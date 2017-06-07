@@ -916,6 +916,13 @@ namespace ARMAria_AssemblerNoGUI
             {
                 texto.AppendLine("RAM[" + enderecos[i] + "] <= " + dados[i]);
             }
+            for (int i = 0; i < processador.memorysize + 1; i++)
+            {
+                if (enderecos.IndexOf(i) == -1)
+                {
+                    texto.AppendLine("RAM[" + i + "] <= 0");
+                }
+            }
             Console.WriteLine("Salvando");
             using (SaveFileDialog sFile = new SaveFileDialog())
             {
