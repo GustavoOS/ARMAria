@@ -912,15 +912,20 @@ namespace ARMAria_AssemblerNoGUI
             }
             texto.AppendLine();
             texto.AppendLine(@"//Memory");
+            texto.AppendLine(@"//Paste this onto reset on external memory");
+            ; texto.AppendLine();
             for (int i = 0; i < dados.Count; i++)
             {
-                texto.AppendLine("RAM[" + enderecos[i] + "] <= " + dados[i]);
+                if (enderecos[i] != 52 && enderecos[i] != 53)
+                {
+                    texto.AppendLine("RAM[" + enderecos[i] + "] <= " + dados[i] + ";");
+                }
             }
             for (int i = 0; i < processador.memorysize + 1; i++)
             {
-                if (enderecos.IndexOf(i) == -1)
+                if (enderecos.IndexOf(i) == -1 && i!=52 && i!= 53)
                 {
-                    texto.AppendLine("RAM[" + i + "] <= 0");
+                    texto.AppendLine("RAM[" + i + "] <= 0;");
                 }
             }
             Console.WriteLine("Salvando");
