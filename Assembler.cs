@@ -12,11 +12,11 @@ namespace ARMAria_AssemblerNoGUI
         public int code, user, priv, io, data, memorysize, cc, cu, cp, cio, cd;
         public memoria()
         {
-            memorysize = 79;
-            user = 24;
-            priv = 36;
-            io = 48;
-            data = 38;
+            memorysize = 12348;
+            user = 4097;
+            priv = 6145;
+            io = 8193;
+            data = 8253;
             code = 0;
             cc = code;
             cu = user;
