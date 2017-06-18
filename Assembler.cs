@@ -213,21 +213,14 @@ namespace ARMAria_AssemblerNoGUI
             saida += max;
             return saida;
         }
-        static String convsBinario(int number)
+        static String convnBinario(int number)
         {
             int lenght = 8;
-            String max = "";
             number = number < -127 ? -127 : number;
             number = number > 127 ? 127 : number;
             String saida = "";
-            max = Convert.ToString(number, 2);
-            max = max.Substring(24);
-            int lenaux = max.Length;
-            for (int i = 0; i < lenght - lenaux; i++)
-            {
-                saida += "0";
-            }
-            saida += max;
+            saida = Convert.ToString(number, 2);
+            saida=saida.Substring(saida.Length - lenght);
             return saida;
         }
         static String extractValues(int type)
@@ -284,7 +277,18 @@ namespace ARMAria_AssemblerNoGUI
                     Console.WriteLine("Digite o código da condição no intervalo 0-15");
                     output += convBinario(Convert.ToInt32(Console.ReadLine()), 4);
                     Console.WriteLine("Digite o registrador da direita no intervalo -127 a +127");
-                    output += convlBinario(Convert.ToInt64(Convert.ToString(Convert.ToInt32(Console.ReadLine())), 2), 8);
+                    int buffer;
+                    buffer = Convert.ToInt32(Console.ReadLine());
+                    if(buffer < 0)
+                    {
+                        output += convnBinario(buffer);
+                    }
+                    else
+                    {
+                        //Buffer >= 0
+                        buffer = (buffer > 127) ? 127 : buffer;
+                        output += convBinario(buffer, 8);
+                    }
                     break;
                 default:
                     Console.WriteLine("Tipo inválido");
@@ -916,18 +920,15 @@ namespace ARMAria_AssemblerNoGUI
             ; texto.AppendLine();
             for (int i = 0; i < dados.Count; i++)
             {
-                if (enderecos[i] != 52 && enderecos[i] != 53)
-                {
-                    texto.AppendLine("RAM[" + enderecos[i] + "] <= " + dados[i] + ";");
-                }
+                
+                texto.AppendLine("RAM[" + enderecos[i] + "] <= " + dados[i] + ";");
+                
             }
-            for (int i = 0; i < processador.memorysize + 1; i++)
-            {
-                if (enderecos.IndexOf(i) == -1 && i!=52 && i!= 53)
-                {
-                    texto.AppendLine("RAM[" + i + "] <= 0;");
-                }
-            }
+            //for (int i = 0; i < processador.memorysize + 1; i++)
+            //{
+            //    texto.AppendLine("RAM[" + i + "] <= 0;");
+                
+            //}
             Console.WriteLine("Salvando");
             using (SaveFileDialog sFile = new SaveFileDialog())
             {
