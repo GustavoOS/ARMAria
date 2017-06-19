@@ -290,9 +290,17 @@ namespace ARMAria_AssemblerNoGUI
                         output += convBinario(buffer, 8);
                     }
                     break;
+
+                case 8:                                        
+                    output += convBinario(0, 3);
+                    Console.WriteLine(@"Digite o registrador para E/S no intervalo 0-7");
+                    output += convBinario(Convert.ToInt32(Console.ReadLine()), 3);
+                    break;
+
                 default:
                     Console.WriteLine("Tipo inválido");
                     break;
+                
             }
             return output;
         }
@@ -720,24 +728,43 @@ namespace ARMAria_AssemblerNoGUI
                     ID += convBinario(Convert.ToInt32(Console.ReadLine()), 3);
                     break;
                 case 69:
+                    Console.WriteLine("Mnemônico: OUTSS");
+                    Console.WriteLine("Descrição: Saída Display 7 Segmentos");
+                    ID = "1011111000";
+                    ID += extractValues(8);
+                    break;
+                case 70:
+                    Console.WriteLine("Mnemônico: OUTLED");
+                    Console.WriteLine("Descrição: Saída nos LEDs vermelhos");
+                    ID = "1011111001";
+                    ID += extractValues(8);
+                    break;
+                case 71:
+                    Console.WriteLine("Mnemônico: INSW");
+                    Console.WriteLine("Descrição: Entrada nas alavancas");
+                    ID = "1011111010";
+                    ID += extractValues(8);
+                    break;
+
+                case 72:
                     Console.WriteLine("Mnemônico: SWI");
                     Console.WriteLine("Descrição: Software Interruption");
                     ID = "1100";
                     ID += convBinario(0, 12);
                     break;
-                case 70:
+                case 73:
                     Console.WriteLine("Mnemônico: B");
                     Console.WriteLine("Descrição: Ramificação");
                     ID = "1101";
                     ID += extractValues(7);
                     break;
-                case 71:
+                case 74:
                     Console.WriteLine("Mnemônico: NOP");
                     Console.WriteLine("Descrição: Pula operação");
                     ID = "11100";
                     ID += convBinario(0, 11);
                     break;
-                case 72:
+                case 75:
                     Console.WriteLine("Mnemônico: HALT");
                     Console.WriteLine("Descrição: Para operações");
                     ID = "11101";
