@@ -18,7 +18,7 @@ module control(
   output [3:0] controlALU, controlBS;
   output [3:0] RegD, RegA, RegB;
   output [6:0] ID;
-  output [7:0] OffImmed;
+  output [8:0] OffImmed;
 
   output [15:0] Instruction;
   wire [3:0] cond;
