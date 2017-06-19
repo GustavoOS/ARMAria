@@ -16,7 +16,7 @@ namespace ARMAria_AssemblerNoGUI
             user = 4097;
             priv = 6145;
             io = 8193;
-            data = 8253;
+            data = 8201;
             code = 0;
             cc = code;
             cu = user;
