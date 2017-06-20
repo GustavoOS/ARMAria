@@ -16,8 +16,7 @@ module ARMAria(
   wire [2:0] controlEM, controlMDH, controlMAH, controlSE1, controlSE2, controlRB;
   wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
   wire [6:0] ID;
-  wire [7:0] DW3, DW2, DW1, DW0, DR3, DR2, DR1, DR0;
-  wire [8:0] OffImmed;
+  wire [7:0] DW3, DW2, DW1, DW0, DR3, DR2, DR1, DR0, OffImmed;
   wire [15:0] PreInstruction, rledsignal;
   wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX;
   wire [31:0] IA0, IA1, A0, A1, A2, A3, display7, RESULT, PC, SP, PCdown, SPdown;

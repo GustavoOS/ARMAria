@@ -12,7 +12,7 @@ module instructiondecoder(
 input [15:0] Instruction;
 output reg [6:0] ID;
 output reg [3:0] RegD, RegA, RegB, Condicao;
-output reg [8:0] Offset;
+output reg [7:0] Offset;
 
 
 reg [3:0] Opcode, funct2;
@@ -295,20 +295,14 @@ always @ ( * ) begin
               0:begin //Instrunction 69 - OUTSS
                 ID = 7'h45;
                 RegD = Instruction[2:0];
-                Offset[8] = 1'b1;//Multiplexed
-                Offset[7:0] = 8'h0;
               end
               1:begin //Instruction 70 - OUTLED
                 ID = 7'h46;
                 RegD = Instruction[2:0];
-                Offset[8] = 1'b1;//Multiplexed
-                Offset[7:0] = 8'h1;
               end
               2:begin //Instruction 71 - INSW
                 ID = 7'h47;
                 RegD = Instruction[2:0];
-                Offset[8] = 1'b1;//Multiplexed
-                Offset[7:0] = 8'h2;
               end
               default:ID=7'h7a;
             endcase
