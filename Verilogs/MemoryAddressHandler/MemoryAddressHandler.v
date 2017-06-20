@@ -41,13 +41,13 @@ module MemoryAddressHandler(
 
         if(!M)begin //User Stack
           if(SP==32'hffffffff)begin//Empty
-            Byte0=6144;
-            Byte1=6143;
-            Byte2=6142;
-            Byte3=6141;
-            SPout=6144;
+            Byte0=6143;
+            Byte1=6142;
+            Byte2=6141;
+            Byte3=6140;
+            SPout=6143;
           end else begin//Not empty
-            if (SP>32'h1004 && SP<=32'h1800) begin //Not full
+            if (SP>32'h1003 && SP<=32'h17ff) begin //Not full
               Byte3=SP-7;
               Byte2=SP-6;
               Byte1=SP-5;
@@ -65,7 +65,7 @@ module MemoryAddressHandler(
             Byte3=8189;
             SPout=8192;
           end else begin//Not empty
-            if (SP>32'h1804 && SP<=32'h2000) begin //Not full
+            if (SP>32'h1803 && SP<=32'h1fff) begin //Not full
               Byte3=SP-7;
               Byte2=SP-6;
               Byte1=SP-5;
@@ -80,18 +80,18 @@ module MemoryAddressHandler(
       end
       2:begin//POP
         if(M==0)begin //User Stack
-          if(SP>=32'h1004 && SP<32'h17fd)begin  //More than one item
+          if(SP>=32'h1003 && SP<32'h17fc)begin  //More than one item
             Byte3=SP-3;
             Byte2=SP-2;
             Byte1=SP-1;
             Byte0=SP;
             SPout=SP+4;
           end else begin  //Single item
-            if(SP==32'h1800) begin
-              Byte0=6144;
-              Byte1=6143;
-              Byte2=6142;
-              Byte3=6141;
+            if(SP==32'h17ff) begin
+              Byte0=6143;
+              Byte1=6142;
+              Byte2=6141;
+              Byte3=6140;
               SPout=32'hffffffff;
             end else begin  //empty
               Byte0 = 32'hffffffff;
@@ -102,7 +102,7 @@ module MemoryAddressHandler(
             end
           end
         end else begin //Privileged Mode
-          if(SP>=32'h1804 && SP<32'h1ffd)begin //More than one item
+          if(SP>=32'h1803 && SP<32'h1ffc)begin //More than one item
             Byte3=SP-3;
             Byte2=SP-2;
             Byte1=SP-1;
@@ -110,10 +110,10 @@ module MemoryAddressHandler(
             SPout=SP+4;
           end else begin//Single item
             if(SP==32'h2000) begin
-              Byte0=8192;
-              Byte1=8191;
-              Byte2=8190;
-              Byte3=8189;
+              Byte0=8191;
+              Byte1=8190;
+              Byte2=8189;
+              Byte3=8188;
               SPout=32'hffffffff;
             end else begin
               Byte0 = 32'hffffffff;

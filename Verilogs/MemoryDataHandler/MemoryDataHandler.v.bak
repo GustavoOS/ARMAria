@@ -50,7 +50,7 @@ module MemoryDataHandler(
         PreMemIn[31:24] = DataReadByte3;
       end
       7:begin //Input from switch
-        PreMemIn[15:0] = IData;
+        PreMim[15:0] = IData;
       end
       8:begin //Output
         OData = MemOut;

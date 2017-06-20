@@ -93,6 +93,9 @@ module EM(
             RAM[A3] <= DW3;
           end
         end
+        default:begin
+          {RAM[8197], RAM[8198]} <= sw;
+        end
       endcase
     end
   end//always

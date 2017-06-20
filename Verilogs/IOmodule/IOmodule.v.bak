@@ -9,12 +9,12 @@ module IOmodule(
   SevenSegDisplays
   );
   input [15:0] switches;
-  input Neg, Zero, Carry, V, M, clock, reset;
+  input Neg, Zero, Carry, V, M, clock;
   output [4:0] GreenLEDs;
   output [55:0] SevenSegDisplays;
   output [15:0] RedLEDs, IData;
   input [31:0] OData;
-  input [3:0] control;
+
   reg [15:0] RLED;
   reg [31:0] info;
   wire [31:0] Display7;
@@ -23,7 +23,7 @@ module IOmodule(
 
   assign GreenLEDs = {Neg, Zero, Carry, V, M};
   assign RedLEDs = RLED;
-  assign IData = switches;
+  assign IData = switches
 
   always @ ( posedge clock or posedge reset ) begin
     if (reset==1'b1) begin
@@ -31,10 +31,10 @@ module IOmodule(
       RLED <=0;
     end else begin
       case (control)
-        1:begin //Records on LED
+        case 1:begin //Records on LED
           RLED <= OData[15:0];
         end
-        2:begin  //Records on Seven Segment Displays
+        case 2:begin  //Records on Seven Segment Displays
           info <= OData;
         end
         default: ;
