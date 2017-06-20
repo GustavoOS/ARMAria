@@ -3,13 +3,14 @@ module controlcore(
   controlALU, controlBS, controlEM, controlRB,
   controlSE1,//down one
   controlSE2,//upper one
-  controlMAH, controlMDH, controlMUX, MODE, reset
+  controlMAH, controlMDH, controlMUX, MODE, reset, controlIO
   );
 
   input take, MODE, reset;
   input [6:0] ID;
-  output reg [2:0] controlEM, controlMDH, controlMAH, controlSE1, controlSE2, controlRB;
-  output reg [3:0] controlALU, controlBS;
+  output reg [1:0] controlIO;
+  output reg [2:0] controlEM, controlMAH, controlSE1, controlSE2, controlRB;
+  output reg [3:0] controlALU, controlBS, controlMDH;
   output reg enable, controlMUX;
 
 
@@ -28,6 +29,7 @@ module controlcore(
     controlEM = 0;
     controlMUX = 0;
     enable = 1;
+    controlIO=0;
     case (ID)
       1:begin
         controlBS=3;
@@ -354,35 +356,37 @@ module controlcore(
         controlRB = 3;
       end
       69:begin  //OUTSS
-        controlALU = 12;
+        controlALU = 0;
         controlBS = 0;
         controlRB = 0;
         controlSE1 = 0;
-        controlMAH = 5;
-        controlMUX = 1;
-        controlMDH = 3;
-        controlEM = 3;
+        controlMAH = 0;
+        controlMUX = 0;
+        controlMDH = 8;
+        controlEM = 0;
+        controlIO = 2;
       end
       70:begin  //OUTLED
-        controlALU = 12;
+        controlALU = 0;
         controlBS = 0;
         controlRB = 0;
         controlSE1 = 0;
-        controlMAH = 4;
-        controlMUX = 1;
-        controlMDH = 2;
-        controlEM = 2;
+        controlMAH = 0;
+        controlMUX = 0;
+        controlMDH = 8;
+        controlEM = 0;
+        controlIO = 1;
       end
       71:begin  //INSW
-        controlALU = 12;
+        controlALU = 0;
         controlBS = 0;
         controlRB = 3;
         controlSE1 = 0;
         controlSE2 = 3;
-        controlMAH = 4;
-        controlMUX = 1;
+        controlMAH = 0;
+        controlMUX = 0;
         controlMDH = 5;
-        controlEM = 5;
+        controlEM = 0;
       end
       72:begin
       if (MODE==1'b1) begin

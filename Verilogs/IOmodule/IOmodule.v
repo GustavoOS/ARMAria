@@ -1,19 +1,47 @@
 module IOmodule(
-  Display7, LED,  //From Memory
+  clock, control, reset,
+  OData,
+  IData,
+  switches,
   Neg, Zero, Carry, V, M,        //Flags from Control Unit
   RedLEDs,
   GreenLEDs,//Will show flags
   SevenSegDisplays
   );
-  input [15:0] LED;
-  input Neg, Zero, Carry, V, M;
+  input [15:0] switches;
+  input Neg, Zero, Carry, V, M, clock;
   output [4:0] GreenLEDs;
   output [55:0] SevenSegDisplays;
-  output [15:0] RedLEDs;
-  input [31:0] Display7;
+  output [15:0] RedLEDs, IData;
+  input [31:0] OData;
+
+  reg [15:0] RLED;
+  reg [31:0] info;
+  wire [31:0] Display7;
+
+  assign Display7 = info;
 
   assign GreenLEDs = {Neg, Zero, Carry, V, M};
-  assign RedLEDs = LED;
+  assign RedLEDs = RLED;
+  assign IData = switches
+
+  always @ ( posedge clock or posedge reset ) begin
+    if (reset==1'b1) begin
+      info <= 0;
+      RLED <=0;
+    end else begin
+      case (control)
+        case 1:begin //Records on LED
+          RLED <= OData[15:0];
+        end
+        case 2:begin  //Records on Seven Segment Displays
+          info <= OData;
+        end
+        default: ;
+      endcase
+    end
+
+  end
 
   HexDecoder dsp0 (
     Display7[3:0],//Input

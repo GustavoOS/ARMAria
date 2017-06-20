@@ -38,8 +38,8 @@ module ARMAria(
 	  rledsignal, display7, sw, reset
     );
 
-  IOmodule iomo (
-    display7, rledsignal,
+  IOmodule iomo (clock, controlIO, reset,
+    OData, IData, sw,
     NEG, ZER, CAR, OVERF, MODE,
     rled, gled, sseg
     );

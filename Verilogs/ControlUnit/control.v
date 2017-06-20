@@ -14,8 +14,8 @@ module control(
   input [15:0] PreInstruction;
 
   output NEG, ZER, CAR, OVERF, MODE, enable, controlMUX;
-  output [2:0] controlEM, controlMDH, controlMAH, controlSE1, controlSE2, controlRB;
-  output [3:0] controlALU, controlBS;
+  output [2:0] controlEM, controlMAH, controlSE1, controlSE2, controlRB;
+  output [3:0] controlALU, controlBS, controlMDH;
   output [3:0] RegD, RegA, RegB;
   output [6:0] ID;
   output [7:0] OffImmed;
