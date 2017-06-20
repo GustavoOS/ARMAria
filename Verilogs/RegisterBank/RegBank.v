@@ -35,7 +35,7 @@ module RegBank(
   always @ ( posedge clock or posedge reset) begin
     if (reset==1'b1) begin//Asynchronous Reset
       // TEST
-      Bank[0] <= 32'h8253;//Data start
+      Bank[0] <= 32'h8192;//Data start
       Bank[13] <= 32'h0;
       Bank[14] <= 32'h0;
 
