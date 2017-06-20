@@ -60,7 +60,7 @@ module RegBank(
             end
           end
           2:begin
-            Bank[0] <= 32'h8253;//Data start
+            Bank[0] <= 32'h8192;//Data start
           end
           3:begin //RD=MemIn
             if(RegD!=4'hf && RegD!=4'he)begin
