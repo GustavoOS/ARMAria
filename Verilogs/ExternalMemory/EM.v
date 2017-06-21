@@ -2,32 +2,35 @@ module EM(
   clock,
   control,
   IA0, IA1,
-  A0, A1, A2, A3,
+  Address,
   DW0, DW1, DW2, DW3,
-  DR0, DR1, DR2, DR3,
+  Read,
   PreInstruction, reset
   );
 
   input clock, reset;
   input [2:0] control;
   input [7:0] DW0, DW1, DW2, DW3;
-  input [31:0] A0, A1, A2, A3, IA0, IA1;
-  output [7:0] DR0, DR1, DR2, DR3;
+  input [9:0]  IA0, IA1;//Lengh matches up to 1023 bytes of Addresses
+  input [39:0] Address;
+  output [31:0] Read;
   output [15:0] PreInstruction;
-  parameter MemSize = 12288;
+  parameter MemSize = 600;
+
+  wire [9:0] A0, A1, A2, A3;
+  assign {A3, A2, A1, A0} = Address;
 
   reg [7:0] RAM [MemSize - 1:0];
 
   reg [7:0] preinstr1, preinstr0;
   assign PreInstruction = {preinstr1, preinstr0};
 
-  wire valida0, valida1, valida2, valida3, validia0, validia1;
-  assign valida0 = ((~A0[31]) && A0<MemSize);
-  assign valida1 = ((~A1[31]) && A1<MemSize);
-  assign valida2 = ((~A2[31]) && A2<MemSize);
-  assign valida3 = ((~A3[31]) && A3<MemSize);
-  assign validia0 = ((~IA0[31]) && IA0<MemSize);
-  assign validia1 = ((~IA1[31]) && IA1<MemSize);
+  wire valida0, valida1, valida23, validia0, validia1;
+  assign valida0 = (A0<MemSize);
+  assign valida1 = (A1<MemSize);
+  assign valida23 = (A2<MemSize) && (A3<MemSize);
+  assign validia = (IA0<MemSize) && (IA1<MemSize);
+
 
 
   //Write logic
@@ -64,11 +67,11 @@ module EM(
       RAM[27] <= 26;
       RAM[28] <= 222;
       RAM[29] <= 249;
-      RAM[8192] <= 1;
-      RAM[8193] <= 5;
-      RAM[8194] <= 8;
-      RAM[8195] <= 7;
-      RAM[8196] <= 6;
+      RAM[400] <= 1;
+      RAM[401] <= 5;
+      RAM[402] <= 8;
+      RAM[403] <= 7;
+      RAM[404] <= 6;
 
 
       //Reset END
@@ -86,7 +89,7 @@ module EM(
           end
         end
         3:begin
-          if(valida0 && valida1 && valida2 && valida3)begin
+          if(valida0 && valida1 && valida23)begin
             RAM[A0] <= DW0;
             RAM[A1] <= DW1;
             RAM[A2] <= DW2;
@@ -100,13 +103,8 @@ module EM(
 
   //Read logic
 
-  wire rw, rh;
-  assign rw = (control==6);
-  assign rh = (control==5);
-  assign DR0 = (valida0 && (control==4 || rh || rw)) ? RAM[A0] : 8'h0;
-  assign DR1 = (valida1 && (rh || rw)) ? RAM[A1] : 8'h0;
-  assign DR2 = (valida2 && rw) ? RAM[A2] : 8'h0;
-  assign DR3 = (valida3 && rw) ? RAM[A3] : 8'h0;
+
+  assign Read = (valida0 && valida1 && valida23) ? {RAM[A3], RAM[A2], RAM[A1], RAM[A0]} : 0;
 
 
   wire ia0a0, ia0a1, ia1a0, ia1a1;
@@ -117,9 +115,8 @@ module EM(
 
 
   always @ ( * ) begin
-    preinstr1 = 8'he8;
-    preinstr0 = 8'h0;
-    if(validia0 && validia1)begin
+
+    if(validia)begin
       preinstr1 = RAM[IA1];
       preinstr0 = RAM[IA0];
       case (control)
@@ -147,11 +144,10 @@ module EM(
           (IA1 == A3) ? DW3:
           preinstr1;
         end
-        default: begin
-          preinstr1 = preinstr1;
-          preinstr0 = preinstr0;
-        end
       endcase
+    end else begin
+      preinstr1 = 8'he8;
+      preinstr0 = 8'h0;
     end
   end
 

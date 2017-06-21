@@ -2,7 +2,7 @@ module MemoryAddressHandler(
   ResultAddress,//From ALU
   PC,SP,//From Register Bank
   PCout,SPout,//Back to Register Bank
-  Byte3, Byte2, Byte1, Byte0,//Output
+  Address,//Output
   InstAdd1, InstAdd0,//Instruction Addresses
   M, control//Control Unit
   // ,StackOverflow
@@ -12,16 +12,22 @@ module MemoryAddressHandler(
   input [2:0] control;
   input [31:0] PC, SP, ResultAddress;
   // output reg StackOverflow;
-  output reg [31:0] Byte3,Byte2,Byte1,Byte0, SPout;
-  output wire [31:0] PCout, InstAdd1, InstAdd0;
+  // output reg [10:0] Byte3,Byte2,Byte1,Byte0;
+  output [39:0] Address;
+  output reg [31:0] SPout;
+  output wire [31:0] PCout;
+  output [9:0] InstAdd1, InstAdd0;
 
   //PC
   wire [31:0] actualPC;
   assign actualPC = control==6? ResultAddress : PC;
   assign PCout = actualPC+2;
-  assign InstAdd1 = actualPC-1;
-  assign InstAdd0 = actualPC;
+  assign InstAdd0 = actualPC[10:0];
+  assign InstAdd1 = InstAdd0-1;
 
+  //old Logic adaptation
+  reg [10:0] Byte3, Byte2, Byte1, Byte0;
+  assign Address = {Byte3, Byte2, Byte1, Byte0};
   //Logic
   always @ (*) begin
     SPout=SP;
@@ -41,38 +47,39 @@ module MemoryAddressHandler(
 
         if(!M)begin //User Stack
           if(SP==32'hffffffff)begin//Empty
-            Byte0=6143;
-            Byte1=6142;
-            Byte2=6141;
-            Byte3=6140;
-            SPout=6143;
+            Byte0=299;
+            Byte1=298;
+            Byte2=297;
+            Byte3=296;
+            SPout=299;
           end else begin//Not empty
-            if (SP>32'h1003 && SP<=32'h17ff) begin //Not full
+            if (SP>203 && SP<=299) begin //Not full
               Byte3=SP-7;
               Byte2=SP-6;
               Byte1=SP-5;
               Byte0=SP-4;
               SPout=SP-4;
-            end else begin //FULL
-              // StackOverflow=1'b1; //Stack Overflow
             end
+            //  else begin //FULL
+              // StackOverflow=1'b1; //Stack Overflow DO NOTHING
+            // end
           end
         end else begin //Privileged Mode
           if(SP==32'hffffffff)begin//Empty
-            Byte0=8192;
-            Byte1=8191;
-            Byte2=8190;
-            Byte3=8189;
-            SPout=8192;
+            Byte0=399;
+            Byte1=398;
+            Byte2=397;
+            Byte3=396;
+            SPout=399;
           end else begin//Not empty
-            if (SP>32'h1803 && SP<=32'h1fff) begin //Not full
+            if (SP>303 && SP<=399) begin //Not full
               Byte3=SP-7;
               Byte2=SP-6;
               Byte1=SP-5;
               Byte0=SP-4;
               SPout=SP-4;
-            end else begin //Full
-              // StackOverflow=1'b1;//Stack Overflow
+            // end else begin //Full
+            //   // StackOverflow=1'b1;//Stack Overflow
             end
           end
         end
@@ -80,46 +87,46 @@ module MemoryAddressHandler(
       end
       2:begin//POP
         if(M==0)begin //User Stack
-          if(SP>=32'h1003 && SP<32'h17fc)begin  //More than one item
+          if(SP>=203 && SP<296)begin  //More than one item
             Byte3=SP-3;
             Byte2=SP-2;
             Byte1=SP-1;
             Byte0=SP;
             SPout=SP+4;
           end else begin  //Single item
-            if(SP==32'h17ff) begin
-              Byte0=6143;
-              Byte1=6142;
-              Byte2=6141;
-              Byte3=6140;
+            if(SP==299) begin
+              Byte0=299;
+              Byte1=298;
+              Byte2=297;
+              Byte3=296;
               SPout=32'hffffffff;
             end else begin  //empty
-              Byte0 = 32'hffffffff;
-              Byte1 = 32'hffffffff;
-              Byte2 = 32'hffffffff;
-              Byte3 = 32'hffffffff;
+              Byte0 = 10'h3ff;
+              Byte1 = 10'h3ff;
+              Byte2 = 10'h3ff;
+              Byte3 = 10'h3ff;
               SPout = 32'hffffffff;
             end
           end
         end else begin //Privileged Mode
-          if(SP>=32'h1803 && SP<32'h1ffc)begin //More than one item
+          if(SP>=32'h25b && SP<32'h31c)begin //More than one item
             Byte3=SP-3;
             Byte2=SP-2;
             Byte1=SP-1;
             Byte0=SP;
             SPout=SP+4;
           end else begin//Single item
-            if(SP==32'h2000) begin
-              Byte0=8191;
-              Byte1=8190;
-              Byte2=8189;
-              Byte3=8188;
+            if(SP==32'h31f) begin
+              Byte0=799;
+              Byte1=798;
+              Byte2=797;
+              Byte3=796;
               SPout=32'hffffffff;
             end else begin
-              Byte0 = 32'hffffffff;
-              Byte1 = 32'hffffffff;
-              Byte2 = 32'hffffffff;
-              Byte3 = 32'hffffffff;
+              Byte0 = 11'h3ff;
+              Byte1 = 11'h3ff;
+              Byte2 = 11'h3ff;
+              Byte3 = 11'h3ff;
               SPout = 32'hffffffff;
             end
           end

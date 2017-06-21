@@ -14,14 +14,16 @@ module ARMAria(
 
   // wires
   wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX;
-  wire [2:0] controlEM, controlMDH, controlMAH, controlSE1, controlSE2, controlRB;
+  wire [2:0] controlMDH, controlMAH, controlSE1, controlSE2, controlRB;
   wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
   wire [6:0] ID;
-  wire [7:0] DW3, DW2, DW1, DW0, DR3, DR2, DR1, DR0, OffImmed;
+  wire [7:0] DW3, DW2, DW1, DW0, OffImmed;// DR3, DR2, DR1, DR0;
   wire [15:0] PreInstruction, rledsignal, IData;
-  wire [31:0] IA0, IA1, A0, A1, A2, A3, display7, RESULT, PC, SP, PCdown, SPdown;
+  wire [9:0] IA0, IA1;
+  wire [39:0] Address;
+  wire [31:0] display7, RESULT, PC, SP, PCdown, SPdown, Read;
   wire [31:0] PreMemIn, MemOut, MemIn, Abus, Bbus, PreB, Bse, Bsh, OData;
-  wire [1:0] controlIO;
+  wire [1:0] controlIO, controlEM;
 
   control controlunit(PreInstruction, RegD, RegA, RegB, OffImmed,
     controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE2, controlSE1,
@@ -32,9 +34,9 @@ module ARMAria(
   EM externalmem(clock,
 	  controlEM,
 	  IA0, IA1,
-	  A0, A1, A2, A3,
+	  Address,
 	  DW0, DW1, DW2, DW3,
-	  DR0, DR1, DR2, DR3, PreInstruction,
+	  Read, PreInstruction,
 	  reset
     );
 
@@ -46,12 +48,12 @@ module ARMAria(
 
   MemoryAddressHandler mah(
     RESULT, PC, SP, PCdown, SPdown,
-    A3, A2, A1, A0, IA1, IA0, MODE, controlMAH
+    Address, IA1, IA0, MODE, controlMAH
   );
 
   MemoryDataHandler mdh(
 	 OData, IData,
-    DR3, DR2, DR1, DR0,
+    Read,
     DW3, DW2, DW1, DW0,
     PreMemIn, MemOut, controlMDH
   );

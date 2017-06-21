@@ -8,8 +8,8 @@ module controlcore(
 
   input take, MODE, reset;
   input [6:0] ID;
-  output reg [1:0] controlIO;
-  output reg [2:0] controlEM, controlMAH, controlSE1, controlSE2, controlRB;
+  output reg [1:0] controlIO, controlEM;
+  output reg [2:0] controlMAH, controlSE1, controlSE2, controlRB;
   output reg [3:0] controlALU, controlBS, controlMDH;
   output reg enable, controlMUX;
 
@@ -176,7 +176,6 @@ module controlcore(
         controlRB = 3;
         controlMAH = 5;
         controlMDH = 6;
-        controlEM = 6;
       end
       40:begin
         controlALU = 2;
@@ -202,7 +201,6 @@ module controlcore(
       43:begin
         controlALU = 2;
         controlMAH = 3;
-        controlEM = 4;
         controlMDH = 4;
         controlSE2 = 2;
         controlRB = 3;
@@ -210,14 +208,12 @@ module controlcore(
       44:begin
         controlALU = 2;
         controlMAH = 5;
-        controlEM = 4;
         controlMDH = 6;
         controlRB = 3;
       end
       45:begin
         controlALU = 2;
         controlMAH = 4;
-        controlEM = 5;
         controlMDH = 5;
         controlSE2 = 3;
         controlRB = 3;
@@ -248,7 +244,6 @@ module controlcore(
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 5;
-        controlEM = 6;
         controlMDH = 6;
         controlRB = 3;
       end
@@ -264,7 +259,6 @@ module controlcore(
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 3;
-        controlEM = 4;
         controlMDH = 4;
         controlSE2 = 4;
         controlRB = 3;
@@ -281,7 +275,6 @@ module controlcore(
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 4;
-        controlEM = 5;
         controlMDH = 5;
         controlRB =3;
         controlSE2 = 3;
@@ -300,7 +293,6 @@ module controlcore(
         controlSE1 = 2;
         controlALU = 2;
         controlMAH = 5;
-        controlEM = 6;
         controlMDH = 6;
         controlRB = 3;
       end
@@ -351,7 +343,6 @@ module controlcore(
       end
       68:begin
         controlMAH = 2;
-        controlEM = 6;
         controlMDH = 6;
         controlRB = 3;
       end
@@ -416,12 +407,12 @@ module controlcore(
       100:begin //RESET
         controlALU = 0;
         controlBS = 0;
-        controlRB = 5;
+        controlRB = 0;
         controlSE1 = 0;//down
         controlSE2 = 0;//up
         controlMAH = 0;
         controlMDH = 0;
-        controlEM = 7;
+        controlEM = 0;
         controlMUX = 0;
         enable = 1;
       end

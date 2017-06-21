@@ -1,14 +1,14 @@
 module MemoryDataHandler(
   OData, IData,
-  DataReadByte3, DataReadByte2, DataReadByte1, DataReadByte0,//Read memory
+  Read,//Read memory
   DataWriteByte3, DataWriteByte2, DataWriteByte1, DataWriteByte0,//Write memory
   PreMemIn,//outputs
   MemOut,//Input from register Bank
   control//Control Unit
   );
 
-  input [7:0] DataReadByte3, DataReadByte2, DataReadByte1, DataReadByte0;
-  input [31:0] MemOut;
+  // input [7:0] DataReadByte3, DataReadByte2, DataReadByte1, DataReadByte0;
+  input [31:0] MemOut, Read;
   input [15:0] IData;
   input [3:0] control;
   output reg [7:0] DataWriteByte3, DataWriteByte2, DataWriteByte1, DataWriteByte0;
@@ -37,17 +37,13 @@ module MemoryDataHandler(
         DataWriteByte1=MemOut[15:8];
       end
       4:begin //READ BYTE
-        PreMemIn[7:0] = DataReadByte0;
+        PreMemIn[7:0] = Read[7:0];
       end
       5:begin //READ HALFWORD
-        PreMemIn[7:0] = DataReadByte0;
-        PreMemIn[15:8] = DataReadByte1;
+        PreMemIn[15:0] = Read[15:0];
       end
       6:begin //READ WORD
-        PreMemIn[7:0] = DataReadByte0;
-        PreMemIn[15:8] = DataReadByte1;
-        PreMemIn[23:16] = DataReadByte2;
-        PreMemIn[31:24] = DataReadByte3;
+        PreMemIn = Read;
       end
       7:begin //Input from switch
         PreMemIn[15:0] = IData;
