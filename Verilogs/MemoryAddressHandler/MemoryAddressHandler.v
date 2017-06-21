@@ -47,10 +47,10 @@ module MemoryAddressHandler(
 
         if(M==1'b0)begin //User Stack
           if(SP==32'hffffffff)begin//Empty
-            Byte0=41;
-            SPout=41;
+            Byte0=36;
+            SPout=36;
           end else begin//Not empty
-            if (SP>28 && SP<=41) begin //Not full
+            if (SP>31 && SP<=36) begin //Not full
               Byte0=SP-1;
               SPout=Byte0;
             end
@@ -60,9 +60,9 @@ module MemoryAddressHandler(
           end
         end else begin //Privileged Mode
           if(SP==32'hffffffff)begin//Empty
-            Byte0=55;
+            Byte0=42;
           end else begin//Not empty
-            if (SP>42 && SP<=55) begin //Not full
+            if (SP>37 && SP<=42) begin //Not full
               Byte0=SP-1;
               SPout=SP-1;
             // end else begin //Full
@@ -74,12 +74,12 @@ module MemoryAddressHandler(
       end
       2:begin//POP
         if(M==1'b0)begin //User Stack
-          if(SP>=28 && SP<41)begin  //More than one item
+          if(SP>=31 && SP<36)begin  //More than one item
             Byte0=SP;
             SPout=SP+1;
           end else begin  //Single item
-            if(SP==41) begin
-              Byte0=41;
+            if(SP==36) begin
+              Byte0=36;
               SPout=32'hffffffff;
             end else begin  //empty
               Byte0 = 10'h3ff;
@@ -87,11 +87,11 @@ module MemoryAddressHandler(
             end
           end
         end else begin //Privileged Mode
-          if(SP>=42 && SP<55)begin //More than one item
+          if(SP>=37 && SP<42)begin //More than one item
             Byte0=SP;
             SPout=SP+1;
           end else begin//Single item
-            if(SP==55) begin
+            if(SP==42) begin
               Byte0=55;
               SPout=32'hffffffff;
             end else begin
