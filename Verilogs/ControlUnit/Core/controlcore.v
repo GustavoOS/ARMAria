@@ -338,13 +338,14 @@ module controlcore(
       67:begin
         controlMAH = 1;
         controlEM = 3;
-        controlMDH = 3;
+        controlMDH = 1;
         controlRB = 0;
       end
       68:begin
         controlMAH = 2;
-        controlMDH = 6;
+        controlMDH = 4;
         controlRB = 3;
+        controlSE2 = 3;
       end
       69:begin  //OUTSS
         controlALU = 0;

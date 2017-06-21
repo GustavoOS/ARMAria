@@ -45,20 +45,14 @@ module MemoryAddressHandler(
 
       1:begin//PUSH
 
-        if(!M)begin //User Stack
+        if(M==1'b0)begin //User Stack
           if(SP==32'hffffffff)begin//Empty
-            Byte0=47;
-            Byte1=46;
-            Byte2=45;
-            Byte3=44;
-            SPout=47;
+            Byte0=41;
+            SPout=41;
           end else begin//Not empty
-            if (SP>35 && SP<=47) begin //Not full
-              Byte3=SP-7;
-              Byte2=SP-6;
-              Byte1=SP-5;
-              Byte0=SP-4;
-              SPout=SP-4;
+            if (SP>28 && SP<=41) begin //Not full
+              Byte0=SP-1;
+              SPout=Byte0;
             end
             //  else begin //FULL
               // StackOverflow=1'b1; //Stack Overflow DO NOTHING
@@ -66,18 +60,11 @@ module MemoryAddressHandler(
           end
         end else begin //Privileged Mode
           if(SP==32'hffffffff)begin//Empty
-            Byte0=63;
-            Byte1=62;
-            Byte2=61;
-            Byte3=60;
-            SPout=63;
+            Byte0=55;
           end else begin//Not empty
-            if (SP>51 && SP<=63) begin //Not full
-              Byte3=SP-7;
-              Byte2=SP-6;
-              Byte1=SP-5;
-              Byte0=SP-4;
-              SPout=SP-4;
+            if (SP>42 && SP<=55) begin //Not full
+              Byte0=SP-1;
+              SPout=SP-1;
             // end else begin //Full
             //   // StackOverflow=1'b1;//Stack Overflow
             end
@@ -86,41 +73,26 @@ module MemoryAddressHandler(
 
       end
       2:begin//POP
-        if(M==0)begin //User Stack
-          if(SP>=35 && SP<44)begin  //More than one item
-            Byte3=SP-3;
-            Byte2=SP-2;
-            Byte1=SP-1;
+        if(M==1'b0)begin //User Stack
+          if(SP>=28 && SP<41)begin  //More than one item
             Byte0=SP;
-            SPout=SP+4;
+            SPout=SP+1;
           end else begin  //Single item
-            if(SP==47) begin
-              Byte0=47;
-              Byte1=46;
-              Byte2=45;
-              Byte3=44;
+            if(SP==41) begin
+              Byte0=41;
               SPout=32'hffffffff;
             end else begin  //empty
               Byte0 = 10'h3ff;
-              Byte1 = 10'h3ff;
-              Byte2 = 10'h3ff;
-              Byte3 = 10'h3ff;
               SPout = 32'hffffffff;
             end
           end
         end else begin //Privileged Mode
-          if(SP>=51 && SP<60)begin //More than one item
-            Byte3=SP-3;
-            Byte2=SP-2;
-            Byte1=SP-1;
+          if(SP>=42 && SP<55)begin //More than one item
             Byte0=SP;
-            SPout=SP+4;
+            SPout=SP+1;
           end else begin//Single item
-            if(SP==63) begin
-              Byte0=63;
-              Byte1=62;
-              Byte2=61;
-              Byte3=60;
+            if(SP==55) begin
+              Byte0=55;
               SPout=32'hffffffff;
             end else begin
               Byte0 = 11'h3ff;
