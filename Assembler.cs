@@ -9,19 +9,17 @@ namespace ARMAria_AssemblerNoGUI
 {
     class memoria
     {
-        public int code, user, priv, io, data, memorysize, cc, cu, cp, cio, cd;
+        public int code, user, priv, data, memorysize, cc, cu, cp, cd;
         public memoria()
         {
-            memorysize = 12348;
-            user = 4097;
-            priv = 6145;
-            io = 8193;
-            data = 8201;
+            memorysize = 48;
+            user = 31;
+            priv = 36;
+            data = 43;
             code = 0;
             cc = code;
             cu = user;
             cp = priv;
-            cio = io;
             cd = data;
         }
 
@@ -35,8 +33,6 @@ namespace ARMAria_AssemblerNoGUI
                     return cu;
                 case 3:
                     return cp;
-                case 4:
-                    return cio;
                 case 5:
                     return cd;
                 default:
@@ -68,17 +64,7 @@ namespace ARMAria_AssemblerNoGUI
                     }
                 //break;
                 case 3:
-                    if (cp + quant - 1 < io)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                //break;
-                case 4:
-                    if (cio + quant - 1 < data)
+                    if (cp + quant - 1 < data)
                     {
                         return true;
                     }
@@ -129,20 +115,9 @@ namespace ARMAria_AssemblerNoGUI
                     }
                     break;
                 case 3:
-                    if (cp + quant - 1 < io)
+                    if (cp + quant - 1 < data)
                     {
                         cp += quant;
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    break;
-                case 4:
-                    if (cio + quant - 1 < data)
-                    {
-                        cio += quant;
                         return true;
                     }
                     else
@@ -796,8 +771,8 @@ namespace ARMAria_AssemblerNoGUI
             Console.WriteLine("Configuração:");
             Console.Write("|" + processador.code + "---Code---"); Console.Write(processador.user - 1); Console.WriteLine("|");
             Console.Write("|" + processador.user + "---User Stack---"); Console.Write(processador.priv - 1); Console.WriteLine("|");
-            Console.Write("|" + processador.priv + "---Privileged Stack---"); Console.Write(processador.io - 1); Console.WriteLine("|");
-            Console.Write("|" + processador.io + "---Input Output---"); Console.Write(processador.data - 1); Console.WriteLine("|");
+            Console.Write("|" + processador.priv + "---Privileged Stack---"); Console.Write(processador.data - 1); Console.WriteLine("|");
+            //Console.Write("|" + processador.io + "---Input Output---"); Console.Write(processador.data - 1); Console.WriteLine("|");
             Console.Write("|" + processador.data + "---Data---"); Console.Write(processador.memorysize); Console.WriteLine("|");
             Console.WriteLine("");
             Console.WriteLine("");
@@ -849,9 +824,10 @@ namespace ARMAria_AssemblerNoGUI
                         break;
                     case 2:
                         Console.WriteLine("Onde você deseja adicionar?");
-                        Console.WriteLine("Digite: 1 para região Code, 2 para região User Stack, 3 para região Privileged Stack, 4 para Região E/S, 5 para região Dados");
+                        Console.WriteLine("Digite: 1 para região Code, 2 para região User Stack, 3 para região Privileged Stack, 4 para região Dados");
                         int local = Convert.ToInt32(Console.ReadLine());
                         local = local < 1 ? 1 : local > 5 ? 5 : local;
+                        local = (local == 4) ? 5 : local;
                         Console.WriteLine("Digite um dado no intervalo de 0-255");
                         byte dado = Convert.ToByte(Console.ReadLine());
                         if (processador.canadd(local, 1))
@@ -868,9 +844,10 @@ namespace ARMAria_AssemblerNoGUI
                         break;
                     case 3:
                         Console.WriteLine("Onde você deseja adicionar?");
-                        Console.WriteLine("Digite: 1 para região Code, 2 para região User Stack, 3 para região Privileged Stack, 4 para Região E/S, 5 para região Dados");
+                        Console.WriteLine("Digite: 1 para região Code, 2 para região User Stack, 3 para região Privileged Stack, 4 para região Dados");
                         int local1 = Convert.ToInt32(Console.ReadLine());
                         local1 = local1 < 1 ? 1 : local1 > 5 ? 5 : local1;
+                        local1 = (local1 == 4) ? 5 : local1;
                         Console.WriteLine("Digite um dado no intervalo de 0-65535");
                         String leitura = convlBinario(Convert.ToInt64(Console.ReadLine()), 16);
 
@@ -893,9 +870,10 @@ namespace ARMAria_AssemblerNoGUI
                         break;
                     case 4:
                         Console.WriteLine("Onde você deseja adicionar?");
-                        Console.WriteLine("Digite: 1 para região Code, 2 para região User Stack, 3 para região Privileged Stack, 4 para Região E/S, 5 para região Dados");
+                        Console.WriteLine("Digite: 1 para região Code, 2 para região User Stack, 3 para região Privileged Stack, 4 para região Dados");
                         int local2 = Convert.ToInt32(Console.ReadLine());
                         local2 = local2 < 1 ? 1 : local2 > 5 ? 5 : local2;
+                        local2 = (local2 == 4) ? 5 : local2;
                         Console.WriteLine("Digite um dado no intervalo de 0-4294967295");
                         String leitura1 = convlBinario(Convert.ToInt64(Console.ReadLine()), 32);
 

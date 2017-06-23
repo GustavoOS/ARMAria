@@ -1,7 +1,7 @@
 module ARMAria(
   clock, reset, sw, rled, gled, sseg,
   //debug io
-  Instruction, IA1, IA0, PCdown, SPdown, take, ResultPC, RESULT, Abus, Bse,Bsh, controlRB
+  Instruction, IA1, IA0, PCdown, SPdown, take, ResultPC, RESULT, Abus, MemOut,Bsh, controlHI
 
   );
   input clock, reset;
@@ -15,25 +15,25 @@ module ARMAria(
   //debug outputs, that will become wires
   output [15:0] Instruction;
   output [9:0] IA0, IA1, ResultPC;
-  output [31:0] PCdown, SPdown, Abus, RESULT, Bsh, Bse;
-  output [2:0] controlRB;
+  output [31:0] PCdown, SPdown, Abus, RESULT, Bsh, MemOut;
+  output [1:0] controlHI;
 
   // wires
   wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX;
-  wire [2:0] controlMDH, controlMAH, controlSE1 ;
+  wire [2:0] controlMAH, controlSE1, controlSE2, controlRB, controlMDH;
   wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
   wire [6:0] ID;
   wire [7:0] DW3, DW2, DW1, DW0, OffImmed;
   wire [15:0] PreInstruction, rledsignal, IData;
   wire [39:0] Address;
-  wire [31:0] display7, PC, SP, Read, PreB;
-  wire [31:0] PreMemIn, MemOut, MemIn, Bbus , OData; //Abus, Bse, PreB;
-  wire [1:0] controlIO, controlEM;
+  wire [31:0] display7, PC, SP, Read, PreB, Bse;
+  wire [31:0] PreMemIn, MemIn, Bbus; //Abus, Bse, PreB;
+  wire [1:0] controlEM;
 
   control controlunit(PreInstruction, RegD, RegA, RegB, OffImmed,
     controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE1, controlSE2,
-    controlBS, controlALU, ID, Instruction, NALU, CALU, VALU, ZALU, NBS, ZBS, CBS,
-    NEG, ZER, CAR, OVERF, MODE, reset, clock, enable, controlIO, take
+    controlBS, controlALU, controlHI, ID, Instruction, NALU, CALU, VALU, ZALU, NBS, ZBS, CBS,
+    NEG, ZER, CAR, OVERF, MODE, reset, clock, enable, take
     );
 
   EM externalmem(clock,
@@ -45,9 +45,11 @@ module ARMAria(
 	  reset
     );
 
-  IOmodule iomo (clock, controlIO, reset,
-    OData, IData, sw,
-    NEG, ZER, CAR, OVERF, MODE,
+
+  IOmodule enterescape(
+    clock, controlHI, reset,
+    MemOut, IData, sw,
+    NEG, ZER, CAR, OVERF, MODE,       //Flags from Control Unit
     rled, gled, sseg
     );
 
@@ -62,7 +64,7 @@ module ARMAria(
     );
 
   MemoryDataHandler mdh(
-	 OData, IData,
+    IData,
     Read,
     DW3, DW2, DW1, DW0,
     PreMemIn, MemOut, controlMDH

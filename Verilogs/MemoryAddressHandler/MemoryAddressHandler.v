@@ -19,6 +19,11 @@ module MemoryAddressHandler(
   output [31:0] PCout;
   output [9:0] InstAdd1, InstAdd0;
 
+  parameter UserStackStart = 31;
+  parameter UserStackEnd = 36;
+  parameter PrivilegedStackStart = UserStackEnd +1;
+  parameter PrivilegedStackEnd = 42;
+
   //PC
   assign PCout = (reset==1'b1) ? ResultPC :  ResultPC+2;
   assign InstAdd1 = (ResultPC[9:0]>0) ? ResultPC[9:0]-1 : 10'h0;
@@ -46,10 +51,10 @@ module MemoryAddressHandler(
 
         if(M==1'b0)begin //User Stack
           if(SP==32'hffffffff)begin//Empty
-            Byte0=36;
-            SPout=36;
+            Byte0=UserStackEnd;
+            SPout=UserStackEnd;
           end else begin//Not empty
-            if (SP>31 && SP<=36) begin //Not full
+            if (SP>UserStackStart && SP<=UserStackEnd) begin //Not full
               Byte0=SP-1;
               SPout=Byte0;
             end
@@ -59,9 +64,9 @@ module MemoryAddressHandler(
           end
         end else begin //Privileged Mode
           if(SP==32'hffffffff)begin//Empty
-            Byte0=42;
+            Byte0=PrivilegedStackEnd;
           end else begin//Not empty
-            if (SP>37 && SP<=42) begin //Not full
+            if (SP>PrivilegedStackStart && SP<=PrivilegedStackEnd) begin //Not full
               Byte0=SP-1;
               SPout=SP-1;
             // end else begin //Full
@@ -73,12 +78,12 @@ module MemoryAddressHandler(
       end
       2:begin//POP
         if(M==1'b0)begin //User Stack
-          if(SP>=31 && SP<36)begin  //More than one item
+          if(SP>=UserStackStart && SP<UserStackEnd)begin  //More than one item
             Byte0=SP;
             SPout=SP+1;
           end else begin  //Single item
-            if(SP==36) begin
-              Byte0=36;
+            if(SP==UserStackEnd) begin
+              Byte0=UserStackEnd;
               SPout=32'hffffffff;
             end else begin  //empty
               Byte0 = 10'h3ff;
@@ -86,13 +91,13 @@ module MemoryAddressHandler(
             end
           end
         end else begin //Privileged Mode
-          if(SP>=37 && SP<42)begin //More than one item
+          if(SP>=PrivilegedStackStart && SP<PrivilegedStackEnd)begin //More than one item
             Byte0=SP;
             SPout=SP+1;
           end else begin//Single item
-            if(SP==42) begin
-              Byte0=55;
-              SPout=32'hffffffff;
+            if(SP==PrivilegedStackEnd) begin
+              Byte0 = PrivilegedStackEnd;
+              SPout = 32'hffffffff;
             end else begin
               Byte0 = 10'h3ff;
               Byte1 = 10'h3ff;

@@ -1,16 +1,16 @@
 module controlcore(
-  ID, take, enable,
+  ID, take, enable, controlHI,
   controlALU, controlBS, controlEM, controlRB,
   controlSE1,//down one
   controlSE2,//upper one
-  controlMAH, controlMDH, controlMUX, MODE, reset, controlIO
+  controlMAH, controlMDH, controlMUX, MODE
   );
 
-  input take, MODE, reset;
+  input take, MODE;
   input [6:0] ID;
-  output reg [1:0] controlIO, controlEM;
-  output reg [2:0] controlMAH, controlSE1, controlSE2, controlRB;
-  output reg [3:0] controlALU, controlBS, controlMDH;
+  output reg [1:0] controlHI, controlEM;
+  output reg [2:0] controlMAH, controlSE1, controlSE2, controlRB, controlMDH;
+  output reg [3:0] controlALU, controlBS;
   output reg enable, controlMUX;
 
 
@@ -18,7 +18,6 @@ module controlcore(
 
 
   always @ ( * ) begin
-
     controlALU = 12;
     controlBS = 0;
     controlRB = 1;
@@ -28,8 +27,9 @@ module controlcore(
     controlMDH = 0;
     controlEM = 0;
     controlMUX = 0;
+    controlHI = 0;
     enable = 1;
-    controlIO=0;
+
     case (ID)
       1:begin
         controlBS=3;
@@ -350,14 +350,10 @@ module controlcore(
       end
       69:begin  //OUTSS
         controlALU = 0;
-        controlBS = 0;
         controlRB = 0;
-        controlSE1 = 0;
-        controlMAH = 0;
-        controlMUX = 0;
-        controlMDH = 8;
+        controlMDH = 0;
         controlEM = 0;
-        controlIO = 2;
+        controlHI = 2'h2;
       end
       70:begin  //OUTLED
         controlALU = 0;
@@ -366,9 +362,9 @@ module controlcore(
         controlSE1 = 0;
         controlMAH = 0;
         controlMUX = 0;
-        controlMDH = 8;
+        controlMDH = 0;
         controlEM = 0;
-        controlIO = 1;
+        controlHI = 2'h1;
       end
       71:begin  //INSW
         controlALU = 0;

@@ -118,10 +118,10 @@ module SpecReg(
         65: begin
           SPECREG[1] <= VALU;
         end
-        69: begin
+        72: begin//SWI
           SPECREG[0] <= !SPECREG[0];
         end
-        72:begin  //HALT
+        75:begin  //HALT
           SPECREG <= 5'h1f;
         end
         default:begin
