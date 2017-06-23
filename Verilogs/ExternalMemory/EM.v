@@ -15,7 +15,7 @@ module EM(
   input [39:0] Address;
   output [31:0] Read;
   output [15:0] PreInstruction;
-  parameter MemSize = 49;
+  parameter MemSize = 125;
 
   wire [9:0] A0, A1, A2, A3;
   assign {A3, A2, A1, A0} = Address;
@@ -69,11 +69,11 @@ module EM(
       RAM[29] <= 249;
 
 
-      RAM[43] <= 1;
-      RAM[44] <= 5;
-      RAM[45] <= 8;
-      RAM[46] <= 7;
-      RAM[47] <= 6;
+      RAM[113] <= 1;
+      RAM[114] <= 5;
+      RAM[115] <= 8;
+      RAM[116] <= 7;
+      RAM[117] <= 6;
 
 
       //Reset END

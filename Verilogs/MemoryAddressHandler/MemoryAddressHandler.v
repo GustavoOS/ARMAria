@@ -19,10 +19,10 @@ module MemoryAddressHandler(
   output [31:0] PCout;
   output [9:0] InstAdd1, InstAdd0;
 
-  parameter UserStackStart = 31;
-  parameter UserStackEnd = 36;
+  parameter UserStackStart = 101;
+  parameter UserStackEnd = 106;
   parameter PrivilegedStackStart = UserStackEnd +1;
-  parameter PrivilegedStackEnd = 42;
+  parameter PrivilegedStackEnd = 112;
 
   //PC
   assign PCout = (reset==1'b1) ? ResultPC :  ResultPC+2;

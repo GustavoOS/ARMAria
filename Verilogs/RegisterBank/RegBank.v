@@ -16,6 +16,7 @@ module RegBank(
   input [2:0] control;
   output [31:0] A,B, PC, SP;
   output [31:0]  MemOut;
+  parameter dataStart = 113;
 
   reg [31:0] Bank [16:0];
 
@@ -27,7 +28,7 @@ module RegBank(
 
   always @ (posedge clock or posedge reset) begin
     if (reset==1'b1) begin
-      Bank[0] <= 43;//Data start
+      Bank[0] <= dataStart;
       Bank[14] <= 32'hffffffff;//User Stack
       Bank[15] <= 1;  //PC
       Bank[16] <= 32'hffffffff; //Privileged Stack
@@ -46,7 +47,7 @@ module RegBank(
             end
           end
           2:begin
-            Bank[0] <= 43;//Data start
+            Bank[0] <= dataStart;
           end
           3:begin //RD=MemIn
             if(RegD!=4'hf && RegD!=4'he)begin
