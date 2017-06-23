@@ -25,7 +25,7 @@ module EM(
   reg [7:0] preinstr1, preinstr0;
   assign PreInstruction = {preinstr1, preinstr0};
 
-  wire valida0, valida1, valida23, validia0, validia1;
+  wire valida0, valida1, valida23, validia;
   assign valida0 = (A0<MemSize);
   assign valida1 = (A1<MemSize);
   assign valida23 = (A2<MemSize) && (A3<MemSize);
@@ -51,11 +51,11 @@ module EM(
       RAM[11] <= 20;
       RAM[12] <= 66;
       RAM[13] <= 147;
-      RAM[14] <= 211;
+      RAM[14] <= 219;
       RAM[15] <= 5;
       RAM[16] <= 41;
       RAM[17] <= 5;
-      RAM[18] <= 211;
+      RAM[18] <= 219;
       RAM[19] <= 249;
       RAM[20] <= 190;
       RAM[21] <= 3;
@@ -67,6 +67,8 @@ module EM(
       RAM[27] <= 26;
       RAM[28] <= 222;
       RAM[29] <= 249;
+
+
       RAM[43] <= 1;
       RAM[44] <= 5;
       RAM[45] <= 8;

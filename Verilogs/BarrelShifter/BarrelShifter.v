@@ -22,8 +22,8 @@ module BarrelShifter(
     aux1=0; aux2=0; aux3=0; //Auxiliar cleaning
 
     case (control)
-      1:begin //Saída=A<<2
-        {aux2,outputBS}=inputA<<1;
+      1:begin //Saída=B<<1
+        {aux2,outputBS}=Bse<<1;
         C=aux2;
         Zero=zer;
         N=outputBS[31];

@@ -7,60 +7,57 @@ module Ramifier(
   input Neg, Carry, Zer, V;
   output reg take;
 
-  reg difnv;
 
 
   always @ ( * ) begin
-    difnv= Neg != V;
     case (Condition)
       0:begin //EQ
-        take = Zer;
+        take = (Zer==1'b1);
       end
       1:begin //NE
-        take = ~Zer;
+        take = (Zer==1'b0);
       end
       2:begin //CS / HS
-        take = Carry;
+        take = (Carry==1'b1);
       end
       3:begin //CC / LO
-        take = ~Carry;
+        take =(Carry==1'b0);
       end
       4:begin   //MI
-        take = Neg;
+        take = (Neg==1'b1);
       end
       5:begin   //PL
-        take = ~Neg;
+        take = (Neg==1'b0);
       end
       6:begin   //VS
-        take = V;
+        take = (V==1'b1);
       end
       7:begin   //VC
-        take = ~V;
+        take = (V==1'b0);
       end
       8:begin   //HI
-        take = Carry && ~Zer;
+        take = (Carry==1'b1) && (Zer==1'b0);
       end
       9:begin   //LS
-        take = ~Carry || Zer;
+        take = (Carry==1'b0) || (Zer==1'b1);
       end
       4'ha:begin    //GE
-        take = ~difnv;
+        take = (Neg==V);
       end
       4'hb:begin    //LT
-        take = difnv;
+        take = (Neg!=V);
       end
       4'hc:begin    //GT
-        take = ~(Zer || difnv);
+        take = (Zer==1'b0) && (Neg==V);
       end
       4'hd:begin     //LE
-        take = Zer && difnv;
+        take = (Zer==1'b1) && (Neg!=V);
       end
       4'he:begin  //Al
         take = 1'b1;
       end
       default: begin
-        take = 1'b0;
-
+        take = 1'b0; //NEVER
       end
     endcase
   end

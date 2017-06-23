@@ -1,39 +1,31 @@
-module SignExtend(inputA, control, outputSE);
-input [31:0] inputA;
+module SignExtend(Input, control, outputSE);
+input [31:0] Input;
 input [2:0] control;
 output reg [31:0] outputSE;
 
 
-always @ (*)
-	begin
 
-	  case(control)
-		  1://Sign extends halfword to word
-		  begin
-			 outputSE[15:0]=inputA[15:0];
-			 outputSE[31:16]=inputA[15]? 16'hFFFF : 16'h0;
-		  end
-		  2://Sign extends byte to word
-		  begin
-			 outputSE[7:0]=inputA[7:0];
-			 outputSE[31:8]=inputA[7]? 24'hFFFFFF : 24'h0;
-		  end
-		  3://Zero extends halfword
-		  begin
-			 outputSE[15:0]=inputA[15:0];
-			 outputSE[31:16]=0;
-		  end
-		  4://Zero extends byte
-		  begin
-			 outputSE[7:0]=inputA[7:0];
-			 outputSE[31:8]=0;
-		  end
-			
-		  default:
-		  begin
-			 outputSE=inputA;
-		  end
-		endcase
-	end
+wire signed [7:0] byte1, byte0;
+assign {byte1,byte0} = Input[15:0];
+
+always @ ( * ) begin
+	case (control)
+		1:begin //Sign extends halfword to word
+			outputSE = ({byte1, byte0}<0)? {16'hffff, byte1, byte0} : {16'h0, byte1, byte0};
+		end
+		2:begin //Sign extends byte to word
+			outputSE = (byte0<0)? {16'hffff, 8'hff, byte0} : {16'h0, 8'h0, byte0};
+		end
+		3:begin//Zero extends halfword
+			outputSE = {16'h0, byte1, byte0};
+		end
+		4:begin///Zero extends byte
+			outputSE = {16'h0, 8'h0, byte0};
+		end
+		default:begin
+			outputSE = Input;
+		end
+	endcase
+end
 
 endmodule

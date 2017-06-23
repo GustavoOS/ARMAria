@@ -70,8 +70,8 @@ always @ ( * ) begin
 
           2:begin//Instruction 6
             ID=7'h6;
-            RegA[2:0]=Instruction[5:3];
             RegD[2:0]=Instruction[2:0];
+            RegA[2:0]=Instruction[5:3];
             Offset[2:0]=Instruction[8:6];
           end
 

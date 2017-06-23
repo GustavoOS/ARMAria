@@ -2,12 +2,12 @@ module control(
   PreInstruction,
   RegD, RegA, RegB,
   OffImmed,
-  controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE2, controlSE1,
+  controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE1, controlSE2,
   controlBS, controlALU,
   ID, Instruction,
   NALU, CALU, VALU, ZALU, NBS, ZBS, CBS,
   NEG, ZER, CAR, OVERF, MODE,
-  reset, clock, enable, controlIO
+  reset, clock, enable, controlIO, take
   );
 
   input NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, clock, reset;
@@ -22,7 +22,7 @@ module control(
   output [1:0] controlIO;
   output [15:0] Instruction;
   wire [3:0] cond;
-  wire take;
+  output take;
   // wire [6:0] IDrt;
 
 
@@ -31,7 +31,6 @@ module control(
   SpecReg sr(clock, reset, ID, NEG, ZER, CAR, OVERF, MODE, NALU, ZALU, CALU, VALU, NBS, ZBS, CBS);
   Ramifier rm(cond, NEG, ZER, CAR, OVERF, take);
   controlcore contcore(ID, take, enable, controlALU, controlBS, controlEM, controlRB, controlSE1, controlSE2, controlMAH, controlMDH, controlMUX, MODE, controlIO);
-
 
 
 

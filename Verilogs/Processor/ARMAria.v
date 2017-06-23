@@ -1,34 +1,39 @@
 module ARMAria(
   clock, reset, sw, rled, gled, sseg,
   //debug io
-  Instruction
+  Instruction, IA1, IA0, PCdown, SPdown, take, ResultPC, RESULT, Abus, Bse,Bsh, controlRB
+
   );
   input clock, reset;
   input [15:0] sw;
   output [4:0] gled;
   output [15:0] rled;
   output [55:0] sseg;
+  output take;
+
 
   //debug outputs, that will become wires
   output [15:0] Instruction;
+  output [9:0] IA0, IA1, ResultPC;
+  output [31:0] PCdown, SPdown, Abus, RESULT, Bsh, Bse;
+  output [2:0] controlRB;
 
   // wires
   wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX;
-  wire [2:0] controlMDH, controlMAH, controlSE1, controlSE2, controlRB;
+  wire [2:0] controlMDH, controlMAH, controlSE1 ;
   wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
   wire [6:0] ID;
-  wire [7:0] DW3, DW2, DW1, DW0, OffImmed;// DR3, DR2, DR1, DR0;
+  wire [7:0] DW3, DW2, DW1, DW0, OffImmed;
   wire [15:0] PreInstruction, rledsignal, IData;
-  wire [9:0] IA0, IA1;
   wire [39:0] Address;
-  wire [31:0] display7, RESULT, PC, SP, PCdown, SPdown, Read;
-  wire [31:0] PreMemIn, MemOut, MemIn, Abus, Bbus, PreB, Bse, Bsh, OData;
+  wire [31:0] display7, PC, SP, Read, PreB;
+  wire [31:0] PreMemIn, MemOut, MemIn, Bbus , OData; //Abus, Bse, PreB;
   wire [1:0] controlIO, controlEM;
 
   control controlunit(PreInstruction, RegD, RegA, RegB, OffImmed,
-    controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE2, controlSE1,
+    controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE1, controlSE2,
     controlBS, controlALU, ID, Instruction, NALU, CALU, VALU, ZALU, NBS, ZBS, CBS,
-    NEG, ZER, CAR, OVERF, MODE, reset, clock, enable, controlIO
+    NEG, ZER, CAR, OVERF, MODE, reset, clock, enable, controlIO, take
     );
 
   EM externalmem(clock,
@@ -47,9 +52,14 @@ module ARMAria(
     );
 
   MemoryAddressHandler mah(
-    RESULT, PC, SP, PCdown, SPdown,
+    RESULT, ResultPC, SP, PCdown, SPdown,
     Address, IA1, IA0, MODE, controlMAH
   );
+
+  MUXPC mpc(
+    RESULT, PC,
+    ResultPC, take, reset
+    );
 
   MemoryDataHandler mdh(
 	 OData, IData,

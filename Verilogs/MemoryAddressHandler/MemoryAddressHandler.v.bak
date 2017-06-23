@@ -11,7 +11,7 @@ module MemoryAddressHandler(
   input  M, reset;
   input [2:0] control;
   input [31:0] SP, ResultAddress;
-  input [31:0] ResultPC;
+  input [9:0] ResultPC;
   // output reg StackOverflow;
   // output reg [10:0] Byte3,Byte2,Byte1,Byte0;
   output [39:0] Address;
@@ -20,12 +20,11 @@ module MemoryAddressHandler(
   output [9:0] InstAdd1, InstAdd0;
 
   //PC
-  assign PCout = (reset==1'b1) ? ResultPC :  ResultPC+2;
-  assign InstAdd1 = (ResultPC[9:0]>0) ? ResultPC[9:0]-1 : 10'h0;
-  assign InstAdd0 = (ResultPC!=10'h0) ? ResultPC[9:0]  : 10'h1;
+  assign PCout = (reset==1'b1) ResultPC :  ResultPC+2;
+  assign {InstAdd1, InstAdd0} = (ResultPC!=10'h0) {ResultPC-1, ResultPC} : {10'h0 : 10'h1};
 
   //old Logic adaptation
-  reg [9:0] Byte3, Byte2, Byte1, Byte0;
+  reg [10:0] Byte3, Byte2, Byte1, Byte0;
   assign Address = {Byte3, Byte2, Byte1, Byte0};
   //Logic
   always @ (*) begin
@@ -94,10 +93,10 @@ module MemoryAddressHandler(
               Byte0=55;
               SPout=32'hffffffff;
             end else begin
-              Byte0 = 10'h3ff;
-              Byte1 = 10'h3ff;
-              Byte2 = 10'h3ff;
-              Byte3 = 10'h3ff;
+              Byte0 = 11'h3ff;
+              Byte1 = 11'h3ff;
+              Byte2 = 11'h3ff;
+              Byte3 = 11'h3ff;
               SPout = 32'hffffffff;
             end
           end

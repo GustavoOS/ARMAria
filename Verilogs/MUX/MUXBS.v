@@ -9,6 +9,6 @@ module MUXBS(
   input [7:0] Offset;
   output [31:0] PreB;
 
-  assign PreB= (~MUXSelector)? B:{24'h0, Offset};
+  assign PreB= (MUXSelector==1'b0)? B:{24'h0, Offset};
 
 endmodule

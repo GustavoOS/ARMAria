@@ -65,7 +65,7 @@ module controlcore(
       end
       9:begin
         controlALU = 5;
-        //controlRB = 1;
+        controlRB = 0;
         controlMUX = 1;
       end
       10:begin
@@ -111,10 +111,11 @@ module controlcore(
       end
       22:begin
         controlALU = 5;
-        //controlRB = 1;
+        controlRB = 0;
       end
       23:begin
         controlALU = 2;
+        controlRB = 0;
       end
       24:begin
         controlALU = 7;
@@ -138,7 +139,7 @@ module controlcore(
       end
       30:begin
         controlALU = 2;
-        //controlRB = 1;
+        controlRB = 0;
       end
       31:begin
         controlALU = 5;
@@ -146,11 +147,11 @@ module controlcore(
       end
       32:begin
         controlALU = 5;
-        //controlRB = 1;
+        controlRB = 0;
       end
       33:begin
         controlALU = 5;
-        //controlRB = 1;
+        controlRB = 0;
       end
       34:begin
         controlALU = 10;
