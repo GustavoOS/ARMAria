@@ -1,0 +1,118 @@
+INSW(71) R0                        ; r0 = in();
+UXTB(62) R0, R0                    ; r0 = (byte) r0
+MOV(8) R3, 1                       ; r3 = 1
+MOV(8) R1, 0                       ; r1 =0
+OUTLED(70) R1                      ; printLED(r1), monitors the stack
+OUTSS(69) R0                       ; print(r0)
+CMP(9) R0, 2                       ; R0<2
+B(73) LT(11)  9 (normalize)        ; if...goto normalize
+PUSH(67) R0                        ; push R0 onto stack
+ADD(10) R1, 1                      ; r1 ++
+OUTLED(70) R1                      ; printLED(r1), monitors the stack
+MOV(8) R4, 5 (linha 15)            ; may be used by BX
+NEG(21) R4, R4                     ; the value should be negative
+CMP(9) R1,6                        ; is stack full
+B(73)EQ(0) 3 (clear)               ; go to clear
+SUB(11) R0, 1                      ; r0 --
+B(73)AL(14) -12 (linha 6)          ; loops
+MOV(8) R4, 5 (print)               ; normalize flag . goto print
+CMP(9) R1, 0                       ; clear flag R1==0
+BX(38) EQ(0) R4                    ; go to R4
+POP(68) R2                         ; Pop from stack
+SUB(11) R1, 1                      ; r1 --
+OUTLED(70) r1                      ; printLED(r1), monitors the stack
+MUL(25) R2, R3                     ; R3 = R2x R3
+B(73)AL (14) -7(clear)             ; loop go to clear
+OUTSS(69) R3                       ; print print(R3)
+HALT(75)                           ; stops processor
+
+;this is a comment
+
+
+; Machine Language Translated code below
+;1// 48768
+;2// 45760
+;3// 8961
+;4// 8448
+;5// 48705
+;6// 48640
+;7// 10242
+;8// 56073
+;9// 46080
+;10// 12545
+;11// 48705
+;12// 9221
+;13// 16996
+;14// 10502
+;15// 53251
+;16// 14337
+;17// 57076
+;18// 9221
+;19// 10496
+;20// 18180
+;21// 48386
+;22// 14593
+;23// 48705
+;24// 17235
+;25// 57081
+;26// 48643
+;27// 59392
+
+
+
+; Paste the below text in EM.v file
+
+      RAM[0] <= 190;
+      RAM[1] <= 128;
+      RAM[2] <= 178;
+      RAM[3] <= 192;
+      RAM[4] <= 35;
+      RAM[5] <= 1;
+      RAM[6] <= 33;
+      RAM[7] <= 0;
+      RAM[8] <= 190;
+      RAM[9] <= 65;
+      RAM[10] <= 190;
+      RAM[11] <= 0;
+      RAM[12] <= 40;
+      RAM[13] <= 2;
+      RAM[14] <= 219;
+      RAM[15] <= 9;
+      RAM[16] <= 180;
+      RAM[17] <= 0;
+      RAM[18] <= 49;
+      RAM[19] <= 1;
+      RAM[20] <= 190;
+      RAM[21] <= 65;
+      RAM[22] <= 36;
+      RAM[23] <= 5;
+      RAM[24] <= 66;
+      RAM[25] <= 100;
+      RAM[26] <= 41;
+      RAM[27] <= 6;
+      RAM[28] <= 208;
+      RAM[29] <= 3;
+      RAM[30] <= 56;
+      RAM[31] <= 1;
+      RAM[32] <= 222;
+      RAM[33] <= 244;
+      RAM[34] <= 36;
+      RAM[35] <= 5;
+      RAM[36] <= 41;
+      RAM[37] <= 0;
+      RAM[38] <= 71;
+      RAM[39] <= 4;
+      RAM[40] <= 189;
+      RAM[41] <= 2;
+      RAM[42] <= 57;
+      RAM[43] <= 1;
+      RAM[44] <= 190;
+      RAM[45] <= 65;
+      RAM[46] <= 67;
+      RAM[47] <= 83;
+      RAM[48] <= 222;
+      RAM[49] <= 249;
+      RAM[50] <= 190;
+      RAM[51] <= 3;
+      RAM[52] <= 232;
+      RAM[53] <= 0;
