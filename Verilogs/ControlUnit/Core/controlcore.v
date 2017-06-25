@@ -169,7 +169,7 @@ module controlcore(
         controlALU = 2;
         controlBS = 1;
         controlRB = 0;
-        controlSE1 = 2;
+        controlSE1 = 0;
         controlMAH = 0;
         controlMUX = 0;
       end
