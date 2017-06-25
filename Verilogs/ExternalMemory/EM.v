@@ -9,7 +9,7 @@ module EM(
   );
 
   input clock, reset;
-  input [2:0] control;
+  input [1:0] control;
   input [7:0] DW0, DW1, DW2, DW3;
   input [9:0]  IA0, IA1;//Lengh matches up to 1023 bytes of Addresses
   input [39:0] Address;
