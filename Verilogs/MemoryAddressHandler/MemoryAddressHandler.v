@@ -26,8 +26,8 @@ module MemoryAddressHandler(
 
   //PC
   assign PCout = (reset==1'b1) ? ResultPC :  ResultPC+2;
-  assign InstAdd1 = (ResultPC[9:0]>0) ? ResultPC[9:0]-1 : 10'h0;
   assign InstAdd0 = (ResultPC!=10'h0) ? ResultPC[9:0]  : 10'h1;
+  assign InstAdd1 = InstAdd0 -1;
 
   //old Logic adaptation
   reg [9:0] Byte3, Byte2, Byte1, Byte0;

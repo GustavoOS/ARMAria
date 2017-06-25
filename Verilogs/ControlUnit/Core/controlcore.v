@@ -166,9 +166,12 @@ module controlcore(
         //standard
       end
       38:begin
-        controlALU = 0;
-        controlMAH = take? 3'h6 : 3'h0;
-        controlRB =0;
+        controlALU = 2;
+        controlBS = 1;
+        controlRB = 0;
+        controlSE1 = 2;
+        controlMAH = 0;
+        controlMUX = 0;
       end
       39:begin
         controlALU = 2;
@@ -371,7 +374,7 @@ module controlcore(
         controlBS = 1;
         controlSE1 = 2;
         controlALU = 2;
-        controlMAH = take? 3'h6:3'h0;
+        controlMAH = 0;
         controlRB = 0;
       end
       74:begin

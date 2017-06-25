@@ -205,7 +205,8 @@ always @ ( * ) begin
           7:begin//Instruction 38
             Condicao=Instruction[7:4];
             ID=7'h26;
-            RegA[2:0]=Instruction[2:0];
+            RegA = 4'hf;
+            RegB[2:0]=Instruction[2:0];
           end
 
           default:begin
