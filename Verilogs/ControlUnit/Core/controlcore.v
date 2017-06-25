@@ -9,9 +9,9 @@ module controlcore(
   input take, MODE;
   input [6:0] ID;
   output reg [1:0] controlHI, controlEM;
-  output reg [2:0] controlMAH, controlSE1, controlSE2, controlRB, controlMDH;
+  output reg [2:0] controlMAH, controlSE1, controlSE2, controlRB;
   output reg [3:0] controlALU, controlBS;
-  output reg enable, controlMUX;
+  output reg enable, controlMUX, controlMDH;
 
 
 
@@ -176,60 +176,51 @@ module controlcore(
         controlMUX = 1;
         controlRB = 3;
         controlMAH = 5;
-        controlMDH = 6;
       end
       40:begin
         controlALU = 2;
         controlMAH = 5;
-        controlMDH = 3;
         controlEM = 3;
         controlRB = 0;
       end
       41:begin
         controlALU = 2;
         controlMAH = 4;
-        controlMDH = 2;
         controlEM = 2;
         controlRB = 0;
       end
       42:begin
         controlALU = 2;
         controlMAH = 3;
-        controlMDH = 1;
         controlEM = 1;
         controlRB = 0;
       end
       43:begin
         controlALU = 2;
         controlMAH = 3;
-        controlMDH = 4;
         controlSE2 = 2;
         controlRB = 3;
       end
       44:begin
         controlALU = 2;
         controlMAH = 5;
-        controlMDH = 6;
         controlRB = 3;
       end
       45:begin
         controlALU = 2;
         controlMAH = 4;
-        controlMDH = 5;
         controlSE2 = 3;
         controlRB = 3;
       end
       46:begin
         controlALU = 2;
         controlMAH = 3;
-        controlMDH = 4;
         controlSE2 = 4;
         controlRB = 3;
       end
       47:begin
         controlALU = 2;
         controlMAH = 4;
-        controlMDH = 5;
         controlSE2 = 1;
         controlRB = 3;
       end
@@ -238,14 +229,12 @@ module controlcore(
         controlALU = 2;
         controlMAH = 5;
         controlEM = 3;
-        controlMDH =3;
         controlRB = 0;
       end
       49:begin
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 5;
-        controlMDH = 6;
         controlRB = 3;
       end
       50:begin
@@ -253,14 +242,12 @@ module controlcore(
         controlALU = 2;
         controlMAH = 3;
         controlEM = 1;
-        controlMDH = 1;
         controlRB  = 0;
       end
       51:begin
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 3;
-        controlMDH = 4;
         controlSE2 = 4;
         controlRB = 3;
       end
@@ -269,14 +256,12 @@ module controlcore(
         controlALU = 2;
         controlMAH = 4;
         controlEM = 2;
-        controlMDH = 2;
         controlRB = 0;
       end
       53:begin
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 4;
-        controlMDH = 5;
         controlRB =3;
         controlSE2 = 3;
       end
@@ -286,7 +271,6 @@ module controlcore(
         controlALU = 2;
         controlMAH = 5;
         controlEM = 3;
-        controlMDH = 3;
         controlRB = 0;
       end
       55:begin
@@ -294,7 +278,6 @@ module controlcore(
         controlSE1 = 2;
         controlALU = 2;
         controlMAH = 5;
-        controlMDH = 6;
         controlRB = 3;
       end
       56:begin
@@ -336,22 +319,19 @@ module controlcore(
       66:begin
         controlBS = 8;
       end
-      67:begin
+      67:begin  //PUSH
         controlMAH = 1;
-        controlEM = 3;
-        controlMDH = 1;
+        controlEM = 1;
         controlRB = 0;
       end
-      68:begin
+      68:begin  //POP
         controlMAH = 2;
-        controlMDH = 4;
         controlRB = 3;
-        controlSE2 = 3;
+        controlSE2 = 4;
       end
       69:begin  //OUTSS
         controlALU = 0;
         controlRB = 0;
-        controlMDH = 0;
         controlEM = 0;
         controlHI = 2'h2;
       end
@@ -362,7 +342,6 @@ module controlcore(
         controlSE1 = 0;
         controlMAH = 0;
         controlMUX = 0;
-        controlMDH = 0;
         controlEM = 0;
         controlHI = 2'h1;
       end
@@ -374,18 +353,18 @@ module controlcore(
         controlSE2 = 3;
         controlMAH = 0;
         controlMUX = 0;
-        controlMDH = 5;
+        controlMDH = 1;
         controlEM = 0;
       end
       72:begin
-      if (MODE==1'b1) begin
-        controlMAH = 6;
-        controlRB = 0;
-      end else begin
-        controlMUX = 1;
-        controlMAH = 6;
-        controlRB = 4;
-      end
+        if (MODE==1'b1) begin
+          controlMAH = 6;
+          controlRB = 0;
+        end else begin
+          controlMUX = 1;
+          controlMAH = 6;
+          controlRB = 4;
+        end
       end
       73:begin
         controlMUX = 1;

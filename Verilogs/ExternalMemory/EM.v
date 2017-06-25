@@ -3,14 +3,14 @@ module EM(
   control,
   IA0, IA1,
   Address,
-  DW0, DW1, DW2, DW3,
+  Write,
   Read,
   PreInstruction, reset
   );
 
   input clock, reset;
   input [1:0] control;
-  input [7:0] DW0, DW1, DW2, DW3;
+  input [31:0] Write;
   input [9:0]  IA0, IA1;//Lengh matches up to 1023 bytes of Addresses
   input [39:0] Address;
   output [31:0] Read;
@@ -34,6 +34,9 @@ module EM(
 
 
   //Write logic
+  wire [7:0] DW0, DW1, DW2, DW3;
+  assign {DW3, DW2, DW1, DW0} = Write;
+
   always @ ( posedge clock or posedge reset) begin
     if (reset==1'b1) begin
       //Paste reset code here

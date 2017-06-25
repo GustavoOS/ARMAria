@@ -13,9 +13,9 @@ module control(
   input NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, clock, reset;
   input [15:0] PreInstruction;
 
-  output NEG, ZER, CAR, OVERF, MODE, enable, controlMUX;
+  output NEG, ZER, CAR, OVERF, MODE, enable, controlMUX, controlMDH;
   output [1:0] controlHI, controlEM;
-  output [2:0] controlMAH, controlSE1, controlSE2, controlRB, controlMDH;
+  output [2:0] controlMAH, controlSE1, controlSE2, controlRB;
   output [3:0] controlALU, controlBS;
   output [3:0] RegD, RegA, RegB;
   output [6:0] ID;

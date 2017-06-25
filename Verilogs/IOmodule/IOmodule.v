@@ -12,16 +12,18 @@ module IOmodule(
   input Neg, Zero, Carry, V, M, clock, reset;
   output [4:0] GreenLEDs;
   output [55:0] SevenSegDisplays;
-  output [15:0] RedLEDs, IData;
+  output [15:0] RedLEDs;
   input [31:0] MemOut;
   input [1:0] control;
+  output [31:0] IData;
+  
   reg [15:0] RLED;
   reg [31:0] info;
 
 
   assign GreenLEDs = {Neg, Zero, Carry, V, M};
   assign RedLEDs = RLED;
-  assign IData = switches;
+  assign IData = {16'h0, switches};
 
   always @ ( posedge clock or posedge reset ) begin
     if (reset==1'b1) begin

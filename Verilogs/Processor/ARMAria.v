@@ -19,15 +19,15 @@ module ARMAria(
   output [1:0] controlHI;
 
   // wires
-  wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX;
-  wire [2:0] controlMAH, controlSE1, controlSE2, controlRB, controlMDH;
+  wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX, controlMDH;
+  wire [2:0] controlMAH, controlSE1, controlSE2, controlRB;
   wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
   wire [6:0] ID;
   wire [7:0] DW3, DW2, DW1, DW0, OffImmed;
-  wire [15:0] PreInstruction, rledsignal, IData;
+  wire [15:0] PreInstruction, rledsignal;
   wire [39:0] Address;
   wire [31:0] display7, PC, SP, Read, PreB, Bse;
-  wire [31:0] PreMemIn, MemIn, Bbus; //Abus, Bse, PreB;
+  wire [31:0] PreMemIn, MemIn, Bbus, IData; //Abus, Bse, PreB;
   wire [1:0] controlEM;
 
   control controlunit(PreInstruction, RegD, RegA, RegB, OffImmed,
@@ -40,9 +40,9 @@ module ARMAria(
 	  controlEM,
 	  IA0, IA1,
 	  Address,
-	  DW0, DW1, DW2, DW3,
-	  Read, PreInstruction,
-	  reset
+	  MemOut,
+	  Read,
+    PreInstruction, reset
     );
 
 
@@ -65,9 +65,9 @@ module ARMAria(
 
   MemoryDataHandler mdh(
     IData,
-    Read,
-    DW3, DW2, DW1, DW0,
-    PreMemIn, MemOut, controlMDH
+    Read,//Read memory
+    PreMemIn,//output
+    controlMDH//Control Unit
   );
 
   SignExtend upperOne(
