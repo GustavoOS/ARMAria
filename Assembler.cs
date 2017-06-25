@@ -12,10 +12,10 @@ namespace ARMAria_AssemblerNoGUI
         public int code, user, priv, data, memorysize, cc, cu, cp, cd;
         public memoria()
         {
-            memorysize = 48;
-            user = 31;
-            priv = 36;
-            data = 43;
+            memorysize = 124;
+            user = 101;
+            priv = 107;
+            data = 113;
             code = 0;
             cc = code;
             cu = user;
@@ -784,7 +784,7 @@ namespace ARMAria_AssemblerNoGUI
             List<byte> dados = new List<byte>();
             List<int> insts = new List<int>(); //Record all instruction as integers
             while (fluxo != 0)
-            //for(int i=0; i<72; i++)
+            //for (int i = 0; i < 35; i++)
             {
 
                 Console.WriteLine();
@@ -795,8 +795,9 @@ namespace ARMAria_AssemblerNoGUI
                 Console.WriteLine("Digite 3 para gravar halfword. Esta é a opção para gravar instruções.");
                 Console.WriteLine("Digite 4 para gravar palavra");
                 Console.WriteLine("Digite 5 para ver dados armazenados");
-                //Console.WriteLine("Programa capado temporariamente");
+                //Console.WriteLine("Programa capado temporariamente"); Capado temporariamente
                 read = Console.ReadLine();
+                //read = 3.ToString();
                 Console.WriteLine();
 
                 int option;
@@ -848,8 +849,10 @@ namespace ARMAria_AssemblerNoGUI
                         int local1 = Convert.ToInt32(Console.ReadLine());
                         local1 = local1 < 1 ? 1 : local1 > 5 ? 5 : local1;
                         local1 = (local1 == 4) ? 5 : local1;
+                        //int local1 = 1;
                         Console.WriteLine("Digite um dado no intervalo de 0-65535");
                         String leitura = convlBinario(Convert.ToInt64(Console.ReadLine()), 16);
+
 
                         if (processador.canadd(local1, 2))
                         {
@@ -909,7 +912,7 @@ namespace ARMAria_AssemblerNoGUI
 
 
 
-                //While end
+                //While end 
                 Console.WriteLine("Digite 0 para sair do assembler ou outro número para continuar");
                 read = Console.ReadLine();
                 fluxo = read != "" ? Convert.ToInt32(read) : 0;
