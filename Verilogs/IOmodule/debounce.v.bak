@@ -1,0 +1,25 @@
+module debounce(clk, button, clock);
+input clk, button;
+output result;
+
+parameter bitlenght = 19;
+
+reg FF1, FF2, FF3, carry;
+reg [bitlenght-1 : 0] counter;
+wire countSet;
+
+assign countSet = FF1 ^ FF2;
+
+always @ ( posedge clk ) begin
+  FF1 <= button;
+  FF2 <= FF1;
+  if (countSet==1'b1) begin
+    {carry, counter} <= counter + 1;
+  end else begin
+    carry <= 1'b0;
+    counter <= 0;
+  end
+  FF3 <= carry;
+end
+
+endmodule
