@@ -23,7 +23,7 @@ module HexDecoder(
         display = 7'h19;
       end
       5:begin
-        display = 7'h11;
+        display = 7'h12;
       end
       6:begin
         display = 7'h2;

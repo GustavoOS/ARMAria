@@ -1,24 +1,33 @@
 module ARMAria(
-  clk, botaoc, botaor, sw, rled, gled, sseg
-  // ,Instruction, IA1, IA0, PCdown, SPdown, take, ResultPC, RESULT, Abus, MemOut,Bsh, clock, reset
+  clk_fpga, clock_fpga, clock, reset, reset_fpga, sw, rled, gled, sseg,
+  //debug io
+  Instruction, IA1, IA0, PCdown, SPdown, take, ResultPC, RESULT, Abus, MemOut,Bsh, controlHI
 
   );
-  input botaoc, botaor, clk;
+  input clk_fpga, clock_fpga, reset_fpga;
   input [15:0] sw;
   output [4:0] gled;
   output [15:0] rled;
   output [55:0] sseg;
+  output take;
 
 
   //debug outputs, that will become wires
-  wire [15:0] Instruction;
-  wire clock, reset, take;
-  wire [9:0] IA0, IA1, ResultPC;
-  wire [31:0] PCdown, SPdown, Abus, RESULT, Bsh, MemOut;
+  output [15:0] Instruction;
+  output [9:0] IA0, IA1, ResultPC;
+  output [31:0] PCdown, SPdown, Abus, RESULT, Bsh, MemOut;
+  output [1:0] controlHI;
+
+  output clock, reset;
+  wire clktemp, resetemp;
+  DeBounce dbc(clk_fpga, clock_fpga, clktemp);
+  DeBounce dbr(clk_fpga, reset_fpga, resetemp);
+
+  assign clock = ~clktemp;
+  assign reset = ~resetemp;
 
   // wires
   wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX, controlMDH;
-  wire [1:0] controlHI;
   wire [2:0] controlMAH, controlSE1, controlSE2, controlRB;
   wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
   wire [6:0] ID;
@@ -49,7 +58,7 @@ module ARMAria(
     clock, controlHI, reset,
     MemOut, IData, sw,
     NEG, ZER, CAR, OVERF, MODE,       //Flags from Control Unit
-    rled, gled, sseg, clk, botaoc, botaor
+    rled, gled, sseg
     );
 
   MemoryAddressHandler mah(
