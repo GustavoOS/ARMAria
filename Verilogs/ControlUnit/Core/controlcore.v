@@ -359,13 +359,13 @@ module controlcore(
         controlMDH = 1;
         controlEM = 0;
       end
-      72:begin
+      72:begin //SWI
         if (MODE==1'b1) begin
-          controlMAH = 6;
+          controlMAH = 0;
           controlRB = 0;
         end else begin
           controlMUX = 1;
-          controlMAH = 6;
+          controlMAH = 0;
           controlRB = 4;
         end
       end
