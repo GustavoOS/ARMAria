@@ -1,5 +1,5 @@
 int main (void){
-  int vetor[5]= {4, 6, 3, 7, 2};
+  int vetor[5]= {1, 5, 8, 7, 6};
   int i;
   int sum = vetor[0];
   int max = vetor[0];
