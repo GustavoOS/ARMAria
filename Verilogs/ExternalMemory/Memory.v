@@ -1,30 +1,38 @@
-// Quartus Prime Verilog Template
-// Simple Dual Port RAM with separate read/write addresses and
-// single read/write clock
-
 module Memory
-#(parameter DATA_WIDTH=8, parameter ADDR_WIDTH=6)
+#(parameter DW=32, parameter ADDR_WIDTH=10)
 (
-	input [(4*DATA_WIDTH-1):0] data,
-	input [(ADDR_WIDTH-1):0] read_addr, write_addr,
-	input we, clk,
-	output reg [(DATA_WIDTH-1):0] q
+	input [(DW-1):0] input_data,
+	input [(ADDR_WIDTH-1):0] instrunction_address, data_address,
+	input we_a, clk_a,
+	output reg [(DW-1):0] instrunction,
+	output reg [(DW-1):0] output_data
 );
-
+	// reg [DW-1:0] fetched_instrunction;
 	// Declare the RAM variable
-	reg [DATA_WIDTH-1:0] ram[2**ADDR_WIDTH-1:0][3:0];
+	reg [DW-1:0] ram[2**ADDR_WIDTH-1:0];
 
-	always @ (posedge clk)
+	
+
+	initial begin
+		$readmemb("Program.txt", ram); //File that fills memory
+	end
+
+	always @ (posedge clk_a)
 	begin
-		// Write
-		if (we)begin
-			{ram[write_addr][3], ram[write_addr][2], ram[write_addr][1], ram[write_addr][0]} <= data;
-		end
-		// Read (if read_addr == write_addr, return OLD data).	To return
-		// NEW data, use = (blocking write) rather than <= (non-blocking write)
-		// in the write assignment.	 NOTE: NEW data may require extra bypass
-		// logic around the RAM.
-		q <= ram[read_addr][0];
+		instrunction = ram[instrunction_address];
+	end
+
+	always @ (negedge clk_a)
+
+	
+	begin
+		if (we_a) 
+		begin
+			ram[data_address] <= input_data;
+		end		
+		output_data = ram[data_address];
+				
+		
 	end
 
 endmodule
