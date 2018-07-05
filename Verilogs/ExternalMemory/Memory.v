@@ -1,38 +1,38 @@
 module Memory
-#(parameter DW=32, parameter ADDR_WIDTH=10)
+#(parameter DW=32, parameter ADDR_WIDTH=14, parameter inputFile = "Program.txt")
 (
 	input [(DW-1):0] input_data,
 	input [(ADDR_WIDTH-1):0] instrunction_address, data_address,
-	input we_a, clk_a,
-	output reg [(DW-1):0] instrunction,
+	input write_enable, clock,
+	output [15:0] instrunction,
 	output reg [(DW-1):0] output_data
 );
-	// reg [DW-1:0] fetched_instrunction;
-	// Declare the RAM variable
-	reg [DW-1:0] ram[2**ADDR_WIDTH-1:0];
+	//Chops the instrunction output
+	reg [(DW-1):0] fetched_instrunction;
+	assign instrunction = fetched_instrunction[15:0];
 
-	
+	// Storage declaration
+	reg [DW-1:0] ram[2**ADDR_WIDTH-1:0];	
 
+	//Initialization: loads input file into memory
 	initial begin
-		$readmemb("Program.txt", ram); //File that fills memory
+		$readmemb(inputFile, ram);
 	end
 
-	always @ (posedge clk_a)
+	//Port A
+	always @ (posedge clock)
 	begin
-		instrunction = ram[instrunction_address];
+		fetched_instrunction = ram[instrunction_address];
 	end
 
-	always @ (negedge clk_a)
-
-	
+	//Port B
+	always @ (negedge clock)	
 	begin
-		if (we_a) 
+		if (write_enable) 
 		begin
 			ram[data_address] <= input_data;
 		end		
-		output_data = ram[data_address];
-				
-		
+		output_data = ram[data_address];				
 	end
 
 endmodule
