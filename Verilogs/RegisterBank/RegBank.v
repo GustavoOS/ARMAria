@@ -15,7 +15,10 @@ module RegBank
 
     reg [REGISTER_LENGTH -1:0] Bank [16:0];
 
-    assign current_SP = privileged_mode ? Bank[16]: Bank[14];
+    wire [4:0] SP_index;
+
+    assign SP_index = privileged_mode ? 16 : 14;
+    assign current_SP = Bank[SP_index];
     assign read_data_A = (register_source_A==14) ? current_SP : Bank[register_source_A];
     assign read_data_B = (register_source_B==14)? current_SP : Bank[register_source_B];
     assign memory_output = (register_Dest==14)? current_SP : Bank[register_Dest];
@@ -29,12 +32,10 @@ module RegBank
             Bank[16] <= MAX_NUMBER; //Privileged Stack
         end else begin
             if (enable) begin
+
                 Bank[15] <= new_PC;
-                if (privileged_mode) begin
-                    Bank[14] <= (control==2)? MAX_NUMBER: new_stack_pointer;
-                end else begin
-                    Bank[16] <= (control==2)? MAX_NUMBER: new_stack_pointer;
-                end
+                Bank[SP_index] <= (control==2)? MAX_NUMBER: new_stack_pointer;
+
                 case (control)
                     1:begin //RD=ALU_result
                         if(register_Dest != 4'hf && register_Dest!=4'he)begin
