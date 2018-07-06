@@ -1,16 +1,12 @@
-module MemoryDataHandler(
-  IData,
-  Read,//Read memory
-  PreMemIn,//output
-  control//Control Unit
-  );
+module MemoryDataHandler
+#(
+    parameter DATA_WIDTH = 32
+)(
+    input  [DATA_WIDTH - 1:0] input_signal, data_read_from_memory,
+    output [DATA_WIDTH - 1:0] chosen_data_input,
+    input should_read_from_input
+);
 
-  // input [7:0] DataReadByte3, DataReadByte2, DataReadByte1, DataReadByte0;
-  input [31:0] Read;
-  input [31:0] IData;
-  input control;
-  output [31:0] PreMemIn;
-
-  assign PreMemIn = (control==1'b0)? Read : IData;
+    assign chosen_data_input = should_read_from_input ? input_signal : data_read_from_memory;
 
 endmodule
