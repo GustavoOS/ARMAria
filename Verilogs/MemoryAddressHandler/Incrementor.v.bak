@@ -1,0 +1,30 @@
+module Incrementor (
+    control,
+    inputAddress,
+    outputAddress
+);
+parameter pace = 4;
+input [1:0] control;
+input [31:0] inputAddress;
+output reg [31:0] outputAddress;
+
+
+always @(*) begin
+    case (control)
+        1:begin
+            outputAddress = inputAddress + pace;
+        end
+        2:begin
+            outputAddress = inputAddress - pace
+        end
+        3:begin
+            outputAddress = 32'hffffffff;
+        end        
+        default: begin
+            outputAddress = inputAddress;
+        end
+    endcase
+    
+end
+    
+endmodule

@@ -1,132 +1,87 @@
-module MemoryAddressHandler(
-  ResultAddress,//From ALU
-  ResultPC,SP,//From Register Bank
-  PCout,SPout,//Back to Register Bank
-  Address,//Output
-  InstAdd1, InstAdd0,//Instruction Addresses
-  M, control,//Control Unit
-  reset
-  );
-  //I/O
-  input  M, reset;
-  input [2:0] control;
-  input [31:0] SP, ResultAddress;
-  input [31:0] ResultPC;
-  // output reg StackOverflow;
-  // output reg [10:0] Byte3,Byte2,Byte1,Byte0;
-  output [39:0] Address;
-  output reg [31:0] SPout;
-  output [31:0] PCout;
-  output [9:0] InstAdd1, InstAdd0;
+module MemoryAddressHandler #(
+    parameter ADDR_WIDTH = 14,
+    parameter DATA_WIDTH = 32;
+    parameter CODE_AREA_SIZE = 4096,
+    parameter PRIVILEGED_STACK_SIZE = 2048,
+    parameter PRIVILEGED_STACK_TOP = CODE_AREA_SIZE,
+    parameter PRIVILEGED_STACK_BOTTOM = USER_STACK_TOP - 1,
+    parameter USER_STACK_SIZE = 2048,
+    parameter USER_STACK_TOP = CODE_AREA_SIZE + PRIVILEGED_STACK_SIZE,
+    parameter USER_STACK_BOTTOM = DATA_AREA_SIZE - 1,
+    parameter DATA_AREA_SIZE = 8192,
+    parameter MAX_NUMBER = (2**DATA_WIDTH) -1
 
-  parameter UserStackStart = 101;
-  parameter UserStackEnd = 106;
-  parameter PrivilegedStackStart = UserStackEnd +1;
-  parameter PrivilegedStackEnd = 112;
-
-  //PC
-  assign PCout = (reset==1'b1) ? ResultPC :  ResultPC+2;
-  assign InstAdd0 = (ResultPC!=10'h0) ? ResultPC[9:0]  : 10'h1;
-  assign InstAdd1 = InstAdd0 -1;
-
-  //old Logic adaptation
-  reg [9:0] Byte3, Byte2, Byte1, Byte0;
-  assign Address = {Byte3, Byte2, Byte1, Byte0};
-  //Logic
-  always @ (*) begin
-    SPout=SP;
-    Byte0 = 0;
-    Byte1 = 0;
-    Byte2 = 0;
-    Byte3 = 0;
-    // StackOverflow=1'b0;
+)(
+    input [DATA_WIDTH -1:0]  input_address, current_PC, current_SP,
+    input [1:0] control,
+    input reset, privilege_mode_flag,
+    output [DATA_WIDTH -1:0] next_PC, next_SP,
+    output reg [ADDR_WIDTH - 1:0] output_address,
+    output [ADDR_WIDTH - 1:0] instrunction_address
+);
+    /* PC behavior */
+    assign instrunction_address = reset ? 0 : current_PC[ADDR_WIDTH - 1:0];
+    Incrementor PC_incr(
+        reset ? 4 : 1,
+        current_PC,
+        1,
+        next_PC
+        );
 
 
-    case(control)
-      default:begin
-        Byte0 = 0;
-      end
+    //Stack behavior
+    reg [2:0] SP_incr_control;
+    wire [DATA_WIDTH - 1: 0] min_stack, max_stack;
+    assign min_stack = privilege_mode_flag ? PRIVILEGED_STACK_TOP : USER_STACK_TOP;
+    assign max_stack = privilege_mode_flag ? PRIVILEGED_STACK_BOTTOM : USER_STACK_BOTTOM;
+    Incrementor SP_incr(
+        SP_incr_control,
+        current_SP,
+        max_stack,
+        next_SP
+    );
 
-      1:begin//PUSH
 
-        if(M==1'b0)begin //User Stack
-          if(SP==32'hffffffff)begin//Empty
-            Byte0=UserStackEnd;
-            SPout=UserStackEnd;
-          end else begin//Not empty
-            if (SP>UserStackStart && SP<=UserStackEnd) begin //Not full
-              Byte0=SP-1;
-              SPout=Byte0;
+    always @( * ) begin
+        case (control)
+            /* PUSH address math */
+            1:begin
+                
+                if (current_SP == MAX_NUMBER) begin // is the stack empty?
+                    SP_incr_control = 4; //SP = first SP
+                end
+                else begin
+                    if (current_SP > min_stack) // has multiple items?
+                    begin
+                        SP_incr_control = 2; //SP--
+                    end
+                    else begin // is the stack full?
+                        SP_incr_control = 3; //SP = 32'hffffffff
+                    end
+                end
+                output_address = next_SP[ADDR_WIDTH - 1:0];
             end
-            //  else begin //FULL
-              // StackOverflow=1'b1; //Stack Overflow DO NOTHING
-            // end
-          end
-        end else begin //Privileged Mode
-          if(SP==32'hffffffff)begin//Empty
-            Byte0=PrivilegedStackEnd;
-          end else begin//Not empty
-            if (SP>PrivilegedStackStart && SP<=PrivilegedStackEnd) begin //Not full
-              Byte0=SP-1;
-              SPout=SP-1;
-            // end else begin //Full
-            //   // StackOverflow=1'b1;//Stack Overflow
+
+            /* POP address math */
+            2:begin                
+                if (current_SP < max_stack // has multiple items?
+                ) begin
+                    SP_incr_control = 1; //SP ++
+                end
+                else begin // has 1 or less items
+                    SP_incr_control = 3; //SP = 32'hffffffff
+                end
+                output_address = current_SP[ADDR_WIDTH - 1:0];
             end
-          end
-        end
-
-      end
-      2:begin//POP
-        if(M==1'b0)begin //User Stack
-          if(SP>=UserStackStart && SP<UserStackEnd)begin  //More than one item
-            Byte0=SP;
-            SPout=SP+1;
-          end else begin  //Single item
-            if(SP==UserStackEnd) begin
-              Byte0=UserStackEnd;
-              SPout=32'hffffffff;
-            end else begin  //empty
-              Byte0 = 10'h3ff;
-              SPout = 32'hffffffff;
+            default: begin
+                output_address = input_address[ADDR_WIDTH - 1:0];
+                SP_incr_control = 0; //SP = SP
             end
-          end
-        end else begin //Privileged Mode
-          if(SP>=PrivilegedStackStart && SP<PrivilegedStackEnd)begin //More than one item
-            Byte0=SP;
-            SPout=SP+1;
-          end else begin//Single item
-            if(SP==PrivilegedStackEnd) begin
-              Byte0 = PrivilegedStackEnd;
-              SPout = 32'hffffffff;
-            end else begin
-              Byte0 = 10'h3ff;
-              Byte1 = 10'h3ff;
-              Byte2 = 10'h3ff;
-              Byte3 = 10'h3ff;
-              SPout = 32'hffffffff;
-            end
-          end
-        end
-      end
-
-      3:begin
-        Byte0=ResultAddress;
-      end
-      4:begin
-        Byte1=ResultAddress-1;
-        Byte0=ResultAddress;
-      end
-      5:begin
-        Byte3=ResultAddress-3;
-        Byte2=ResultAddress-2;
-        Byte1=ResultAddress-1;
-        Byte0=ResultAddress;
-      end
-
-    endcase
-
-  end//always
+        endcase
+    end
 
 
 
+
+    
 endmodule
