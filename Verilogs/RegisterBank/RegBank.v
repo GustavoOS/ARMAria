@@ -16,6 +16,7 @@ module RegBank
     reg [REGISTER_LENGTH -1:0] Bank [16:0];
 
     wire [4:0] SP_index;
+    wire RD_isnt_special;
 
     assign SP_index = privileged_mode ? 16 : 14;
     assign current_SP = Bank[SP_index];
@@ -23,6 +24,7 @@ module RegBank
     assign read_data_B = (register_source_B==14)? current_SP : Bank[register_source_B];
     assign memory_output = (register_Dest==14)? current_SP : Bank[register_Dest];
     assign current_PC = Bank[15];
+    assign RD_isnt_special = register_Dest != 15 && register_Dest!= 14;
 
     always @ (posedge clock or posedge reset) begin
         if (reset) begin
@@ -38,7 +40,7 @@ module RegBank
 
                 case (control)
                     1:begin //RD=ALU_result
-                        if(register_Dest != 4'hf && register_Dest!=4'he)begin
+                        if(RD_isnt_special)begin
                             Bank[register_Dest] <= ALU_result;
                         end
                     end
@@ -46,7 +48,7 @@ module RegBank
                         Bank[0] <= DATA_AREA_START;
                     end
                     3:begin //RD=data_from_memory
-                        if(register_Dest!=4'hf && register_Dest!=4'he)begin
+                        if(RD_isnt_special)begin
                             Bank[register_Dest] <= data_from_memory;
                         end
                     end
