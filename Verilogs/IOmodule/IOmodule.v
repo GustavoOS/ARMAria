@@ -25,10 +25,15 @@ module IOmodule(
   assign RedLEDs = RLED;
   assign IData = {16'h0, switches};
 
-  always @ ( posedge clock or posedge reset ) begin
-    if (reset==1'b1) begin
+  initial begin
+    info = 0;
+    RLED = 0;
+  end
+
+  always @ ( negedge clock ) begin
+    if (reset) begin
       info <= 0;
-      RLED <=0;
+      RLED <= 0;
     end else begin
       case (control)
         1:begin //Records on LED

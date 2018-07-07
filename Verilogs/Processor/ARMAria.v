@@ -65,22 +65,20 @@ module ARMAria
         reset, clock, enable, should_take_branch
     );
 
-    EM externalmem(
+    Memory externalmem(
         MemOut,
-        instruction_address,
-        data_address,
-        allow_write_on_memory,
-        clock,
+        instruction_address, data_address,
+        allow_write_on_memory, clock,
         Instruction,
         Read
     );
 
 
     IOmodule enterescape(
-    clock, control_Human_Interface, reset,
-    MemOut, IData, sw,
-    negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,       //Flags from Control Unit
-    rled, gled, sseg
+        clock, control_Human_Interface, reset,
+        MemOut, IData, sw,
+        negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,       //Flags from Control Unit
+        rled, gled, sseg
     );
 
     MemoryAddressHandler mah(
