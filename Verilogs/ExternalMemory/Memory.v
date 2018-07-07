@@ -5,14 +5,14 @@ module Memory
 	parameter inputFile = "Program.txt")
 (
 	input [(DW-1):0] input_data,
-	input [(ADDR_WIDTH-1):0] instrunction_address, data_address,
+	input [(ADDR_WIDTH-1):0] instruction_address, data_address,
 	input write_enable, clock,
-	output [15:0] instrunction,
+	output [15:0] instruction,
 	output reg [(DW-1):0] output_data
 );
-	//Chops the instrunction output
-	reg [(DW-1):0] fetched_instrunction;
-	assign instrunction = fetched_instrunction[15:0];
+	//Chops the instruction output
+	reg [(DW-1):0] fetched_instruction;
+	assign instruction = fetched_instruction[15:0];
 
 	// Storage declaration
 	reg [DW-1:0] ram[2**ADDR_WIDTH-1:0];	
@@ -25,7 +25,7 @@ module Memory
 	//Port A
 	always @ (posedge clock)
 	begin
-		fetched_instrunction = ram[instrunction_address];
+		fetched_instruction = ram[instruction_address];
 	end
 
 	//Port B

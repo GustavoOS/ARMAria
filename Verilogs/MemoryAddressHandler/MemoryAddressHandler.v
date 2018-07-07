@@ -17,10 +17,10 @@ module MemoryAddressHandler #(
     input reset, privilege_mode_flag,
     output [DATA_WIDTH -1:0] next_PC, next_SP,
     output reg [ADDR_WIDTH - 1:0] output_address,
-    output [ADDR_WIDTH - 1:0] instrunction_address
+    output [ADDR_WIDTH - 1:0] instruction_address
 );
     /* PC behavior */
-    assign instrunction_address = reset ? 0 : current_PC[ADDR_WIDTH - 1:0];
+    assign instruction_address = reset ? 0 : current_PC[ADDR_WIDTH - 1:0];
     Incrementor PC_incr(
         reset ? 4 : 1,
         current_PC,
