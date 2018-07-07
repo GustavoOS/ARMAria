@@ -3,7 +3,7 @@ module MUXBS
     parameter DATA_WIDTH = 32,
     parameter OFFSET_WIDTH = 8
 )(
-    input should_output_offset,//0 to B, 1 to Offset
+    input should_output_offset,
     input [DATA_WIDTH - 1:0] input_channel_B,
     input [OFFSET_WIDTH - 1:0] Offset,
     output [DATA_WIDTH - 1:0] updated_channel_B
