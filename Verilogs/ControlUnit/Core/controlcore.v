@@ -1,5 +1,5 @@
 module ControlCore(
-  ID, take, enable, controlHI,
+  ID, enable, controlHI,
   controlALU, controlBS, allow_write_on_memory, controlRB,
   control_channel_B_sign_extend_unit,//down one
   control_load_sign_extend_unit,//upper one
