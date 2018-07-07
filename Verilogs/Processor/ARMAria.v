@@ -32,8 +32,8 @@ module ARMAria
 
     /* Wire Declaration Section*/
     wire alu_negative, alu_zero, alu_carry, alu_overflow;
-    wire bs_negative, bs_zero, bs_carry;
-    wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag, enable;
+    wire bs_negative, bs_zero, bs_carry, enable;
+    wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
     wire should_fill_channel_b_with_offset;
     wire should_read_from_input_instead_of_memory;
     wire [2:0] controlMAH, control_channel_B_sign_extend_unit;
@@ -41,10 +41,10 @@ module ARMAria
     wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
     wire [6:0] ID;
     wire [7:0] OffImmed;
-    wire [15:0] rledsignal;
+    wire [IO_WIDTH - 1:0] rledsignal;
     wire [ADDR_WIDTH - 1: 0] data_address;
-    wire [31:0] display7, PC, SP, Read, PreB, Bse;
-    wire [31:0] PreMemIn, MemIn, Bbus, IData; //Abus, Bse, PreB;
+    wire [DATA_WIDTH - 1:0] display7, PC, SP, data_read_from_memory;
+    wire [DATA_WIDTH - 1:0] PreMemIn, MemIn, Bbus, IData, PreB, Bse;
     wire allow_write_on_memory;
 
     /* Module interconnection*/
@@ -70,7 +70,7 @@ module ARMAria
         instruction_address, data_address,
         allow_write_on_memory, clock,
         Instruction,
-        Read
+        data_read_from_memory
     );
 
 
@@ -82,51 +82,68 @@ module ARMAria
     );
 
     MemoryAddressHandler mah(
-    RESULT, next_instruction_address, SP, next_PC, next_SP,
-    data_address, IA1, IA0, mode_flag, controlMAH
+        RESULT, next_instruction_address, SP,
+        controlMAH,
+        reset, mode_flag,
+        next_PC, next_SP,
+        data_address,
+        instruction_address
     );
 
     MUXPC mpc(
-    RESULT, PC,
-    next_instruction_address, should_take_branch, reset
+        should_take_branch,
+        RESULT, PC,
+        next_instruction_address
     );
 
     MemoryDataHandler mdh(
-    IData,
-    Read,//Read memory
-    PreMemIn,//output
-    should_read_from_input_instead_of_memory//Control Unit
+        should_read_from_input_instead_of_memory,
+        IData, data_read_from_memory,
+        PreMemIn
     );
 
     SignExtend load_sign_extend_unit(
-    PreMemIn, control_load_sign_extend_unit, MemIn
+        PreMemIn,
+        control_load_sign_extend_unit,
+        MemIn
     );
 
     RegBank ARMARIAbank(
-    Abus, Bbus, RESULT, PC, next_PC, SP, next_SP,
-    MemOut, MemIn,
-    mode_flag,
-    RegD, RegA, RegB,
-    controlRB, clock,
-    enable, reset
+        mode_flag, enable, reset, clock,
+        controlRB, 
+        RegA, RegB, RegD, 
+        RESULT, MemIn,
+        next_SP, next_PC, 
+        Abus, Bbus,
+        PC, SP, 
+        MemOut
     );
 
     MUXBS muxbusb(
-    should_fill_channel_b_with_offset,
-    Bbus, OffImmed,
-    PreB
+        should_fill_channel_b_with_offset,
+        Bbus, OffImmed,
+        PreB
     );
 
-    SignExtend channel_B_sign_extend_unit(PreB, control_channel_B_sign_extend_unit, Bse);
+    SignExtend channel_B_sign_extend_unit(
+        PreB, 
+        control_channel_B_sign_extend_unit, 
+        Bse
+    );
 
     BarrelShifter NiagaraFalls(
-    Abus, Bse, controlBS, Bsh, bs_negative, bs_zero, bs_carry
+        Abus, Bse, 
+        controlBS, 
+        Bsh, 
+        bs_negative, bs_zero, bs_carry
     );
 
     ALU arithmeticlogicunit(
-    Abus, Bsh, RESULT,
-    controlALU, carry_flag,
-    alu_negative, alu_zero, alu_carry, alu_overflow
+        Abus, Bsh,
+        RESULT,
+        controlALU,
+        carry_flag,
+        alu_negative, alu_zero, alu_carry, alu_overflow
     );
 
 

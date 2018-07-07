@@ -4,13 +4,13 @@ module RegBank
     parameter REGISTER_LENGTH = 32,
     parameter MAX_NUMBER = 2**REGISTER_LENGTH - 1
 )(
+    input   privileged_mode, enable, reset, clock,
+    input   [2:0]   control, 
+    input   [3:0]   register_source_A, register_source_B, register_Dest,
     input   [REGISTER_LENGTH -1:0]  ALU_result, data_from_memory,
     input   [REGISTER_LENGTH -1:0]  new_SP, new_PC,
-    input   [3:0]   register_source_A, register_source_B, register_Dest,
-    input   [2:0]   control, 
-    input   privileged_mode, enable, reset, clock,
-    output [REGISTER_LENGTH -1:0]   read_data_A, read_data_B,
-    output [REGISTER_LENGTH -1:0]   current_PC, current_SP, memory_output
+    output  [REGISTER_LENGTH -1:0]  read_data_A, read_data_B,
+    output  [REGISTER_LENGTH -1:0]  current_PC, current_SP, memory_output
 );
 
     reg [REGISTER_LENGTH -1:0] Bank [16:0];

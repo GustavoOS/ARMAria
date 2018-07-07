@@ -1,12 +1,12 @@
-module MUXPC(
-  Result, PC,
-  ResultPC, selector, reset
-  );
-  input selector, reset;
-  input [31:0] Result, PC;
-  output [31:0] ResultPC;
+module MUXPC
+#(
+    parameter DATA_WIDTH = 32
+)(
+    input should_use_alu_as_pc_source,
+    input [DATA_WIDTH - 1:0] alu_result, current_PC,
+    output [DATA_WIDTH - 1:0] final_PC
+);
 
-  assign ResultPC = (reset==1'b1)? 10'h1:
-  (selector==1'b1)? Result[9:0] : PC[9:0];
+    assign final_PC = (should_use_alu_as_pc_source) ? alu_result : current_PC;
 
 endmodule
