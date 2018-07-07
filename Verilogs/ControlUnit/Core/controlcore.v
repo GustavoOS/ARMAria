@@ -1,17 +1,18 @@
-module controlcore(
+module ControlCore(
   ID, take, enable, controlHI,
-  controlALU, controlBS, controlEM, controlRB,
-  controlSE1,//down one
-  controlSE2,//upper one
-  controlMAH, controlMDH, controlMUX, MODE
+  controlALU, controlBS, allow_write_on_memory, controlRB,
+  control_channel_B_sign_extend_unit,//down one
+  control_load_sign_extend_unit,//upper one
+  controlMAH, should_read_from_input_instead_of_memory, controlMUX, MODE
   );
 
   input take, MODE;
   input [6:0] ID;
-  output reg [1:0] controlHI, controlEM;
-  output reg [2:0] controlMAH, controlSE1, controlSE2, controlRB;
+  output reg [1:0] controlHI;
+  output reg allow_write_on_memory;
+  output reg [2:0] controlMAH, control_channel_B_sign_extend_unit, control_load_sign_extend_unit, controlRB;
   output reg [3:0] controlALU, controlBS;
-  output reg enable, controlMUX, controlMDH;
+  output reg enable, controlMUX, should_read_from_input_instead_of_memory;
 
 
 
@@ -21,11 +22,11 @@ module controlcore(
     controlALU = 12;
     controlBS = 0;
     controlRB = 1;
-    controlSE1 = 0;
-    controlSE2 = 0;
+    control_channel_B_sign_extend_unit = 0;
+    control_load_sign_extend_unit = 0;
     controlMAH = 0;
-    controlMDH = 0;
-    controlEM = 0;
+    should_read_from_input_instead_of_memory = 0;
+    allow_write_on_memory = 0;
     controlMUX = 0;
     controlHI = 0;
     enable = 1;
@@ -169,7 +170,7 @@ module controlcore(
         controlALU = 2;
         controlBS = 1;
         controlRB = 0;
-        controlSE1 = 0;
+        control_channel_B_sign_extend_unit = 0;
         controlMAH = 0;
         controlMUX = 0;
       end
@@ -183,25 +184,25 @@ module controlcore(
       40:begin
         controlALU = 2;
         controlMAH = 5;
-        controlEM = 3;
+        allow_write_on_memory = 1;
         controlRB = 0;
       end
       41:begin
         controlALU = 2;
         controlMAH = 4;
-        controlEM = 2;
+        allow_write_on_memory = 1;
         controlRB = 0;
       end
       42:begin
         controlALU = 2;
         controlMAH = 3;
-        controlEM = 1;
+        allow_write_on_memory = 1;
         controlRB = 0;
       end
       43:begin
         controlALU = 2;
         controlMAH = 3;
-        controlSE2 = 2;
+        control_load_sign_extend_unit = 2;
         controlRB = 3;
       end
       44:begin
@@ -212,26 +213,26 @@ module controlcore(
       45:begin
         controlALU = 2;
         controlMAH = 4;
-        controlSE2 = 3;
+        control_load_sign_extend_unit = 3;
         controlRB = 3;
       end
       46:begin
         controlALU = 2;
         controlMAH = 3;
-        controlSE2 = 4;
+        control_load_sign_extend_unit = 4;
         controlRB = 3;
       end
       47:begin
         controlALU = 2;
         controlMAH = 4;
-        controlSE2 = 1;
+        control_load_sign_extend_unit = 1;
         controlRB = 3;
       end
       48:begin
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 5;
-        controlEM = 3;
+        allow_write_on_memory = 1;
         controlRB = 0;
       end
       49:begin
@@ -244,21 +245,21 @@ module controlcore(
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 3;
-        controlEM = 1;
+        allow_write_on_memory = 1;
         controlRB  = 0;
       end
       51:begin
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 3;
-        controlSE2 = 4;
+        control_load_sign_extend_unit = 4;
         controlRB = 3;
       end
       52:begin
         controlMUX = 1;
         controlALU = 2;
         controlMAH = 4;
-        controlEM = 2;
+        allow_write_on_memory = 1;
         controlRB = 0;
       end
       53:begin
@@ -266,19 +267,19 @@ module controlcore(
         controlALU = 2;
         controlMAH = 4;
         controlRB =3;
-        controlSE2 = 3;
+        control_load_sign_extend_unit = 3;
       end
       54:begin
         controlMUX = 1;
-        controlSE1 = 2;
+        control_channel_B_sign_extend_unit = 2;
         controlALU = 2;
         controlMAH = 5;
-        controlEM = 3;
+        allow_write_on_memory = 1;
         controlRB = 0;
       end
       55:begin
         controlMUX =1;
-        controlSE1 = 2;
+        control_channel_B_sign_extend_unit = 2;
         controlALU = 2;
         controlMAH = 5;
         controlRB = 3;
@@ -299,16 +300,16 @@ module controlcore(
         controlRB = 2;
       end
       59:begin
-        controlSE1 = 1;
+        control_channel_B_sign_extend_unit = 1;
       end
       60:begin
-        controlSE1 = 2;
+        control_channel_B_sign_extend_unit = 2;
       end
       61:begin
-        controlSE1 = 3;
+        control_channel_B_sign_extend_unit = 3;
       end
       62:begin
-        controlSE1 = 4;
+        control_channel_B_sign_extend_unit = 4;
       end
       63:begin
         controlBS = 6;
@@ -324,40 +325,40 @@ module controlcore(
       end
       67:begin  //PUSH
         controlMAH = 1;
-        controlEM = 1;
+        allow_write_on_memory = 1;
         controlRB = 0;
       end
       68:begin  //POP
         controlMAH = 2;
         controlRB = 3;
-        controlSE2 = 4;
+        control_load_sign_extend_unit = 4;
       end
       69:begin  //OUTSS
         controlALU = 0;
         controlRB = 0;
-        controlEM = 0;
+        allow_write_on_memory = 0;
         controlHI = 2'h2;
       end
       70:begin  //OUTLED
         controlALU = 0;
         controlBS = 0;
         controlRB = 0;
-        controlSE1 = 0;
+        control_channel_B_sign_extend_unit = 0;
         controlMAH = 0;
         controlMUX = 0;
-        controlEM = 0;
+        allow_write_on_memory = 0;
         controlHI = 2'h1;
       end
       71:begin  //INSW
         controlALU = 0;
         controlBS = 0;
         controlRB = 3;
-        controlSE1 = 0;
-        controlSE2 = 3;
+        control_channel_B_sign_extend_unit = 0;
+        control_load_sign_extend_unit = 3;
         controlMAH = 0;
         controlMUX = 0;
-        controlMDH = 1;
-        controlEM = 0;
+        should_read_from_input_instead_of_memory = 1;
+        allow_write_on_memory = 0;
       end
       72:begin //SWI
         if (MODE==1'b1) begin
@@ -372,7 +373,7 @@ module controlcore(
       73:begin
         controlMUX = 1;
         controlBS = 1;
-        controlSE1 = 2;
+        control_channel_B_sign_extend_unit = 2;
         controlALU = 2;
         controlMAH = 0;
         controlRB = 0;
@@ -388,11 +389,11 @@ module controlcore(
         controlALU = 0;
         controlBS = 0;
         controlRB = 0;
-        controlSE1 = 0;//down
-        controlSE2 = 0;//up
+        control_channel_B_sign_extend_unit = 0;//down
+        control_load_sign_extend_unit = 0;//up
         controlMAH = 0;
-        controlMDH = 0;
-        controlEM = 0;
+        should_read_from_input_instead_of_memory = 0;
+        allow_write_on_memory = 0;
         controlMUX = 0;
         enable = 1;
       end

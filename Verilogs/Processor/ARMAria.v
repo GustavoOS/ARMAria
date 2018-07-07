@@ -27,19 +27,19 @@ module ARMAria(
   assign reset = ~resetemp;
 
   // wires
-  wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, controlMUX, controlMDH;
-  wire [2:0] controlMAH, controlSE1, controlSE2, controlRB;
+  wire NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, NEG, ZER, CAR, OVERF, MODE, enable, should_fill_channel_b_with_offset, should_read_from_input_instead_of_memory;
+  wire [2:0] controlMAH, control_channel_B_sign_extend_unit, control_load_sign_extend_unit, controlRB;
   wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
   wire [6:0] ID;
   wire [7:0] DW3, DW2, DW1, DW0, OffImmed;
   wire [15:0] PreInstruction, rledsignal;
-  wire [39:0] Address;
+  wire [127:0] Address;
   wire [31:0] display7, PC, SP, Read, PreB, Bse;
   wire [31:0] PreMemIn, MemIn, Bbus, IData; //Abus, Bse, PreB;
   wire [1:0] controlEM;
 
-  control controlunit(PreInstruction, RegD, RegA, RegB, OffImmed,
-    controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE1, controlSE2,
+  Control control_unit(PreInstruction, RegD, RegA, RegB, OffImmed,
+    controlEM, controlRB, should_read_from_input_instead_of_memory, controlMAH, should_fill_channel_b_with_offset, control_channel_B_sign_extend_unit, control_load_sign_extend_unit,
     controlBS, controlALU, controlHI, ID, Instruction, NALU, CALU, VALU, ZALU, NBS, ZBS, CBS,
     NEG, ZER, CAR, OVERF, MODE, reset, clock, enable, take
     );
@@ -75,11 +75,11 @@ module ARMAria(
     IData,
     Read,//Read memory
     PreMemIn,//output
-    controlMDH//Control Unit
+    should_read_from_input_instead_of_memory//Control Unit
   );
 
-  SignExtend upperOne(
-    PreMemIn, controlSE2, MemIn
+  SignExtend load_sign_extend_unit(
+    PreMemIn, control_load_sign_extend_unit, MemIn
   );
 
   RegBank ARMARIAbank(
@@ -92,12 +92,12 @@ module ARMAria(
     );
 
   MUXBS muxbusb(
-    controlMUX,
+    should_fill_channel_b_with_offset,
     Bbus, OffImmed,
     PreB
   );
 
-  SignExtend downOne(PreB, controlSE1, Bse);
+  SignExtend channel_B_sign_extend_unit(PreB, control_channel_B_sign_extend_unit, Bse);
 
   BarrelShifter NiagaraFalls(
     Abus, Bse, controlBS, Bsh, NBS, ZBS, CBS
