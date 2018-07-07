@@ -1,4 +1,4 @@
-module instructiondecoder(
+module InstructionDecoder(
   Instruction,
   ID,
   RegD,//Destination Register
@@ -293,7 +293,7 @@ always @ ( * ) begin
           end
           14:begin
             case (funct1)
-              0:begin //Instrunction 69 - OUTSS
+              0:begin //Instruction 69 - OUTSS
                 ID = 7'h45;
                 RegD = Instruction[2:0];
               end
