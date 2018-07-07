@@ -1,14 +1,16 @@
-module MUXBS(
-  MUXSelector,//0 to B, 1 to Offset
-  B,
-  Offset,
-  PreB
-  );
-  input MUXSelector;
-  input [31:0] B;
-  input [7:0] Offset;
-  output [31:0] PreB;
+module MUXBS
+#(
+    parameter DATA_WIDTH = 32,
+    parameter OFFSET_WIDTH = 8
+)(
+    input should_output_offset,//0 to B, 1 to Offset
+    input [DATA_WIDTH - 1:0] input_channel_B,
+    input [OFFSET_WIDTH - 1:0] Offset,
+    output [DATA_WIDTH - 1:0] updated_channel_B
+);
+    wire [DATA_WIDTH - OFFSET_WIDTH -1:0] zeros;
+    assign zeros = 0;
 
-  assign PreB= (MUXSelector==1'b0)? B:{24'h0, Offset};
+    assign updated_channel_B = (should_output_offset)? {zeros, Offset} : input_channel_B;
 
 endmodule
