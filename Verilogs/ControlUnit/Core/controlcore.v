@@ -3,7 +3,8 @@ module ControlCore(
   controlALU, controlBS, allow_write_on_memory, controlRB,
   control_channel_B_sign_extend_unit,//down one
   control_load_sign_extend_unit,//upper one
-  controlMAH, should_read_from_input_instead_of_memory, controlMUX, MODE
+  controlMAH, should_read_from_input_instead_of_memory, controlMUX, MODE,
+  specreg_update_mode
   );
 
   input take, MODE;
@@ -13,6 +14,7 @@ module ControlCore(
   output reg [2:0] controlMAH, control_channel_B_sign_extend_unit, control_load_sign_extend_unit, controlRB;
   output reg [3:0] controlALU, controlBS;
   output reg enable, controlMUX, should_read_from_input_instead_of_memory;
+  output reg [2:0] specreg_update_mode;
 
 
 
@@ -30,105 +32,133 @@ module ControlCore(
     controlMUX = 0;
     controlHI = 0;
     enable = 1;
+    specreg_update_mode = 0;
 
     case (ID)
       1:begin
         controlBS=3;
         controlMUX=1;
+        specreg_update_mode = 1;
       end
       2:begin
         controlBS = 4;
         controlMUX = 1;
+        specreg_update_mode = 1;
       end
       3:begin
         controlBS = 2;
         //controlRB = 1;
         controlMUX = 1;
+        specreg_update_mode = 1;
       end
       4:begin
         controlALU = 2;
         //controlRB = 1;
+        specreg_update_mode = 2;
       end
       5:begin
         controlALU = 5;
+        specreg_update_mode = 2;
       end
       6:begin
         controlALU = 2;
         //controlRB = 1;
         controlMUX = 1;
+        specreg_update_mode = 2;
       end
       7:begin
         controlALU = 5;
         controlMUX = 1;
+        specreg_update_mode = 2;
       end
       8:begin
         controlMUX = 1;
+        specreg_update_mode = 3;
       end
       9:begin
         controlALU = 5;
         controlRB = 0;
         controlMUX = 1;
+        specreg_update_mode = 2;
       end
       10:begin
         controlALU = 2;
         controlMUX = 1;
+        specreg_update_mode = 2;
       end
       11:begin
         controlALU = 5;
         controlMUX = 1;
+        specreg_update_mode = 2;
       end
       12:begin
         controlALU = 3;
         //controlRB = 1;
+        specreg_update_mode = 3;
       end
       13:begin
         controlALU = 13;
+        specreg_update_mode = 3;
       end
       14:begin
         controlBS = 3;
+        specreg_update_mode = 1;
       end
       15:begin
         controlBS = 4;
+        specreg_update_mode = 1;
       end
       16:begin
         controlBS = 2;
         //controlRB = 1;
+        specreg_update_mode = 1;
       end
       17:begin
         controlALU = 1;
         //controlRB = 1;
+        specreg_update_mode = 2;
       end
       18:begin
         controlALU = 8;
+        specreg_update_mode = 2;
       end
       19:begin
         controlBS = 5;
+        specreg_update_mode = 1;
       end
       20:begin
         controlALU = 14;
+        specreg_update_mode = 3;
       end
       21:begin
         controlALU = 6;
+        specreg_update_mode = 2;
       end
       22:begin
         controlALU = 5;
         controlRB = 0;
+        specreg_update_mode = 2;
       end
       23:begin
         controlALU = 2;
         controlRB = 0;
+        specreg_update_mode = 2;
       end
       24:begin
         controlALU = 7;
+        specreg_update_mode = 3;
       end
       25:begin
         controlALU = 9;
+        specreg_update_mode = 3;
       end
       26:begin
         controlALU = 4;
+        specreg_update_mode = 3;
         //controlRB = 1;
       end
       27:begin
+        specreg_update_mode = 3;
       end
       28:begin
         controlALU = 2;
@@ -145,17 +175,21 @@ module ControlCore(
       31:begin
         controlALU = 5;
         //controlRB = 1;
+        specreg_update_mode = 2;
       end
       32:begin
         controlALU = 5;
         controlRB = 0;
+        specreg_update_mode = 2;
       end
       33:begin
         controlALU = 5;
         controlRB = 0;
+        specreg_update_mode = 2;
       end
       34:begin
         controlALU = 10;
+        specreg_update_mode = 4;
       end
       35:begin
         //standard
@@ -319,6 +353,7 @@ module ControlCore(
       end
       65:begin
         controlALU = 11;
+        specreg_update_mode = 4;
       end
       66:begin
         controlBS = 8;
@@ -384,6 +419,7 @@ module ControlCore(
       75:begin
         controlRB = 0;
         enable = 0;
+        specreg_update_mode = 6;
       end
       100:begin //RESET
         controlALU = 0;

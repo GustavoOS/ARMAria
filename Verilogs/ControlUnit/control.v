@@ -19,6 +19,7 @@ module Control
 );
   
     wire [3:0] condition_code;
+    wire [3:0] specreg_update_mode;
 
     InstructionDecoder id(
         Instruction,
@@ -33,7 +34,7 @@ module Control
     SpecReg sr(
         clock, 
         reset, 
-        ID, 
+        specreg_update_mode, 
         negative_flag,
         zero_flag, 
         carry_flag, 
@@ -71,7 +72,8 @@ module Control
         controlMAH, 
         should_read_from_input_instead_of_memory, 
         should_fill_channel_b_with_offset, 
-        mode_flag
+        mode_flag,
+        specreg_update_mode
     );
 
 
