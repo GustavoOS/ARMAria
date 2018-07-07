@@ -5,7 +5,7 @@ module RegBank
     parameter MAX_NUMBER = 2**REGISTER_LENGTH - 1
 )(
     input   [REGISTER_LENGTH -1:0]  ALU_result, data_from_memory,
-    input   [REGISTER_LENGTH -1:0]  new_stack_pointer, new_PC,
+    input   [REGISTER_LENGTH -1:0]  new_SP, new_PC,
     input   [3:0]   register_source_A, register_source_B, register_Dest,
     input   [2:0]   control, 
     input   privileged_mode, enable, reset, clock,
@@ -26,17 +26,24 @@ module RegBank
     assign current_PC = Bank[15];
     assign RD_isnt_special = register_Dest != 15 && register_Dest!= 14;
 
-    always @ (posedge clock or posedge reset) begin
+    initial begin
+        Bank[0] = DATA_AREA_START;
+        Bank[14] = MAX_NUMBER;//User Stack
+        Bank[15] = 0;  //PC
+        Bank[16] = MAX_NUMBER; //Privileged Stack
+    end
+
+    always @ (negedge clock) begin
         if (reset) begin
             Bank[0] <= DATA_AREA_START;
             Bank[14] <= MAX_NUMBER;//User Stack
-            Bank[15] <= 0;  //PC
+            Bank[15] <= new_PC;  //PC = 1 due to Memory Data Handler
             Bank[16] <= MAX_NUMBER; //Privileged Stack
         end else begin
             if (enable) begin
 
                 Bank[15] <= new_PC;
-                Bank[SP_index] <= (control==2)? MAX_NUMBER: new_stack_pointer;
+                Bank[SP_index] <= (control==2)? MAX_NUMBER: new_SP;
 
                 case (control)
                     1:begin //RD=ALU_result
