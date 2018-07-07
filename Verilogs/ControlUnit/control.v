@@ -8,7 +8,7 @@ module Control
 )(
     input [INSTRUCTION_WIDTH - 1:0] Instruction,
     input alu_negative, alu_carry, alu_overflow, alu_zero,
-    input bs_negative, bs_zero, bs_carry,
+    input bs_negative, bs_zero, bs_carry, reset, clock, 
     output [OFFSET_WIDTH - 1:0] OffImmed,
     output [ID_WIDTH - 1:0] ID,
     output [REGISTER_NUMBER_WIDTH - 1:0] RegD, RegA, RegB,
@@ -18,7 +18,7 @@ module Control
     output allow_write_on_memory, should_fill_channel_b_with_offset,
     output should_read_from_input_instead_of_memory,
     output negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
-    output reset, clock, enable, should_take_branch
+    output enable, should_take_branch
 );
   
     wire [3:0] condition_code;
@@ -63,7 +63,6 @@ module Control
 
     ControlCore core(
         ID, 
-        should_take_branch, 
         enable, 
         control_Human_Interface,
         controlALU, 

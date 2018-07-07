@@ -52,7 +52,7 @@ module ARMAria
     Control control_unit(
         Instruction,
         alu_negative, alu_carry, alu_overflow, alu_zero, 
-        bs_negative, bs_zero, bs_carry,
+        bs_negative, bs_zero, bs_carry, reset, clock,
         OffImmed,
         ID, 
         RegD, RegA, RegB, 
@@ -62,7 +62,7 @@ module ARMAria
         allow_write_on_memory, should_fill_channel_b_with_offset, 
         should_read_from_input_instead_of_memory, 
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag, 
-        reset, clock, enable, should_take_branch
+        enable, should_take_branch
     );
 
     Memory externalmem(

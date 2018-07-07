@@ -7,7 +7,7 @@ module ControlCore(
   specreg_update_mode
   );
 
-  input take, MODE;
+  input MODE;
   input [6:0] ID;
   output reg [1:0] controlHI;
   output reg allow_write_on_memory;
