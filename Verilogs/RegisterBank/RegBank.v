@@ -14,6 +14,9 @@ module RegBank
 );
 
     reg [REGISTER_LENGTH -1:0] Bank [16:0];
+    reg [REGISTER_LENGTH - 1:0] Buffer;
+    reg [3:0] stored_register;
+    reg past_by_load;
 
     wire [4:0] SP_index;
     wire RD_isnt_special;
@@ -31,7 +34,13 @@ module RegBank
         Bank[14] = MAX_NUMBER;//User Stack
         Bank[15] = 0;  //PC
         Bank[16] = MAX_NUMBER; //Privileged Stack
+        past_by_load = 0;
+        stored_register = 0;
     end
+    always @ (posedge clock) begin
+        Buffer <= data_from_memory;      
+    end
+
 
     always @ (negedge clock) begin
         if (reset) begin
@@ -39,6 +48,8 @@ module RegBank
             Bank[14] <= MAX_NUMBER;//User Stack
             Bank[15] <= new_PC;  //PC = 1 due to Memory Data Handler
             Bank[16] <= MAX_NUMBER; //Privileged Stack
+            past_by_load = 0;
+            stored_register = 0;
         end else begin
             if (enable) begin
 
@@ -56,11 +67,24 @@ module RegBank
                     end
                     3:begin //RD=data_from_memory
                         if(RD_isnt_special)begin
-                            Bank[register_Dest] <= data_from_memory;
+                            // Bank[register_Dest] <= data_from_memory;
+                            stored_register <= register_Dest;
+                            past_by_load <= 1;
                         end
                     end
                     4:begin //Enter privileged mode
                         Bank[13] <= Bank[15];  //LR = actual next Instruction address
+                    end
+                    5:begin
+                      if(past_by_load) begin
+                        Bank[stored_register] <= Buffer;
+                        past_by_load <= 0;
+                      end
+                    end
+                    6:begin
+                        if(RD_isnt_special)begin
+                            Bank[register_Dest] <= data_from_memory;
+                        end
                     end
                 endcase
 

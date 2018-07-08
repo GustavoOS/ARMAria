@@ -366,7 +366,7 @@ module ControlCore(
       68:begin  //POP
         controlMAH = 2;
         controlRB = 3;
-        control_load_sign_extend_unit = 4;
+        control_load_sign_extend_unit = 0;
       end
       69:begin  //OUTSS
         controlALU = 0;
@@ -387,7 +387,7 @@ module ControlCore(
       71:begin  //INSW
         controlALU = 0;
         controlBS = 0;
-        controlRB = 3;
+        controlRB = 6;
         control_channel_B_sign_extend_unit = 0;
         control_load_sign_extend_unit = 3;
         controlMAH = 0;
@@ -414,7 +414,7 @@ module ControlCore(
         controlRB = 0;
       end
       74:begin
-        controlRB = 0;
+        controlRB = 5;
       end
       75:begin
         controlRB = 0;

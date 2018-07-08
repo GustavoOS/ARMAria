@@ -6,7 +6,8 @@ module IOmodule(
   Neg, Zero, Carry, V, M,        //Flags from Control Unit
   RedLEDs,
   GreenLEDs,//Will show flags
-  SevenSegDisplays
+  SevenSegDisplays,
+  Instruction
   );
   input [15:0] switches;
   input Neg, Zero, Carry, V, M, clock, reset;
@@ -16,13 +17,14 @@ module IOmodule(
   input [31:0] MemOut;
   input [1:0] control;
   output [31:0] IData;
+  input [15:0] Instruction;
   
   reg [15:0] RLED;
   reg [31:0] info;
 
-
+  assign RedLEDs = Instruction;
   assign GreenLEDs = {Neg, Zero, Carry, V, M};
-  assign RedLEDs = RLED;
+  // assign RedLEDs = RLED;
   assign IData = {16'h0, switches};
 
   initial begin

@@ -2,7 +2,7 @@ module Memory
 #(
 	parameter DW=32,
 	parameter ADDR_WIDTH=14, 
-	parameter inputFile = "Program.txt")
+	parameter inputFile = "Programa.txt")
 (
 	input [(DW-1):0] input_data,
 	input [(ADDR_WIDTH-1):0] instruction_address, data_address,

@@ -45,11 +45,6 @@ module SpecReg(
         6:begin  //HALT
           SPECREG <= 5'h1f;
         end
-
-        default:begin
-          SPECREG <= SPECREG;
-        end
-        
       endcase
     end
 

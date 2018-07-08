@@ -20,7 +20,8 @@ module ARMAria
     output [INSTRUCTION_WIDTH -1 :0] Instruction,
     output [DATA_WIDTH - 1: 0] next_PC, next_SP, RESULT, Abus, MemOut, Bsh 
 );
-
+    wire [1:0] always_zero;
+    assign always_zero = 0;
     /* Clock statup  */
     wire clktemp, resetemp;
     DeBounce dbc(clk_fpga, clock_fpga_button, clktemp);
@@ -78,7 +79,7 @@ module ARMAria
         clock, control_Human_Interface, reset,
         MemOut, IData, sw,
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,       //Flags from Control Unit
-        rled, gled, sseg
+        rled, gled, sseg, Instruction
     );
 
     MemoryAddressHandler mah(
