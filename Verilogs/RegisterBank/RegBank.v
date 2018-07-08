@@ -37,8 +37,10 @@ module RegBank
         past_by_load = 0;
         stored_register = 0;
     end
+
     always @ (posedge clock) begin
-        Buffer <= data_from_memory;      
+        Buffer <= data_from_memory;
+        
     end
 
 
@@ -46,7 +48,7 @@ module RegBank
         if (reset) begin
             Bank[0] <= DATA_AREA_START;
             Bank[14] <= MAX_NUMBER;//User Stack
-            Bank[15] <= new_PC;  //PC = 1 due to Memory Data Handler
+            Bank[15] <= new_PC;  //PC = 1 due to Memory Address Handler
             Bank[16] <= MAX_NUMBER; //Privileged Stack
             past_by_load = 0;
             stored_register = 0;

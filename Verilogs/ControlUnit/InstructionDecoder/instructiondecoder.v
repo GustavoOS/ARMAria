@@ -321,7 +321,7 @@ always @ ( * ) begin
         Condicao = 4'he; //Always branches
       end
 
-      13:begin//Instruction 73 - B
+      13:begin//Instruction 73 - B immediate
         ID=7'h49;
         Condicao=Instruction[11:8];
         Offset[7:0]=Instruction[7:0];
