@@ -320,13 +320,13 @@ module ControlCore(
       end
       56:begin
         controlALU = 2;
-        controlBS = 1;
+        // controlBS = 1;
         //controlRB = 1;
         controlMUX = 1;
       end
       57:begin
         controlALU = 2;
-        controlBS = 1;
+        // controlBS = 1;
         //controlRB = 1;
         controlMUX = 1;
       end
