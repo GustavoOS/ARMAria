@@ -206,7 +206,7 @@ module ControlCore(
         control_channel_B_sign_extend_unit = 0;
         controlMAH = 0;
         controlRB = 0;
-        should_fill_channel_b_with_offset = 1;
+        should_fill_channel_b_with_offset = 0;
       end
       39:begin
         controlALU = 2;
