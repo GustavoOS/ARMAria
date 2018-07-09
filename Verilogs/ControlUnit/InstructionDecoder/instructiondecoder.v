@@ -1,4 +1,4 @@
-module instructiondecoder(
+module InstructionDecoder(
   Instruction,
   ID,
   RegD,//Destination Register
@@ -259,9 +259,9 @@ always @ ( * ) begin
 
       10:begin//Instructions 56 & 57
         Offset[7:0]=Instruction[7:0];
-        RegD[2:0]=Instruction[10:8];
-        RegA=(op)?4'he : 4'hf;
-        op=Instruction[11];
+        RegD = {1'b0, Instruction[10:8]};
+        op = Instruction[11];
+        RegA = (op) ? 4'he : 4'hf;
         ID=(op)?7'h39:7'h38;
       end
 
@@ -293,7 +293,7 @@ always @ ( * ) begin
           end
           14:begin
             case (funct1)
-              0:begin //Instrunction 69 - OUTSS
+              0:begin //Instruction 69 - OUTSS
                 ID = 7'h45;
                 RegD = Instruction[2:0];
               end
@@ -321,7 +321,7 @@ always @ ( * ) begin
         Condicao = 4'he; //Always branches
       end
 
-      13:begin//Instruction 73 - B
+      13:begin//Instruction 73 - B immediate
         ID=7'h49;
         Condicao=Instruction[11:8];
         Offset[7:0]=Instruction[7:0];

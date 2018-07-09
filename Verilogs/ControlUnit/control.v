@@ -1,40 +1,82 @@
-module control(
-  PreInstruction,
-  RegD, RegA, RegB,
-  OffImmed,
-  controlEM, controlRB, controlMDH, controlMAH, controlMUX, controlSE1, controlSE2,
-  controlBS, controlALU, controlHI,
-  ID, Instruction,
-  NALU, CALU, VALU, ZALU, NBS, ZBS, CBS,
-  NEG, ZER, CAR, OVERF, MODE,
-  reset, clock, enable, take
-  );
+module Control
+#(
+    parameter DATA_WIDTH = 32,
+    parameter ID_WIDTH = 7,
+    parameter INSTRUCTION_WIDTH = 16,
+    parameter REGISTER_NUMBER_WIDTH = 4,
+    parameter OFFSET_WIDTH = 8
+)(
+    input [INSTRUCTION_WIDTH - 1:0] Instruction,
+    input alu_negative, alu_carry, alu_overflow, alu_zero,
+    input bs_negative, bs_zero, bs_carry, reset, clock, 
+    output [OFFSET_WIDTH - 1:0] OffImmed,
+    output [ID_WIDTH - 1:0] ID,
+    output [REGISTER_NUMBER_WIDTH - 1:0] RegD, RegA, RegB,
+    output [3:0] controlBS, controlALU, control_Human_Interface,
+    output [2:0] controlRB, controlMAH,
+    output [2:0] control_channel_B_sign_extend, control_load_sign_extend,
+    output allow_write_on_memory, should_fill_channel_b_with_offset,
+    output should_read_from_input_instead_of_memory,
+    output negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
+    output enable, should_take_branch
+);
+  
+    wire [3:0] condition_code;
+    wire [2:0] specreg_update_mode;
 
-  input NALU, ZALU, CALU, VALU, NBS, ZBS, CBS, clock, reset;
-  input [15:0] PreInstruction;
+    InstructionDecoder id(
+        Instruction,
+        ID, 
+        RegD, 
+        RegA, 
+        RegB, 
+        OffImmed, 
+        condition_code
+    );
 
-  output NEG, ZER, CAR, OVERF, MODE, enable, controlMUX, controlMDH;
-  output [1:0] controlHI, controlEM;
-  output [2:0] controlMAH, controlSE1, controlSE2, controlRB;
-  output [3:0] controlALU, controlBS;
-  output [3:0] RegD, RegA, RegB;
-  output [6:0] ID;
-  output [7:0] OffImmed;
-  output [15:0] Instruction;
-  wire [3:0] cond;
-  output take;
-  // wire [6:0] IDrt;
+    SpecReg sr(
+        clock, 
+        reset, 
+        specreg_update_mode, 
+        negative_flag,
+        zero_flag, 
+        carry_flag, 
+        overflow_flag, 
+        mode_flag, 
+        alu_negative, 
+        alu_zero, 
+        alu_carry, 
+        alu_overflow, 
+        bs_negative, 
+        bs_zero, 
+        bs_carry
+    );
 
+    Ramifier rm(
+        condition_code, 
+        negative_flag, 
+        zero_flag, 
+        carry_flag, 
+        overflow_flag, 
+        should_take_branch
+    );
 
-  InstructionRegister ir(clock, PreInstruction, Instruction, reset, enable);
-  instructiondecoder id(Instruction, ID, RegD, RegA, RegB, OffImmed, cond);
-  SpecReg sr(clock, reset, ID, NEG, ZER, CAR, OVERF, MODE, NALU, ZALU, CALU, VALU, NBS, ZBS, CBS);
-  Ramifier rm(cond, NEG, ZER, CAR, OVERF, take);
-  controlcore contcore(ID, take, enable, controlHI,
-  controlALU, controlBS, controlEM, controlRB,
-  controlSE1,//down one
-  controlSE2,//upper one
-  controlMAH, controlMDH, controlMUX, MODE);
+    ControlCore core(
+        ID, 
+        enable, 
+        control_Human_Interface,
+        controlALU, 
+        controlBS, 
+        allow_write_on_memory, 
+        controlRB,
+        control_channel_B_sign_extend,
+        control_load_sign_extend,
+        controlMAH, 
+        should_read_from_input_instead_of_memory, 
+        should_fill_channel_b_with_offset, 
+        mode_flag,
+        specreg_update_mode
+    );
 
 
 
