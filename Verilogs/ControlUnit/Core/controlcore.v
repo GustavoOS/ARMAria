@@ -319,10 +319,11 @@ module ControlCore(
         controlRB = 3;
       end
       56:begin
-        controlALU = 2;
-        controlBS = 0;
-        controlRB = 1;
         should_fill_channel_b_with_offset = 1;
+        control_channel_B_sign_extend_unit = 0;
+        controlBS = 0;
+        controlALU = 2;
+        controlRB = 1;
       end
       57:begin
         controlALU = 2;

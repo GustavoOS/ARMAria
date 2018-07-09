@@ -14,28 +14,14 @@ module MemoryAddressHandler #(
 )(
     input [DATA_WIDTH -1:0]  input_address, current_PC, current_SP,
     input [1:0] control,
-    input reset, privilege_mode_flag, clock, enable,    
+    input reset, privilege_mode_flag,    
     output [DATA_WIDTH -1:0] next_SP,
     output reg [ADDR_WIDTH - 1:0] output_address, 
     output [ADDR_WIDTH - 1:0] instruction_address, next_PC
 );
 
     /* PC behavior */
-    reg [ADDR_WIDTH - 1:0] pc_buffer;
-    initial begin
-      pc_buffer = 0;
-    end
-    always @ (negedge clock) begin
-        if (reset) begin
-            pc_buffer <= 0;
-        end
-        else begin
-            if(enable)begin
-                pc_buffer <= current_PC;
-            end
-        end        
-    end
-    assign instruction_address = reset ? 0 : pc_buffer;
+    assign instruction_address = reset ? 0 : current_PC;
     Incrementor PC_incr(
         reset ? 4 : 1,
         current_PC,

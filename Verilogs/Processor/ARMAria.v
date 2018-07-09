@@ -17,7 +17,7 @@ module ARMAria
     output [1:0] always_zero,
     output clock, reset, should_take_branch,
     output [1:0] control_Human_Interface,
-    output [ADDR_WIDTH - 1: 0] instruction_address, next_instruction_address, next_PC,
+    output [ADDR_WIDTH - 1: 0] instruction_address, next_PC,
     output [INSTRUCTION_WIDTH -1 :0] Instruction,
     output [DATA_WIDTH - 1: 0] next_SP, RESULT, Abus, MemOut, Bsh 
 );
@@ -79,22 +79,16 @@ module ARMAria
         clock, control_Human_Interface, reset,
         MemOut, IData, sw,
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,       //Flags from Control Unit
-        rled, gled, sseg, Abus , Bsh
+        rled, gled, sseg, instruction_address , Instruction    
     );
 
     MemoryAddressHandler mah(
-        RESULT, next_instruction_address, SP,
+        RESULT, PC, SP,
         controlMAH,
-        reset, mode_flag, clock, enable,
+        reset, mode_flag,
         next_SP,
         data_address,
         instruction_address, next_PC
-    );
-
-    MUXPC mpc(
-        should_take_branch,
-        RESULT, PC,
-        next_instruction_address
     );
 
     MemoryDataHandler mdh(
@@ -110,7 +104,7 @@ module ARMAria
     );
 
     RegBank ARMARIAbank(
-        mode_flag, enable, reset, clock,
+        mode_flag, enable, reset, clock, should_take_branch,
         controlRB, 
         RegA, RegB, RegD, 
         RESULT, MemIn,
