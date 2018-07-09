@@ -259,9 +259,9 @@ always @ ( * ) begin
 
       10:begin//Instructions 56 & 57
         Offset[7:0]=Instruction[7:0];
-        RegD[2:0]=Instruction[10:8];
-        RegA=(op)?4'he : 4'hf;
-        op=Instruction[11];
+        RegD = {1'b0, Instruction[10:8]};
+        op = Instruction[11];
+        RegA = (op) ? 4'he : 4'hf;
         ID=(op)?7'h39:7'h38;
       end
 

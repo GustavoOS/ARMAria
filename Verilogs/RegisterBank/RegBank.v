@@ -2,13 +2,15 @@ module RegBank
 #(
     parameter DATA_AREA_START = 8192,
     parameter REGISTER_LENGTH = 32,
-    parameter MAX_NUMBER = 2**REGISTER_LENGTH - 1
+    parameter MAX_NUMBER = 32'hffffffff,
+    parameter ADDR_WIDTH = 14
 )(
     input   privileged_mode, enable, reset, clock,
     input   [2:0]   control, 
     input   [3:0]   register_source_A, register_source_B, register_Dest,
     input   [REGISTER_LENGTH -1:0]  ALU_result, data_from_memory,
-    input   [REGISTER_LENGTH -1:0]  new_SP, new_PC,
+    input   [REGISTER_LENGTH -1:0]  new_SP,
+    input   [ADDR_WIDTH - 1:0] new_PC,
     output  [REGISTER_LENGTH -1:0]  read_data_A, read_data_B,
     output  [REGISTER_LENGTH -1:0]  current_PC, current_SP, memory_output
 );
@@ -17,6 +19,9 @@ module RegBank
     reg [REGISTER_LENGTH - 1:0] Buffer;
     reg [3:0] stored_register;
     reg past_by_load;
+
+    wire [REGISTER_LENGTH - ADDR_WIDTH - 1:0] zeros;
+    assign zeros = 0;
 
     wire [4:0] SP_index;
     wire RD_isnt_special;
@@ -32,7 +37,7 @@ module RegBank
     initial begin
         Bank[0] = DATA_AREA_START;
         Bank[14] = MAX_NUMBER;//User Stack
-        Bank[15] = 0;  //PC
+        Bank[15] = 1;  //PC
         Bank[16] = MAX_NUMBER; //Privileged Stack
         past_by_load = 0;
         stored_register = 0;
@@ -48,19 +53,19 @@ module RegBank
         if (reset) begin
             Bank[0] <= DATA_AREA_START;
             Bank[14] <= MAX_NUMBER;//User Stack
-            Bank[15] <= new_PC;  //PC = 1 due to Memory Address Handler
+            Bank[15] <= {zeros, new_PC};  //PC = 1 due to Memory Address Handler
             Bank[16] <= MAX_NUMBER; //Privileged Stack
             past_by_load = 0;
             stored_register = 0;
         end else begin
             if (enable) begin
 
-                Bank[15] <= new_PC;
+                Bank[15] <= {zeros, new_PC};
                 Bank[SP_index] <= (control==2)? MAX_NUMBER: new_SP;
 
                 case (control)
                     1:begin //RD=ALU_result
-                        if(RD_isnt_special)begin
+                        if(RD_isnt_special) begin
                             Bank[register_Dest] <= ALU_result;
                         end
                     end

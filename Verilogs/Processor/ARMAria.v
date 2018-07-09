@@ -8,19 +8,19 @@ module ARMAria
     parameter DATA_WIDTH = 32
 )(
     input clk_fpga, clock_fpga_button, reset_fpga,
-    input [IO_WIDTH - 1:0] sw,
+    input [IO_WIDTH :0] sw,
     output [IO_WIDTH - 1:0] rled,
     output [FLAG_COUNT - 1:0] gled,
     output [SEGMENTS_COUNT - 1:0] sseg,
 
     //Debug signals
+    output [1:0] always_zero,
     output clock, reset, should_take_branch,
     output [1:0] control_Human_Interface,
-    output [ADDR_WIDTH - 1: 0] instruction_address, next_instruction_address,
+    output [ADDR_WIDTH - 1: 0] instruction_address, next_instruction_address, next_PC,
     output [INSTRUCTION_WIDTH -1 :0] Instruction,
-    output [DATA_WIDTH - 1: 0] next_PC, next_SP, RESULT, Abus, MemOut, Bsh 
+    output [DATA_WIDTH - 1: 0] next_SP, RESULT, Abus, MemOut, Bsh 
 );
-    wire [1:0] always_zero;
     assign always_zero = 0;
     /* Clock statup  */
     wire clktemp, resetemp;
@@ -79,16 +79,16 @@ module ARMAria
         clock, control_Human_Interface, reset,
         MemOut, IData, sw,
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,       //Flags from Control Unit
-        rled, gled, sseg, Instruction
+        rled, gled, sseg, Abus , Bsh
     );
 
     MemoryAddressHandler mah(
         RESULT, next_instruction_address, SP,
         controlMAH,
-        reset, mode_flag,
-        next_PC, next_SP,
+        reset, mode_flag, clock, enable,
+        next_SP,
         data_address,
-        instruction_address
+        instruction_address, next_PC
     );
 
     MUXPC mpc(
