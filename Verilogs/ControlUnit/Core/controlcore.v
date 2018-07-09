@@ -201,7 +201,7 @@ module ControlCore(
         //standard
       end
       38:begin //BX Register
-        controlALU = 0;
+        controlALU = 12;
         controlBS = 0;
         control_channel_B_sign_extend_unit = 0;
         controlMAH = 0;
@@ -320,8 +320,8 @@ module ControlCore(
       end
       56:begin
         controlALU = 2;
-        // controlBS = 1;
-        //controlRB = 1;
+        controlBS = 0;
+        controlRB = 1;
         should_fill_channel_b_with_offset = 1;
       end
       57:begin
@@ -413,7 +413,7 @@ module ControlCore(
         controlMAH = 0;
         controlRB = 0;
       end
-      74:begin
+      74:begin //NOP
         controlRB = 5;
       end
       75:begin

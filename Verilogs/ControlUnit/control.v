@@ -22,7 +22,7 @@ module Control
 );
   
     wire [3:0] condition_code;
-    wire [3:0] specreg_update_mode;
+    wire [2:0] specreg_update_mode;
 
     InstructionDecoder id(
         Instruction,
