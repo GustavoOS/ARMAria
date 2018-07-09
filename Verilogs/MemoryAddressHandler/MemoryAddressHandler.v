@@ -13,7 +13,7 @@ module MemoryAddressHandler #(
 
 )(
     input [DATA_WIDTH -1:0]  input_address, current_PC, current_SP,
-    input [1:0] control,
+    input [2:0] control,
     input reset, privilege_mode_flag,    
     output [DATA_WIDTH -1:0] next_SP,
     output reg [ADDR_WIDTH - 1:0] output_address, 
