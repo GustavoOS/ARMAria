@@ -9,7 +9,7 @@ module MemoryAddressHandler #(
     parameter USER_STACK_TOP = CODE_AREA_SIZE + PRIVILEGED_STACK_SIZE,
     parameter USER_STACK_BOTTOM = DATA_AREA_SIZE - 1,
     parameter DATA_AREA_SIZE = 8192,
-    parameter MAX_NUMBER = (2**DATA_WIDTH) -1
+    parameter MAX_NUMBER = 32'hffffffff
 
 )(
     input [DATA_WIDTH -1:0]  input_address, current_PC, current_SP,

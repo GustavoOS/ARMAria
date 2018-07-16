@@ -1,7 +1,7 @@
 module Incrementor #(
     parameter PACE = 1,
     parameter DATA_WIDTH = 32,
-    parameter MAX_NUMBER = (2**DATA_WIDTH) -1
+    parameter MAX_NUMBER = 32'hffffffff
 )(
     input [2:0] control,
     input [31:0] input_address, new_address,
