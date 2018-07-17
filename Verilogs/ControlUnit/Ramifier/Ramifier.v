@@ -39,16 +39,16 @@ module Ramifier
                 take = (!carry_flag) || (zero_flag);
             end
             10:begin    //GE
-                take = (negative_flag == overflow_flag);
+                take =  (negative_flag ^~ overflow_flag) ;
             end
             11:begin    //LT
-                take = (negative_flag != overflow_flag);
+                take = (negative_flag ^ overflow_flag);
             end
             12:begin    //GT
-                take = (!zero_flag) && (negative_flag == overflow_flag);
+                take = (!zero_flag) && (negative_flag ^~ overflow_flag);
             end
             13:begin     //LE
-                take = (zero_flag) && (negative_flag != overflow_flag);
+                take = (zero_flag) || (negative_flag ^ overflow_flag);
             end
             14:begin  //Al
                 take = 1;
