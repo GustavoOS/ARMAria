@@ -7,43 +7,36 @@ module ARMAria
     parameter SEGMENTS_COUNT = 56,
     parameter DATA_WIDTH = 32
 )(
-    input clk_fpga, clock_fpga_button, reset_fpga,
+    input clock_50mhz, confirmation_button, reset_button,
     input [IO_WIDTH :0] sw,
     output [IO_WIDTH - 1:0] rled,
     output [FLAG_COUNT - 1:0] gled,
     output [SEGMENTS_COUNT - 1:0] sseg,
-
-    //Debug signals
-    output [1:0] always_zero,
     output clock, reset, should_take_branch,
-    output [1:0] control_Human_Interface,
-    output [ADDR_WIDTH - 1: 0] instruction_address, next_PC,
-    output [INSTRUCTION_WIDTH -1 :0] Instruction,
-    output [DATA_WIDTH - 1: 0] next_SP, RESULT, Abus, MemOut, Bsh 
+    output is_input, is_output
 );
-    assign always_zero = 0;
-    /* Clock statup  */
-    wire clktemp, resetemp;
-    DeBounce dbc(clk_fpga, clock_fpga_button, clktemp);
-    DeBounce dbr(clk_fpga, reset_fpga, resetemp);
 
-    assign clock = ~clktemp;
-    assign reset = ~resetemp;
+    /* Clock statup  */
+    DeBounce dbc(clock_50mhz, confirmation_button, clock);
+    DeBounce dbr(clock_50mhz, reset_button, reset);
     /*Clock startup end */
 
     /* Wire Declaration Section*/
     wire alu_negative, alu_zero, alu_carry, alu_overflow;
     wire bs_negative, bs_zero, bs_carry, enable;
-    wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
-    wire should_fill_channel_b_with_offset;
+    wire negative_flag, zero_flag, carry_flag, overflow_flag;
+    wire should_fill_channel_b_with_offset, mode_flag;
     wire should_read_from_input_instead_of_memory;
+    wire [1:0] control_Human_Interface;
     wire [2:0] controlMAH, control_channel_B_sign_extend_unit;
     wire [2:0] control_load_sign_extend_unit, controlRB;
     wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
     wire [6:0] ID;
     wire [7:0] OffImmed;
     wire [IO_WIDTH - 1:0] rledsignal;
-    wire [ADDR_WIDTH - 1: 0] data_address;
+    wire [ADDR_WIDTH - 1: 0] instruction_address, next_PC, data_address;
+    wire [INSTRUCTION_WIDTH -1 :0] Instruction;
+    wire [DATA_WIDTH - 1: 0] next_SP, RESULT, Abus, MemOut, Bsh;
     wire [DATA_WIDTH - 1:0] display7, PC, SP, data_read_from_memory;
     wire [DATA_WIDTH - 1:0] PreMemIn, MemIn, Bbus, IData, PreB, Bse;
     wire allow_write_on_memory;
@@ -63,7 +56,7 @@ module ARMAria
         allow_write_on_memory, should_fill_channel_b_with_offset, 
         should_read_from_input_instead_of_memory, 
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag, 
-        enable, should_take_branch
+        enable, should_take_branch, is_input, is_output
     );
 
     Memory externalmem(

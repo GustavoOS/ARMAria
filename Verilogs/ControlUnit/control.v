@@ -18,7 +18,7 @@ module Control
     output allow_write_on_memory, should_fill_channel_b_with_offset,
     output should_read_from_input_instead_of_memory,
     output negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
-    output enable, should_take_branch
+    output enable, should_take_branch, is_input, is_output
 );
   
     wire [3:0] condition_code;
@@ -75,7 +75,9 @@ module Control
         should_read_from_input_instead_of_memory, 
         should_fill_channel_b_with_offset, 
         mode_flag,
-        specreg_update_mode
+        specreg_update_mode,
+        is_input,
+        is_output
     );
 
 
