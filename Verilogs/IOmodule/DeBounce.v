@@ -28,8 +28,10 @@
 module  DeBounce
 	(
 	input 			clk, button_in,				// inputs
-	output reg 	DB_out													// output
+	output debounce_output													// output
 	);
+	assign debounce_output = ~DB_out;
+	reg DB_out;
 //// ---------------- internal constants --------------
 	parameter N = 11 ;		// (2^ (21-1) )/ 38 MHz = 32 ms debounce time
 ////---------------- internal variables ---------------
