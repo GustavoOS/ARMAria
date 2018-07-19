@@ -379,6 +379,7 @@ module ControlCore(
                 should_read_from_input_instead_of_memory = 1;
                 allow_write_on_memory = 0;
                 is_input = 1;
+                enable = confirmation;
             end
             72:begin //SWI
                 if (MODE==1'b1) begin
