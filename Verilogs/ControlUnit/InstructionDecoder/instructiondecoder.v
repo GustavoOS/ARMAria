@@ -293,15 +293,17 @@ always @ ( * ) begin
           end
           14:begin
             case (funct1)
-              0:begin //Instruction 69 - OUTSS
+              0:begin //Instruction 69 - OUTPUT
                 ID = 7'h45;
                 RegD = Instruction[2:0];
               end
-              1:begin //Instruction 70 - OUTLED
+              1:begin //Instruction 70 - PAUSE
                 ID = 7'h46;
-                RegD = Instruction[2:0];
+                RegA = 0;
+                RegB = 0;
+                RegD = 0;
               end
-              2:begin //Instruction 71 - INSW
+              2:begin //Instruction 71 - INPUT
                 ID = 7'h47;
                 RegD = Instruction[2:0];
               end

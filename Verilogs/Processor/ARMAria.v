@@ -8,13 +8,13 @@ module ARMAria
     parameter DATA_WIDTH = 32,
     parameter OFFSET_WIDTH = 8
 )(
-    input clock_50mhz, confirmation_button, reset_button,
+    input clock_50mhz, confirmation_button, reset_button, continue_button,
     input [IO_WIDTH :0] sw,
     output [IO_WIDTH - 1:0] rled,
     output [FLAG_COUNT - 1:0] gled,
     output [SEGMENTS_COUNT - 1:0] sseg,
     output clock, reset, should_take_branch,
-    output is_input, is_output, confirmation
+    output is_input, is_output, confirmation, continue
 );
 
     /* Wire Declaration Section*/
@@ -41,6 +41,7 @@ module ARMAria
 
     DeBounce dbc(clock_50mhz, confirmation_button, confirmation);
     DeBounce dbr(clock_50mhz, reset_button, reset);
+    DeBounce dbco(clock_50mhz, continue_button, continue);
 
     /*Clock startup */
 
@@ -50,7 +51,7 @@ module ARMAria
 
     Control control_unit(
         Instruction,
-        alu_negative, alu_carry, alu_overflow, alu_zero, 
+        alu_negative, alu_carry, alu_overflow, alu_zero, continue,
         bs_negative, bs_zero, bs_carry, reset, clock, confirmation,
         OffImmed,
         ID, 

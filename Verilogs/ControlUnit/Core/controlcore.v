@@ -1,5 +1,5 @@
 module ControlCore(
-    input confirmation, MODE,
+    input confirmation, continue, MODE,
     input [6:0] ID,
     output reg enable, allow_write_on_memory, should_fill_channel_b_with_offset,
     output reg should_read_from_input_instead_of_memory, is_input, is_output,
@@ -360,7 +360,7 @@ module ControlCore(
                 controlRB = 3;
                 control_load_sign_extend_unit = 0;
             end
-            69:begin    //OUTSS
+            69:begin    // OUTPUT
                 controlALU = 0;
                 controlRB = 0;
                 allow_write_on_memory = 0;
@@ -368,7 +368,12 @@ module ControlCore(
                 enable = confirmation;
                 is_output = 1;
             end
-            71:begin    //INSW
+            70: begin // PAUSE
+                controlRB = 0;
+                enable = continue;
+                specreg_update_mode = 0;
+            end
+            71:begin    // INPUT
                 controlALU = 0;
                 controlBS = 0;
                 controlRB = 6;
