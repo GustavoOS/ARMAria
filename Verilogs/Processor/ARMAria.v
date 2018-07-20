@@ -14,13 +14,13 @@ module ARMAria
     output [FLAG_COUNT - 1:0] gled,
     output [SEGMENTS_COUNT - 1:0] sseg,
     output clock, reset, should_take_branch,
-    output is_input, is_output, confirmation, continue
+    output is_input, is_output, enable
 );
 
     /* Wire Declaration Section*/
 
     wire alu_negative, alu_zero, alu_carry, alu_overflow;
-    wire bs_negative, bs_zero, bs_carry, enable;
+    wire bs_negative, bs_zero, bs_carry, confirmation, continue;
     wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
     wire allow_write_on_memory, should_fill_channel_b_with_offset;
     wire should_read_from_input_instead_of_memory;

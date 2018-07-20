@@ -372,6 +372,8 @@ module ControlCore(
                 controlRB = 0;
                 enable = continue;
                 specreg_update_mode = 0;
+                is_input = 1;
+                is_output = 1;
             end
             71:begin    // INPUT
                 controlALU = 0;
