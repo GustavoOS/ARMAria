@@ -4,49 +4,55 @@ module ARMAria
     parameter INSTRUCTION_WIDTH = 16,
     parameter FLAG_COUNT = 5,
     parameter IO_WIDTH = 16,
-    parameter SEGMENTS_COUNT = 56,
-    parameter DATA_WIDTH = 32
+    parameter SEGMENTS_COUNT = 7*8,
+    parameter DATA_WIDTH = 32,
+    parameter OFFSET_WIDTH = 8
 )(
-    input clock_50mhz, confirmation_button, reset_button,
+    input clock_50mhz, confirmation_button, reset_button, continue_button,
     input [IO_WIDTH :0] sw,
     output [IO_WIDTH - 1:0] rled,
     output [FLAG_COUNT - 1:0] gled,
     output [SEGMENTS_COUNT - 1:0] sseg,
     output clock, reset, should_take_branch,
-    output is_input, is_output
+    output is_input, is_output, enable
 );
 
-    /* Clock statup  */
-    DeBounce dbc(clock_50mhz, confirmation_button, clock);
-    DeBounce dbr(clock_50mhz, reset_button, reset);
-    /*Clock startup end */
-
     /* Wire Declaration Section*/
+
     wire alu_negative, alu_zero, alu_carry, alu_overflow;
-    wire bs_negative, bs_zero, bs_carry, enable;
-    wire negative_flag, zero_flag, carry_flag, overflow_flag;
-    wire should_fill_channel_b_with_offset, mode_flag;
+    wire bs_negative, bs_zero, bs_carry, confirmation, continue;
+    wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
+    wire allow_write_on_memory, should_fill_channel_b_with_offset;
     wire should_read_from_input_instead_of_memory;
     wire [1:0] control_Human_Interface;
     wire [2:0] controlMAH, control_channel_B_sign_extend_unit;
     wire [2:0] control_load_sign_extend_unit, controlRB;
     wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
     wire [6:0] ID;
-    wire [7:0] OffImmed;
+    wire [OFFSET_WIDTH - 1:0] OffImmed;
     wire [IO_WIDTH - 1:0] rledsignal;
-    wire [ADDR_WIDTH - 1: 0] instruction_address, next_PC, data_address;
     wire [INSTRUCTION_WIDTH -1 :0] Instruction;
-    wire [DATA_WIDTH - 1: 0] next_SP, RESULT, Abus, MemOut, Bsh;
+    wire [ADDR_WIDTH - 1: 0] instruction_address, next_PC, data_address;
     wire [DATA_WIDTH - 1:0] display7, PC, SP, data_read_from_memory;
     wire [DATA_WIDTH - 1:0] PreMemIn, MemIn, Bbus, IData, PreB, Bse;
-    wire allow_write_on_memory;
+    wire [DATA_WIDTH - 1: 0] next_SP, RESULT, Abus, MemOut, Bsh;
+
+    /* Buttons startup  */
+
+    DeBounce dbc(clock_50mhz, confirmation_button, confirmation);
+    DeBounce dbr(clock_50mhz, reset_button, reset);
+    DeBounce dbco(clock_50mhz, continue_button, continue);
+
+    /*Clock startup */
+
+    FrequencyDivider fd(clock_50mhz, clock);
 
     /* Module interconnection*/
 
     Control control_unit(
         Instruction,
-        alu_negative, alu_carry, alu_overflow, alu_zero, 
-        bs_negative, bs_zero, bs_carry, reset, clock,
+        alu_negative, alu_carry, alu_overflow, alu_zero, continue,
+        bs_negative, bs_zero, bs_carry, reset, clock, confirmation,
         OffImmed,
         ID, 
         RegD, RegA, RegB, 
@@ -66,7 +72,6 @@ module ARMAria
         Instruction,
         data_read_from_memory
     );
-
 
     IOmodule enterescape(
         clock, control_Human_Interface, reset,
@@ -133,9 +138,5 @@ module ARMAria
         carry_flag,
         alu_negative, alu_zero, alu_carry, alu_overflow
     );
-
-
-
-
 
 endmodule

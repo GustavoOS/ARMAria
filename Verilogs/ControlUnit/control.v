@@ -7,8 +7,8 @@ module Control
     parameter OFFSET_WIDTH = 8
 )(
     input [INSTRUCTION_WIDTH - 1:0] Instruction,
-    input alu_negative, alu_carry, alu_overflow, alu_zero,
-    input bs_negative, bs_zero, bs_carry, reset, clock, 
+    input alu_negative, alu_carry, alu_overflow, alu_zero, continue,
+    input bs_negative, bs_zero, bs_carry, reset, clock, confirmation,
     output [OFFSET_WIDTH - 1:0] OffImmed,
     output [ID_WIDTH - 1:0] ID,
     output [REGISTER_NUMBER_WIDTH - 1:0] RegD, RegA, RegB,
@@ -20,7 +20,7 @@ module Control
     output negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
     output enable, should_take_branch, is_input, is_output
 );
-  
+    
     wire [3:0] condition_code;
     wire [2:0] specreg_update_mode;
 
@@ -35,21 +35,11 @@ module Control
     );
 
     SpecReg sr(
-        clock, 
-        reset, 
+        clock, reset, enable,
         specreg_update_mode, 
-        negative_flag,
-        zero_flag, 
-        carry_flag, 
-        overflow_flag, 
-        mode_flag, 
-        alu_negative, 
-        alu_zero, 
-        alu_carry, 
-        alu_overflow, 
-        bs_negative, 
-        bs_zero, 
-        bs_carry
+        negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag, 
+        alu_negative, alu_zero, alu_carry, alu_overflow,
+        bs_negative, bs_zero, bs_carry
     );
 
     Ramifier rm(
@@ -62,22 +52,14 @@ module Control
     );
 
     ControlCore core(
+        confirmation, continue, mode_flag,
         ID, 
-        enable, 
+        enable, allow_write_on_memory, should_fill_channel_b_with_offset, 
+        should_read_from_input_instead_of_memory, is_input, is_output,
         control_Human_Interface,
-        controlALU, 
-        controlBS, 
-        allow_write_on_memory, 
-        controlRB,
-        control_channel_B_sign_extend,
-        control_load_sign_extend,
-        controlMAH, 
-        should_read_from_input_instead_of_memory, 
-        should_fill_channel_b_with_offset, 
-        mode_flag,
-        specreg_update_mode,
-        is_input,
-        is_output
+        control_channel_B_sign_extend, control_load_sign_extend,
+        specreg_update_mode, controlRB, controlMAH, 
+        controlALU, controlBS
     );
 
 
