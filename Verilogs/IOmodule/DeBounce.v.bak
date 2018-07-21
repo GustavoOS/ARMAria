@@ -31,6 +31,7 @@ module  DeBounce
 	output debounce_output													// output
 	);
 	assign debounce_output = ~DB_out;
+	reg DB_out;
 //// ---------------- internal constants --------------
 	reg 	DB_out;													// output
 	assign debounce_out = ~DB_out;
