@@ -6,7 +6,7 @@ module Memory
 (
 	input [(DW-1):0] input_data,
 	input [(ADDR_WIDTH-1):0] instruction_address, data_address,
-	input write_enable, clock,
+	input write_enable, read_clock, write_clock,
 	output [15:0] instruction,
 	output reg [(DW-1):0] output_data
 );
@@ -22,20 +22,18 @@ module Memory
 		$readmemb(inputFile, ram);
 	end
 
-	//Port A
-	always @ (posedge clock)
+	// Read port	
+	always @ (posedge read_clock)
 	begin
-		fetched_instruction = ram[instruction_address];
+		fetched_instruction = ram[instruction_address];		
+		output_data = ram[data_address];
 	end
 
-	//Port B
-	always @ (negedge clock)	
+	// Write port
+	always @ (posedge write_clock)
 	begin
-		if (write_enable) 
-		begin
+		if (write_enable)
 			ram[data_address] <= input_data;
-		end		
-		output_data = ram[data_address];				
 	end
 
 endmodule

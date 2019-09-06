@@ -16,7 +16,7 @@ module SpecReg(
 
 
 
-    always @ ( negedge clock ) begin
+    always @ ( posedge clock ) begin
         if (reset) begin
             SPECREG <= 0;
         end else begin
