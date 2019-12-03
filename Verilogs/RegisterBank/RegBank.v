@@ -17,8 +17,6 @@ module RegBank
 
     reg [REGISTER_LENGTH -1:0] Bank [16:0];
     reg [REGISTER_LENGTH - 1:0] infoA, infoB;
-    reg [3:0] stored_register;
-    // reg past_by_load;
 
     wire [REGISTER_LENGTH - ADDR_WIDTH - 1:0] zeros;
     assign zeros = 0;
@@ -39,8 +37,6 @@ module RegBank
         Bank[14] = MAX_NUMBER;//User Stack
         Bank[15] = 0;  //PC
         Bank[16] = MAX_NUMBER; //Privileged Stack
-        // past_by_load = 0;
-        stored_register = 0;
     end
 
     always @ (posedge fast_clock) begin
@@ -55,8 +51,6 @@ module RegBank
             Bank[14] <= MAX_NUMBER;//User Stack
             Bank[15] <= {zeros, new_PC};  //PC = 1 due to Memory Address Handler
             Bank[16] <= MAX_NUMBER; //Privileged Stack
-            // past_by_load = 0;
-            stored_register = 0;
         end else begin
             if (enable) begin
 
@@ -69,29 +63,16 @@ module RegBank
                             Bank[register_Dest] <= ALU_result;
                         end
                     end
-                    2:begin
+                    2:begin // Clear stack instruction
                         Bank[0] <= DATA_AREA_START;
                     end
                     3:begin //RD=data_from_memory
                         if(RD_isnt_special)begin
                             Bank[register_Dest] <= data_from_memory;
-                            // stored_register <= register_Dest;
-                            // past_by_load <= 1;
                         end
                     end
                     4:begin //Enter privileged mode
                         Bank[13] <= Bank[15];  //LR = actual next Instruction address
-                    end
-                    5:begin
-                    //   if(past_by_load) begin
-                        Bank[register_Dest] <= data_from_memory;
-                        // past_by_load <= 0;
-                    //   end
-                    end
-                    6:begin
-                        if(RD_isnt_special)begin
-                            Bank[register_Dest] <= data_from_memory;
-                        end
                     end
                 endcase
 

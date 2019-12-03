@@ -12,7 +12,7 @@ module Control
     output [OFFSET_WIDTH - 1:0] OffImmed,
     output [ID_WIDTH - 1:0] ID,
     output [REGISTER_NUMBER_WIDTH - 1:0] RegD, RegA, RegB,
-    output [3:0] controlBS, controlALU, control_Human_Interface,
+    output [3:0] controlBS, controlALU,
     output [2:0] controlRB, controlMAH,
     output [2:0] control_channel_B_sign_extend, control_load_sign_extend,
     output allow_write_on_memory, should_fill_channel_b_with_offset,
@@ -56,7 +56,6 @@ module Control
         ID, 
         enable, allow_write_on_memory, should_fill_channel_b_with_offset, 
         should_read_from_input_instead_of_memory, is_input, is_output,
-        control_Human_Interface,
         control_channel_B_sign_extend, control_load_sign_extend,
         specreg_update_mode, controlRB, controlMAH, 
         controlALU, controlBS
