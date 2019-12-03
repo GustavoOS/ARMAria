@@ -1,5 +1,5 @@
 module MemoryAddressHandler #(
-    parameter ADDR_WIDTH = 14,
+    parameter ADDR_WIDTH = 32,
     parameter DATA_WIDTH = 32;
     parameter CODE_AREA_SIZE = 4096,
     parameter PRIVILEGED_STACK_SIZE = 2048,

@@ -2,12 +2,13 @@ module Memory
 #(
 	parameter DW=32,
 	parameter ADDR_WIDTH=14, 
-	parameter inputFile = "Programa.txt")
-(
+	parameter INSTRUCTION_SIZE = 16;
+	parameter inputFile = "Programa.txt"
+)(
 	input [(DW-1):0] input_data,
 	input [(ADDR_WIDTH-1):0] instruction_address, data_address,
 	input write_enable, read_clock, write_clock,
-	output [15:0] instruction,
+	output [(INSTRUCTION_SIZE - 1):0] instruction,
 	output reg [(DW-1):0] output_data
 );
 	//Chops the instruction output

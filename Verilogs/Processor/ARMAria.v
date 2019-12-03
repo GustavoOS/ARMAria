@@ -1,6 +1,6 @@
 module ARMAria
 #(
-    parameter ADDR_WIDTH = 14,
+    parameter ADDR_WIDTH = 32,
     parameter INSTRUCTION_WIDTH = 16,
     parameter FLAG_COUNT = 5,
     parameter IO_WIDTH = 16,
@@ -24,17 +24,20 @@ module ARMAria
     wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
     wire allow_write_on_memory, should_fill_channel_b_with_offset;
     wire should_read_from_input_instead_of_memory;
+    wire isStorage;
     wire [2:0] controlMAH, control_channel_B_sign_extend_unit;
     wire [2:0] control_load_sign_extend_unit, controlRB;
     wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
     wire [6:0] ID;
-    wire [OFFSET_WIDTH - 1:0] OffImmed;
-    wire [IO_WIDTH - 1:0] rledsignal;
-    wire [INSTRUCTION_WIDTH -1 :0] Instruction;
-    wire [ADDR_WIDTH - 1: 0] instruction_address, next_PC, data_address;
-    wire [DATA_WIDTH - 1:0] display7, PC, SP, data_read_from_memory;
-    wire [DATA_WIDTH - 1:0] PreMemIn, MemIn, Bbus, IData, PreB, Bse;
-    wire [DATA_WIDTH - 1: 0] next_SP, RESULT, Abus, MemOut, Bsh;
+    wire [(OFFSET_WIDTH - 1):0] OffImmed;
+    wire [(IO_WIDTH - 1):0] rledsignal;
+    wire [(INSTRUCTION_WIDTH -1) :0] Instruction;
+    wire [(ADDR_WIDTH - 1): 0] instruction_address, next_PC, data_address,
+                                storage_addres;
+    wire [(DATA_WIDTH - 1):0] display7, PC, SP, data_read_from_memory;
+    wire [(DATA_WIDTH - 1):0] PreMemIn, MemIn, Bbus, IData, PreB, Bse;
+    wire [(DATA_WIDTH - 1): 0] next_SP, RESULT, Abus, MemOut, Bsh;
+    wire [(DATA_WIDTH - 1): 0] StoDat, MemDat; //Storage Data, Memory Data
 
     /* Buttons startup  */
 
@@ -64,10 +67,9 @@ module ARMAria
         enable, should_take_branch, is_input, is_output
     );
 
-    Memory externalmem(
-        MemOut,
-        instruction_address, data_address,
-        allow_write_on_memory, fast_clock, slow_clock,
+    MemoryUnit mu(
+        allow_write_on_memory, slow_clock, fast_clock,
+        data_address, instruction_address, MemOut,
         Instruction,
         data_read_from_memory
     );
@@ -78,7 +80,7 @@ module ARMAria
         reset,
         MemOut, IData, sw,
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,       //Flags from Control Unit
-        rled, gled, sseg, instruction_address , Instruction    
+        rled, gled, sseg, instruction_address , Instruction
     );
 
     MemoryAddressHandler mah(
