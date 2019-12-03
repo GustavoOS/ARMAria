@@ -3,7 +3,7 @@ module RegBank
     parameter DATA_AREA_START = 8192,
     parameter REGISTER_LENGTH = 32,
     parameter MAX_NUMBER = 32'hffffffff,
-    parameter ADDR_WIDTH = 14
+    parameter ADDR_WIDTH = 32
 )(
     input   privileged_mode, enable, reset, slow_clock, fast_clock, should_branch,
     input   [2:0]   control, 
@@ -17,9 +17,6 @@ module RegBank
 
     reg [REGISTER_LENGTH -1:0] Bank [16:0];
     reg [REGISTER_LENGTH - 1:0] infoA, infoB;
-
-    wire [REGISTER_LENGTH - ADDR_WIDTH - 1:0] zeros;
-    assign zeros = 0;
 
     wire [4:0] SP_index;
     wire RD_isnt_special;
@@ -49,12 +46,12 @@ module RegBank
         if (reset) begin
             Bank[0] <= DATA_AREA_START;
             Bank[14] <= MAX_NUMBER;//User Stack
-            Bank[15] <= {zeros, new_PC};  //PC = 1 due to Memory Address Handler
+            Bank[15] <= new_PC;  //PC = 1 due to Memory Address Handler
             Bank[16] <= MAX_NUMBER; //Privileged Stack
         end else begin
             if (enable) begin
 
-                Bank[15] <= should_branch ? ALU_result : {zeros, new_PC};
+                Bank[15] <= should_branch ? ALU_result : new_PC;
                 Bank[SP_index] <= (control==2)? MAX_NUMBER: new_SP;
 
                 case (control)
