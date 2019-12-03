@@ -20,7 +20,7 @@ module ARMAria
     /* Wire Declaration Section*/
 
     wire alu_negative, alu_zero, alu_carry, alu_overflow;
-    wire bs_negative, bs_zero, bs_carry, confirmation, continue;
+    wire bs_negative, bs_zero, bs_carry, confirmation, continue_debounced;
     wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
     wire allow_write_on_memory, should_fill_channel_b_with_offset;
     wire should_read_from_input_instead_of_memory;
@@ -43,7 +43,7 @@ module ARMAria
 
     DeBounce dbc(fast_clock, confirmation_button, confirmation);
     DeBounce dbr(fast_clock, reset_button, reset);
-    DeBounce dbco(fast_clock, continue_button, continue);
+    DeBounce dbco(fast_clock, continue_button, continue_debounced);
 
     /*Drive slow clock */
 
@@ -53,7 +53,7 @@ module ARMAria
 
     Control control_unit(
         Instruction,
-        alu_negative, alu_carry, alu_overflow, alu_zero, continue,
+        alu_negative, alu_carry, alu_overflow, alu_zero, continue_debounced,
         bs_negative, bs_zero, bs_carry, reset, slow_clock, confirmation,
         OffImmed,
         ID, 

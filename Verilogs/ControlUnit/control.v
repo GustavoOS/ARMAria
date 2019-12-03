@@ -7,7 +7,7 @@ module Control
     parameter OFFSET_WIDTH = 8
 )(
     input [INSTRUCTION_WIDTH - 1:0] Instruction,
-    input alu_negative, alu_carry, alu_overflow, alu_zero, continue,
+    input alu_negative, alu_carry, alu_overflow, alu_zero, continue_button,
     input bs_negative, bs_zero, bs_carry, reset, clock, confirmation,
     output [OFFSET_WIDTH - 1:0] OffImmed,
     output [ID_WIDTH - 1:0] ID,
@@ -52,7 +52,7 @@ module Control
     );
 
     ControlCore core(
-        confirmation, continue, mode_flag,
+        confirmation, continue_button, mode_flag,
         ID, 
         enable, allow_write_on_memory, should_fill_channel_b_with_offset, 
         should_read_from_input_instead_of_memory, is_input, is_output,
