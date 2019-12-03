@@ -5,6 +5,13 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 
+### VisualStudioCode ###
+./Verilogs/vscode/*
+!./Verilogs/.vscode/settings.json
+!./Verilogs/.vscode/tasks.json
+!./Verilogs/.vscode/launch.json
+!./Verilogs/.vscode/extensions.json
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
