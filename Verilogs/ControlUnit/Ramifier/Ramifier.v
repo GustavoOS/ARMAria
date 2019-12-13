@@ -1,6 +1,6 @@
 module Ramifier
 (
-  input [3:0] Condition,
+  input [5:0] Condition,
   input negative_flag, zero_flag, carry_flag, overflow_flag,
   output reg take
 );
@@ -51,6 +51,9 @@ module Ramifier
                 take = (zero_flag) || (negative_flag ^ overflow_flag);
             end
             14:begin  //Al
+                take = 1;
+            end
+            15:begin    //ABSOLUTE JUMP ALWAYS AB
                 take = 1;
             end
             default: begin

@@ -4,7 +4,8 @@ module Control
     parameter ID_WIDTH = 7,
     parameter INSTRUCTION_WIDTH = 16,
     parameter REGISTER_NUMBER_WIDTH = 4,
-    parameter OFFSET_WIDTH = 8
+    parameter OFFSET_WIDTH = 8,
+    parameter CONDITION_WIDTH = 5
 )(
     input [INSTRUCTION_WIDTH - 1:0] Instruction,
     input alu_negative, alu_carry, alu_overflow, alu_zero, continue_button,
@@ -20,8 +21,8 @@ module Control
     output negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
     output enable, should_take_branch, is_input, is_output
 );
-    
-    wire [3:0] condition_code;
+
+    wire [(CONDITION_WIDTH -1):0] condition_code;
     wire [2:0] specreg_update_mode;
 
     InstructionDecoder id(

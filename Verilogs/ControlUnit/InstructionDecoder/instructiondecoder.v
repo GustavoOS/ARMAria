@@ -1,24 +1,25 @@
-module InstructionDecoder(
-  Instruction,
-  ID,
-  RegD,//Destination Register
-  RegA,//Channel A
-  RegB,//Channel B
-  Offset,
-  Condicao
+
+module InstructionDecoder #(
+  parameter INSTRUCTION_WIDTH = 16,
+  parameter ID_WIDTH = 7,
+  parameter REGISTER_WIDTH = 4,
+  parameter OFFSET_WIDTH = 8
+)(
+  input [(INSTRUCTION_WIDTH - 1):0] Instruction,
+  output reg [(ID_WIDTH - 1):0] ID,
+  output reg [(REGISTER_WIDTH - 1):0] RegD, RegA, RegB,
+  output reg [(OFFSET_WIDTH - 1):0] Offset,
+  output reg [REGISTER_WIDTH:0] branch_condition
 );
 
-
-input [15:0] Instruction;
-output reg [6:0] ID;
-output reg [3:0] RegD, RegA, RegB, Condicao;
-output reg [7:0] Offset;
-
-
-reg [3:0] Opcode, funct2;
 reg op;
 reg [1:0] funct1;
 reg [2:0] aux;
+reg [3:0] funct2;
+
+wire [3:0] Opcode;
+
+assign Opcode = Instruction[15:12];
 
 
 always @ ( * ) begin
@@ -27,12 +28,11 @@ always @ ( * ) begin
   RegD=0;
   RegA=0;
   RegB=0;
-  Condicao=4'hf;
+  branch_condition=5'h1f;
   ID=0;
   funct1=0;
   funct2=Instruction[11:8];
   op=0;
-  Opcode=Instruction[15:12];
   aux=0;
 
   case(Opcode)
@@ -202,9 +202,9 @@ always @ ( * ) begin
                   end
                   endcase//Opcode=4, funct2=6, case(funct1)
           end//Opcode=4. funct2=6
-          7:begin//Instruction 38
-            Condicao=Instruction[7:4];
-            ID=7'h26;
+          7:begin//Instruction 38 BX
+            branch_condition={1'b0, Instruction[7:4]};
+            ID = (branch_condition == 5'hf) ? 7'h4c : 7'h26;
             RegA = 4'hf;
             RegB[2:0]=Instruction[2:0];
           end
@@ -320,12 +320,12 @@ always @ ( * ) begin
         ID=7'h48;
         Offset = 9; //Branches to 0x9
         RegB=4'hd;  //Link Register
-        Condicao = 4'he; //Always branches
+        branch_condition = 4'he; //Always branches
       end
 
       13:begin//Instruction 73 - B immediate
         ID=7'h49;
-        Condicao=Instruction[11:8];
+        branch_condition={1'b0, Instruction[11:8]};
         Offset[7:0]=Instruction[7:0];
         RegA= 4'hf; //PC
       end

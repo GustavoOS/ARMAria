@@ -190,7 +190,7 @@ module ControlCore(
                 //standard
             end
             38:begin //BX Register
-                controlALU = 12;
+                controlALU = 2;
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 0;
                 controlMAH = 0;
@@ -410,7 +410,15 @@ module ControlCore(
                 controlRB = 0;
                 enable = 0;
                 specreg_update_mode = 0;
-            end            
+            end
+            76: begin //Branch Absolute
+                controlALU = 12;
+                controlBS = 0;
+                control_channel_B_sign_extend_unit = 0;
+                controlMAH = 0;
+                controlRB = 0;
+                should_fill_channel_b_with_offset = 0;
+            end
             default: controlRB = 0;
         endcase
 
