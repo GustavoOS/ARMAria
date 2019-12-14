@@ -57,7 +57,7 @@ module ARMAria
         bs_negative, bs_zero, bs_carry, reset, slow_clock, confirmation,
         OffImmed,
         ID, 
-        RegD, RegA, RegB, 
+        RegD, RegA, RegB,
         controlBS, controlALU, 
         controlRB, controlMAH, 
         control_channel_B_sign_extend_unit, control_load_sign_extend_unit,
