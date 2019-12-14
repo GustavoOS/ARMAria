@@ -320,7 +320,7 @@ always @ ( * ) begin
         ID=7'h48;
         Offset = 9; //Branches to 0x9
         RegB=4'hd;  //Link Register
-        branch_condition = 4'he; //Always branches
+        branch_condition = 5'he; //Always branches
       end
 
       13:begin//Instruction 73 - B immediate
