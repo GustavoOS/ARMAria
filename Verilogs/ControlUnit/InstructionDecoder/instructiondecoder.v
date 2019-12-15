@@ -332,7 +332,7 @@ always @ ( * ) begin
       end
 
       14:begin//Instructions 74 & 75
-        op=Instruction[11];
+        op = Instruction[11];
         ID = op?  7'h4b : 7'h4a; //HLT or NOP
         if(ID == 75 && is_bios)
         begin
