@@ -2,7 +2,7 @@ module StorageDrive
 #(
 	parameter DW=32,
 	parameter ADDR_WIDTH=14, 
-	parameter inputFile = "Programa.txt"
+	parameter inputFile = "./Programa.txt"
 )(
 	input [(ADDR_WIDTH-1):0] data_address,
 	input [(DW-1):0] input_data,
