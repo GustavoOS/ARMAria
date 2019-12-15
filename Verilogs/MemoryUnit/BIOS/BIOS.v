@@ -1,4 +1,4 @@
-module bios
+module BIOS
 #(
     parameter DATA_WIDTH=16,
     parameter ADDR_WIDTH=9
@@ -12,7 +12,7 @@ module bios
 
 	initial
 	begin
-		$readmemb("biosInitiationAddres.txt", rom);
+		$readmemb("./biosInitiationAddress.txt", rom);
 	end
 
 	always @ (posedge clk)

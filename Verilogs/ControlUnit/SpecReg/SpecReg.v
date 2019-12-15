@@ -1,9 +1,10 @@
 module SpecReg(
     input clock, reset, enable,
-    input [2:0] update_mode,
+    input [3:0] update_mode,
     output negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
     input alu_negative, alu_zero, alu_carry, alu_overflow,
-    input bs_negative, bs_zero, bs_carry
+    input bs_negative, bs_zero, bs_carry,
+    output reg is_bios
 );
 
     reg [4:0] SPECREG;
@@ -12,6 +13,7 @@ module SpecReg(
 
     initial begin
         SPECREG <= 0;
+        is_bios <= 1;
     end
 
 
@@ -19,6 +21,7 @@ module SpecReg(
     always @ ( posedge clock ) begin
         if (reset) begin
             SPECREG <= 0;
+            is_bios <= 1;
         end else begin
             if(enable)
             begin
@@ -41,6 +44,10 @@ module SpecReg(
 
                     5: begin//SWI
                         SPECREG[0] <= !SPECREG[0];
+                    end
+
+                    7: begin //Turn off BIOS
+                        is_bios <= 0;
                     end
                    
                 endcase

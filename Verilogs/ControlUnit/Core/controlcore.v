@@ -4,8 +4,8 @@ module ControlCore(
     output reg enable, allow_write_on_memory, should_fill_channel_b_with_offset,
     output reg should_read_from_input_instead_of_memory, is_input, is_output,
     output reg [2:0] control_channel_B_sign_extend_unit, control_load_sign_extend_unit,
-    output reg [2:0] specreg_update_mode, controlRB, controlMAH,
-    output reg [3:0] controlALU, controlBS
+    output reg [2:0] controlRB, controlMAH,
+    output reg [3:0] controlALU, controlBS, specreg_update_mode
 );
 
     always @ ( * ) begin
@@ -389,10 +389,12 @@ module ControlCore(
                 if (MODE==1'b1) begin
                     controlMAH = 0;
                     controlRB = 0;
+                    specreg_update_mode = 5;
                 end else begin
                     should_fill_channel_b_with_offset = 1;
                     controlMAH = 0;
                     controlRB = 4;
+                    specreg_update_mode = 5;
                 end
             end
             73:begin //B immediate
@@ -418,6 +420,14 @@ module ControlCore(
                 controlMAH = 0;
                 controlRB = 0;
                 should_fill_channel_b_with_offset = 0;
+            end
+            77: begin //HALT Leave BIOS
+                should_fill_channel_b_with_offset = 1;
+                controlALU = 12;
+                controlBS = 0;
+                controlMAH = 0;
+                controlRB = 0;
+                specreg_update_mode = 7;
             end
             default: controlRB = 0;
         endcase

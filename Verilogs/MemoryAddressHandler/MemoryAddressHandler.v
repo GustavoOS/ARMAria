@@ -29,7 +29,6 @@ module MemoryAddressHandler #(
         next_PC
         );
 
-
     //Stack behavior
     reg [2:0] SP_incr_control;
     wire [DATA_WIDTH - 1: 0] min_stack, max_stack;
