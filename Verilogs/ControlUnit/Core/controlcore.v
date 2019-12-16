@@ -1,5 +1,5 @@
 module ControlCore(
-    input confirmation, continue, MODE,
+    input confirmation, continue_button, mode_flag,
     input [6:0] ID,
     output reg enable, allow_write_on_memory, should_fill_channel_b_with_offset,
     output reg should_read_from_input_instead_of_memory, is_input, is_output,
@@ -36,13 +36,11 @@ module ControlCore(
             end
             3:begin
                 controlBS = 2;
-                //controlRB = 1;
                 should_fill_channel_b_with_offset = 1;
                 specreg_update_mode = 1;
             end
             4:begin
                 controlALU = 2;
-                //controlRB = 1;
                 specreg_update_mode = 2;
             end
             5:begin
@@ -51,7 +49,6 @@ module ControlCore(
             end
             6:begin
                 controlALU = 2;
-                //controlRB = 1;
                 should_fill_channel_b_with_offset = 1;
                 specreg_update_mode = 2;
             end
@@ -82,7 +79,6 @@ module ControlCore(
             end
             12:begin
                 controlALU = 3;
-                //controlRB = 1;
                 specreg_update_mode = 3;
             end
             13:begin
@@ -99,12 +95,10 @@ module ControlCore(
             end
             16:begin
                 controlBS = 2;
-                //controlRB = 1;
                 specreg_update_mode = 1;
             end
             17:begin
                 controlALU = 1;
-                //controlRB = 1;
                 specreg_update_mode = 2;
             end
             18:begin
@@ -144,18 +138,15 @@ module ControlCore(
             26:begin
                 controlALU = 4;
                 specreg_update_mode = 3;
-                //controlRB = 1;
             end
             27:begin
                 specreg_update_mode = 3;
             end
             28:begin
                 controlALU = 2;
-                //controlRB = 1;
             end
             29:begin
                 controlALU = 2;
-                //controlRB = 1;
             end
             30:begin
                 controlALU = 2;
@@ -163,7 +154,6 @@ module ControlCore(
             end
             31:begin
                 controlALU = 5;
-                //controlRB = 1;
                 specreg_update_mode = 2;
             end
             32:begin
@@ -316,8 +306,6 @@ module ControlCore(
             end
             57:begin
                 controlALU = 2;
-                // controlBS = 1;
-                //controlRB = 1;
                 should_fill_channel_b_with_offset = 1;
             end
             58:begin
@@ -361,13 +349,12 @@ module ControlCore(
             69:begin    // OUTPUT
                 controlALU = 0;
                 controlRB = 0;
-                allow_write_on_memory = 0;
                 enable = confirmation;
                 is_output = 1;
             end
             70: begin // PAUSE
                 controlRB = 0;
-                enable = continue;
+                enable = continue_button;
                 specreg_update_mode = 0;
                 is_input = 1;
                 is_output = 1;
@@ -386,7 +373,7 @@ module ControlCore(
                 enable = confirmation;
             end
             72:begin //SWI
-                if (MODE==1'b1) begin
+                if (mode_flag) begin
                     controlMAH = 0;
                     controlRB = 0;
                     specreg_update_mode = 5;

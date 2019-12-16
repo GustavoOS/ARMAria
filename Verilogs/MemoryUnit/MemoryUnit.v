@@ -2,7 +2,8 @@ module MemoryUnit
 #(
 	parameter DATA_WIDTH=32,
 	parameter ADDR_WIDTH=14,
-    parameter INSTRUCTION_SIZE = 16
+    parameter INSTRUCTION_SIZE = 16,
+    parameter BIOS_ADDRESS_SIZE = 9
 )(
 	input allow_write_on_memory, slow_clock, fast_clock,
 	input [(DATA_WIDTH -1):0] original_address,
@@ -48,8 +49,8 @@ module MemoryUnit
     );
 
     BIOS bios(
-        instruction_address,
         slow_clock,
+        instruction_address[(BIOS_ADDRESS_SIZE):0],
         bios_instruction
     );
 

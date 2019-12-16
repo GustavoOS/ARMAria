@@ -3,14 +3,15 @@ module InstructionDecoder #(
   parameter INSTRUCTION_WIDTH = 16,
   parameter ID_WIDTH = 7,
   parameter REGISTER_WIDTH = 4,
-  parameter OFFSET_WIDTH = 12
+  parameter OFFSET_WIDTH = 12,
+  parameter BRANCH_CONDITION_WIDTH = 5
 )(
   input [(INSTRUCTION_WIDTH - 1):0] Instruction,
   input is_bios,
   output reg [(ID_WIDTH - 1):0] ID,
   output reg [(REGISTER_WIDTH - 1):0] RegD, RegA, RegB,
   output reg [(OFFSET_WIDTH - 1):0] Offset,
-  output reg [REGISTER_WIDTH:0] branch_condition
+  output reg [(BRANCH_CONDITION_WIDTH - 1):0] branch_condition
 );
 
 reg op;

@@ -3,8 +3,8 @@ module BIOS
     parameter DATA_WIDTH=16,
     parameter ADDR_WIDTH=9
 )(
+	input clk,
 	input [(ADDR_WIDTH-1):0] addr,
-	input clk, 
 	output reg [(DATA_WIDTH-1):0] q
 );
 
