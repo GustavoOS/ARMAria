@@ -73,14 +73,14 @@ always @ ( * ) begin
             ID=7'h6;
             RegD[2:0]=Instruction[2:0];
             RegA[2:0]=Instruction[5:3];
-            Offset={10'h0,Instruction[8:6]};
+            Offset={9'h0,Instruction[8:6]};
           end
 
           3:begin//Instruction 7
             ID=7'h7;
             RegA[2:0]=Instruction[5:3];
             RegD[2:0]=Instruction[2:0];
-            Offset={10'h0,Instruction[8:6]};
+            Offset={9'h0,Instruction[8:6]};
           end
 
           default:begin
@@ -231,7 +231,7 @@ always @ ( * ) begin
         ID=(op)? 7'h31: 7'h30;
         RegD[2:0]=Instruction[2:0];
         RegA[2:0]=Instruction[5:3];
-        Offset = {8'h0, Instruction[10:6]};
+        Offset = {7'h0, Instruction[10:6]};
       end
 
       7:begin//Instructions 50 & 51
@@ -239,7 +239,7 @@ always @ ( * ) begin
         ID=(op)? 7'h33: 7'h32;
         RegD[2:0]=Instruction[2:0];
         RegA[2:0]=Instruction[5:3];
-        Offset = {8'h0, Instruction[10:6]};
+        Offset = {7'h0, Instruction[10:6]};
       end
 
       8:begin//Instructions 52 & 53
@@ -247,7 +247,7 @@ always @ ( * ) begin
         ID=(op)? 7'h35: 7'h34;
         RegD[2:0]=Instruction[2:0];
         RegA[2:0]=Instruction[5:3];
-        Offset = {8'h0, Instruction[10:6]};
+        Offset = {7'h0, Instruction[10:6]};
       end
 
       9:begin//Instructions 54 & 55
