@@ -23,12 +23,11 @@ module MemoryAddressHandler #(
     /* PC behavior */
     assign instruction_address = reset ? 0 : current_PC;
     Incrementor PC_incr(
-        reset ? 4 : 1,
+        1,
         current_PC,
         1,
         next_PC
         );
-
 
     //Stack behavior
     reg [2:0] SP_incr_control;

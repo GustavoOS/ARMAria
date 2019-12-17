@@ -1,13 +1,15 @@
 module Ramifier
-(
-  input [5:0] Condition,
+#(
+    parameter BRANCH_CONDITION_WIDTH = 5
+)(
+  input [(BRANCH_CONDITION_WIDTH - 1):0] condition,
   input negative_flag, zero_flag, carry_flag, overflow_flag,
   output reg take
 );
 
 
     always @ ( * ) begin
-        case (Condition)
+        case (condition)
             0:begin //EQ
                 take = zero_flag;
             end

@@ -4,7 +4,7 @@ module Control
     parameter ID_WIDTH = 7,
     parameter INSTRUCTION_WIDTH = 16,
     parameter REGISTER_NUMBER_WIDTH = 4,
-    parameter OFFSET_WIDTH = 8,
+    parameter OFFSET_WIDTH = 12,
     parameter CONDITION_WIDTH = 5
 )(
     input [INSTRUCTION_WIDTH - 1:0] Instruction,
@@ -19,14 +19,15 @@ module Control
     output allow_write_on_memory, should_fill_channel_b_with_offset,
     output should_read_from_input_instead_of_memory,
     output negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
-    output enable, should_take_branch, is_input, is_output
+    output enable, should_take_branch, is_input, is_output, is_bios
 );
 
     wire [(CONDITION_WIDTH -1):0] condition_code;
-    wire [2:0] specreg_update_mode;
+    wire [3:0] specreg_update_mode;
 
     InstructionDecoder id(
         Instruction,
+        is_bios,
         ID, 
         RegD, 
         RegA, 
@@ -40,7 +41,7 @@ module Control
         specreg_update_mode, 
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag, 
         alu_negative, alu_zero, alu_carry, alu_overflow,
-        bs_negative, bs_zero, bs_carry
+        bs_negative, bs_zero, bs_carry, is_bios
     );
 
     Ramifier rm(
@@ -58,8 +59,8 @@ module Control
         enable, allow_write_on_memory, should_fill_channel_b_with_offset, 
         should_read_from_input_instead_of_memory, is_input, is_output,
         control_channel_B_sign_extend, control_load_sign_extend,
-        specreg_update_mode, controlRB, controlMAH, 
-        controlALU, controlBS
+        controlRB, controlMAH, 
+        controlALU, controlBS, specreg_update_mode
     );
 
 

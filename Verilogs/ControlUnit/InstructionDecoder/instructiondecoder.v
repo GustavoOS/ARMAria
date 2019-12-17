@@ -3,13 +3,15 @@ module InstructionDecoder #(
   parameter INSTRUCTION_WIDTH = 16,
   parameter ID_WIDTH = 7,
   parameter REGISTER_WIDTH = 4,
-  parameter OFFSET_WIDTH = 8
+  parameter OFFSET_WIDTH = 12,
+  parameter BRANCH_CONDITION_WIDTH = 5
 )(
   input [(INSTRUCTION_WIDTH - 1):0] Instruction,
+  input is_bios,
   output reg [(ID_WIDTH - 1):0] ID,
   output reg [(REGISTER_WIDTH - 1):0] RegD, RegA, RegB,
   output reg [(OFFSET_WIDTH - 1):0] Offset,
-  output reg [REGISTER_WIDTH:0] branch_condition
+  output reg [(BRANCH_CONDITION_WIDTH - 1):0] branch_condition
 );
 
 reg op;
@@ -39,7 +41,7 @@ always @ ( * ) begin
     0:begin//Instructions 1 & 2
       op=Instruction[11];
       ID=(op)? 7'h2: 7'h1;
-      Offset[5:0]=Instruction[10:6];
+      Offset={6'h0, Instruction[10:6]};
       RegD[2:0]=Instruction[2:0];
       RegA[2:0]=Instruction[5:3];
     end
@@ -47,7 +49,7 @@ always @ ( * ) begin
       op=Instruction[11];
       if(~op)begin//Instruction 3
         ID=7'h3;
-        Offset[5:0]=Instruction[10:6];
+        Offset={6'h0, Instruction[10:6]};
         RegD[2:0]=Instruction[2:0];
         RegA[2:0]=Instruction[5:3];
       end
@@ -72,14 +74,14 @@ always @ ( * ) begin
             ID=7'h6;
             RegD[2:0]=Instruction[2:0];
             RegA[2:0]=Instruction[5:3];
-            Offset[2:0]=Instruction[8:6];
+            Offset={9'h0,Instruction[8:6]};
           end
 
           3:begin//Instruction 7
             ID=7'h7;
             RegA[2:0]=Instruction[5:3];
             RegD[2:0]=Instruction[2:0];
-            Offset[2:0]=Instruction[8:6];
+            Offset={9'h0,Instruction[8:6]};
           end
 
           default:begin
@@ -92,14 +94,14 @@ always @ ( * ) begin
     2:begin//Instructions 8 & 9
       op=Instruction[11];
       ID=(op)? 7'h9 : 7'h8;
-      Offset[7:0] = Instruction[7:0];
+      Offset = {4'h0, Instruction[7:0]};
       RegD[2:0] = Instruction[10:8];
       RegA[2:0] = Instruction[10:8];
     end
     3:begin//Instructions 10 & 11
       op=Instruction[11];
       ID=(op)? 7'hb : 7'ha;
-      Offset[7:0] = Instruction[7:0];
+      Offset = {4'h0, Instruction[7:0]};
       RegD[2:0] = Instruction[10:8];
       RegA[2:0] = Instruction[10:8];
     end
@@ -109,7 +111,7 @@ always @ ( * ) begin
         funct1=Instruction[7:6];
         if(op)begin//Instruction 39
           ID=7'h27;
-          Offset[7:0] = Instruction[7:0];
+          Offset = {4'h0, Instruction[7:0]};
           RegD[2:0] = Instruction[10:8];
           RegA = 4'hf;
           RegB = Instruction[10:8];
@@ -230,7 +232,7 @@ always @ ( * ) begin
         ID=(op)? 7'h31: 7'h30;
         RegD[2:0]=Instruction[2:0];
         RegA[2:0]=Instruction[5:3];
-        Offset[4:0]=Instruction[10:6];
+        Offset = {7'h0, Instruction[10:6]};
       end
 
       7:begin//Instructions 50 & 51
@@ -238,7 +240,7 @@ always @ ( * ) begin
         ID=(op)? 7'h33: 7'h32;
         RegD[2:0]=Instruction[2:0];
         RegA[2:0]=Instruction[5:3];
-        Offset[4:0]=Instruction[10:6];
+        Offset = {7'h0, Instruction[10:6]};
       end
 
       8:begin//Instructions 52 & 53
@@ -246,11 +248,11 @@ always @ ( * ) begin
         ID=(op)? 7'h35: 7'h34;
         RegD[2:0]=Instruction[2:0];
         RegA[2:0]=Instruction[5:3];
-        Offset[4:0]=Instruction[10:6];
+        Offset = {7'h0, Instruction[10:6]};
       end
 
       9:begin//Instructions 54 & 55
-        Offset[7:0]=Instruction[7:0];
+        Offset={4'h0, Instruction[7:0]};
         RegD[2:0]=Instruction[10:8];
         RegA=4'he;
         op=Instruction[11];
@@ -258,7 +260,7 @@ always @ ( * ) begin
       end
 
       10:begin//Instructions 56 & 57
-        Offset[7:0]=Instruction[7:0];
+        Offset={4'h0, Instruction[7:0]};
         RegD = {1'b0, Instruction[10:8]};
         op = Instruction[11];
         RegA = (op) ? 4'he : 4'hf;
@@ -326,13 +328,20 @@ always @ ( * ) begin
       13:begin//Instruction 73 - B immediate
         ID=7'h49;
         branch_condition={1'b0, Instruction[11:8]};
-        Offset[7:0]=Instruction[7:0];
+        Offset={4'h0, Instruction[7:0]};
         RegA= 4'hf; //PC
       end
 
       14:begin//Instructions 74 & 75
-        op=Instruction[11];
+        op = Instruction[11];
         ID = op?  7'h4b : 7'h4a; //HLT or NOP
+        if(ID == 75 && is_bios)
+        begin
+          ID = 77;
+          branch_condition = 5'hf;
+          Offset = 2048;
+          RegA= 4'hf; //PC
+        end
       end
       15: begin //Reset State = 100
         ID = Instruction[15:0]==16'hffff ? 7'h64 : 7'h7f;

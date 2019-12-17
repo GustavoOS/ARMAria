@@ -6,14 +6,14 @@ module ARMAria
     parameter IO_WIDTH = 16,
     parameter SEGMENTS_COUNT = 7*8,
     parameter DATA_WIDTH = 32,
-    parameter OFFSET_WIDTH = 8
+    parameter OFFSET_WIDTH = 12
 )(
     input fast_clock, confirmation_button, reset_button, continue_button,
     input [IO_WIDTH :0] sw,
     output [IO_WIDTH - 1:0] rled,
     output [FLAG_COUNT - 1:0] gled,
     output [SEGMENTS_COUNT - 1:0] sseg,
-    output slow_clock, reset,
+    output slow_clock, reset, is_bios,
     output is_input, is_output, enable
 );
 
@@ -64,12 +64,13 @@ module ARMAria
         allow_write_on_memory, should_fill_channel_b_with_offset, 
         should_read_from_input_instead_of_memory, 
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag, 
-        enable, should_take_branch, is_input, is_output
+        enable, should_take_branch, is_input, is_output, is_bios
     );
 
     MemoryUnit mu(
         allow_write_on_memory, slow_clock, fast_clock,
         data_address, instruction_address, MemOut,
+        is_bios,
         Instruction,
         data_read_from_memory
     );
