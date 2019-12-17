@@ -49,7 +49,7 @@ module MemoryUnit
     );
 
     BIOS bios(
-        slow_clock,
+        fast_clock,
         instruction_address[(BIOS_ADDRESS_SIZE):0],
         bios_instruction
     );
