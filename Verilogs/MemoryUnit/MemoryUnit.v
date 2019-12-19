@@ -14,7 +14,7 @@ module MemoryUnit
 	output [(DATA_WIDTH-1):0] data_read_from_memory
 );
 
-    wire [(ADDR_WIDTH -1): 0] memory_address, storage_address,
+    wire [(ADDR_WIDTH -1): 0] data_address,
                                 instruction_address;
     wire [(DATA_WIDTH -1): 0] memory_data, storage_data;
     wire is_storage;
@@ -24,19 +24,19 @@ module MemoryUnit
     MemoryController controller(
         original_address, original_instruction_address,
         is_storage,
-        memory_address, storage_address, instruction_address
+        data_address, instruction_address
     );
 
     Memory main_memory(
         MemOut,
-        instruction_address, memory_address,
+        instruction_address, data_address,
         allow_write_on_memory, fast_clock, slow_clock,
         memory_instruction,
         memory_data
     );
 
     StorageDrive hd(
-        storage_address,
+        data_address,
         MemOut,
         is_storage && allow_write_on_memory , fast_clock, slow_clock,
         storage_data
