@@ -321,7 +321,7 @@ always @ ( * ) begin
 
       12:begin//Instruction 72 - SWI
         ID=7'h48;
-        Offset = is_kernel? OS_START : 0; //Branches to OS
+        Offset = is_kernel? 0 : OS_START; //Branches to OS
         RegB=4'hd;  //Link Register
         branch_condition = 5'he; //Always branches
       end
