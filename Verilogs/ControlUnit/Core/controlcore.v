@@ -373,15 +373,13 @@ module ControlCore(
                 enable = confirmation;
             end
             72:begin //SWI
-                if (mode_flag) begin
-                    controlMAH = 0;
-                    controlRB = 0;
                     specreg_update_mode = 5;
-                end else begin
+                    controlMAH = 0;
+                if (mode_flag)
+                    controlRB = 5;
+                else begin
                     should_fill_channel_b_with_offset = 1;
-                    controlMAH = 0;
                     controlRB = 4;
-                    specreg_update_mode = 5;
                 end
             end
             73:begin //B immediate

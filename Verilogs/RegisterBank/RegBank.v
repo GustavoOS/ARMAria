@@ -71,6 +71,10 @@ module RegBank
                     end
                     4:begin //Enter privileged mode
                         Bank[13] <= Bank[PC_REGISTER];  //LR = actual next Instruction address
+                        Bank[5] <= Bank[14];            // Save user SP
+                    end
+                    5:begin //Exit privileged mode
+                        Bank[14] <= Bank[5];            // Recover user SP
                     end
                 endcase
 
