@@ -4,10 +4,11 @@ module InstructionDecoder #(
   parameter ID_WIDTH = 7,
   parameter REGISTER_WIDTH = 4,
   parameter OFFSET_WIDTH = 12,
-  parameter BRANCH_CONDITION_WIDTH = 5
+  parameter BRANCH_CONDITION_WIDTH = 5,
+  parameter OS_START = 2048
 )(
   input [(INSTRUCTION_WIDTH - 1):0] Instruction,
-  input is_bios,
+  input is_bios, is_kernel,
   output reg [(ID_WIDTH - 1):0] ID,
   output reg [(REGISTER_WIDTH - 1):0] RegD, RegA, RegB,
   output reg [(OFFSET_WIDTH - 1):0] Offset,
@@ -320,7 +321,7 @@ always @ ( * ) begin
 
       12:begin//Instruction 72 - SWI
         ID=7'h48;
-        Offset = 9; //Branches to 0x9
+        Offset = is_kernel? OS_START : 0; //Branches to OS
         RegB=4'hd;  //Link Register
         branch_condition = 5'he; //Always branches
       end
@@ -339,7 +340,7 @@ always @ ( * ) begin
         begin
           ID = 77;
           branch_condition = 5'hf;
-          Offset = 2048;
+          Offset = OS_START;
           RegA= 4'hf; //PC
         end
       end
