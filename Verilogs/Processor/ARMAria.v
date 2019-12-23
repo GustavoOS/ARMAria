@@ -78,7 +78,7 @@ module ARMAria
     IOmodule enterescape(
         slow_clock, fast_clock, 
         is_output & (~is_input),
-        reset,
+        reset, enable,
         MemOut, IData, sw,
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,       //Flags from Control Unit
         rled, gled, sseg, instruction_address , Instruction

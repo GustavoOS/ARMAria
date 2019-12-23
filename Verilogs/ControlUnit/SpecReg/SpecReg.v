@@ -9,7 +9,7 @@ module SpecReg(
 
     reg [4:0] SPECREG;
 
-    assign {negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag} = enable ? SPECREG : 5'h1f;
+    assign {negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag} = SPECREG;
 
     initial begin
         SPECREG <= 0;
