@@ -7,7 +7,7 @@ module IOmodule #(
     parameter INSTRUCTION_ADDR_LEN = 14,
     parameter INSTRUCTION_LEN = 16
 )(
-    input  slow_clock, fast_clock,
+    input slow_clock, fast_clock,
     input should_update_display,
     input reset, enable,
     input [(DATA_SIZE - 1) : 0] exported_data,
