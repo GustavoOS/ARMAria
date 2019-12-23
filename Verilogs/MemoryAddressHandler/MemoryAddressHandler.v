@@ -2,11 +2,11 @@ module MemoryAddressHandler #(
     parameter ADDR_WIDTH = 32,
     parameter DATA_WIDTH = 32;
     parameter CODE_AREA_SIZE = 4096,
-    parameter PRIVILEGED_STACK_SIZE = 2048,
-    parameter PRIVILEGED_STACK_TOP = CODE_AREA_SIZE,
-    parameter PRIVILEGED_STACK_BOTTOM = USER_STACK_TOP - 1,
+    parameter KERNEL_STACK_SIZE = 2048,
+    parameter KERNEL_STACK_TOP = CODE_AREA_SIZE,
+    parameter KERNEL_STACK_BOTTOM = USER_STACK_TOP - 1,
     parameter USER_STACK_SIZE = 2048,
-    parameter USER_STACK_TOP = CODE_AREA_SIZE + PRIVILEGED_STACK_SIZE,
+    parameter USER_STACK_TOP = CODE_AREA_SIZE + KERNEL_STACK_SIZE,
     parameter USER_STACK_BOTTOM = DATA_AREA_SIZE - 1,
     parameter DATA_AREA_SIZE = 8192,
     parameter MAX_NUMBER = 32'hffffffff
@@ -32,8 +32,8 @@ module MemoryAddressHandler #(
     //Stack behavior
     reg [2:0] SP_incr_control;
     wire [DATA_WIDTH - 1: 0] min_stack, max_stack;
-    assign min_stack = is_kernel ? PRIVILEGED_STACK_TOP : USER_STACK_TOP;
-    assign max_stack = is_kernel ? PRIVILEGED_STACK_BOTTOM : USER_STACK_BOTTOM;
+    assign min_stack = is_kernel ? KERNEL_STACK_TOP : USER_STACK_TOP;
+    assign max_stack = is_kernel ? KERNEL_STACK_BOTTOM : USER_STACK_BOTTOM;
     Incrementor SP_incr(
         SP_incr_control,
         current_SP,
