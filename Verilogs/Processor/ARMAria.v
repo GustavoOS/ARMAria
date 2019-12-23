@@ -106,7 +106,7 @@ module ARMAria
     );
 
     RegBank ARMARIAbank(
-        mode_flag, enable, reset, slow_clock, fast_clock, should_take_branch,
+        enable, reset, slow_clock, fast_clock, should_take_branch,
         controlRB, 
         RegA, RegB, RegD,
         RESULT, MemIn,

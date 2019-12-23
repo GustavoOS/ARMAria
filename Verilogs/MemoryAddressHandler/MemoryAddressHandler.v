@@ -14,7 +14,7 @@ module MemoryAddressHandler #(
 )(
     input [DATA_WIDTH -1:0]  input_address, current_PC, current_SP,
     input [2:0] control,
-    input reset, privilege_mode_flag,    
+    input reset, is_kernel,    
     output [DATA_WIDTH -1:0] next_SP,
     output reg [ADDR_WIDTH - 1:0] output_address, 
     output [ADDR_WIDTH - 1:0] instruction_address, next_PC
@@ -32,8 +32,8 @@ module MemoryAddressHandler #(
     //Stack behavior
     reg [2:0] SP_incr_control;
     wire [DATA_WIDTH - 1: 0] min_stack, max_stack;
-    assign min_stack = privilege_mode_flag ? PRIVILEGED_STACK_TOP : USER_STACK_TOP;
-    assign max_stack = privilege_mode_flag ? PRIVILEGED_STACK_BOTTOM : USER_STACK_BOTTOM;
+    assign min_stack = is_kernel ? PRIVILEGED_STACK_TOP : USER_STACK_TOP;
+    assign max_stack = is_kernel ? PRIVILEGED_STACK_BOTTOM : USER_STACK_BOTTOM;
     Incrementor SP_incr(
         SP_incr_control,
         current_SP,

@@ -398,6 +398,7 @@ module ControlCore(
                 controlALU = 15;
                 specreg_update_mode = 2;
             end
+
             77: begin //Branch Absolute
                 controlALU = 12;
                 controlBS = 0;
@@ -406,12 +407,13 @@ module ControlCore(
                 controlRB = 0;
                 should_fill_channel_b_with_offset = 0;
             end
+
             78: begin //HALT Leave BIOS
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 12;
                 controlBS = 0;
                 controlMAH = 0;
-                controlRB = 0;
+                controlRB = 4;
                 specreg_update_mode = 7;
             end
             default: controlRB = 0;

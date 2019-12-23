@@ -48,6 +48,7 @@ module SpecReg(
 
                     7: begin //Turn off BIOS
                         is_bios <= 0;
+                        SPECREG[0] <= 1'b1;
                     end
                    
                 endcase
