@@ -6,8 +6,7 @@ module ALU
     output reg [DATA_WIDTH - 1:0] operation_result,
     input [3:0] control,
     input previous_specreg_carry,
-    output reg Negative_ALU_flag,
-    output Zero_ALU_flag, 
+    output reg Negative_ALU_flag, Zero_ALU_flag, 
     output reg Carry_ALU_flag, oVerflow_ALU_flag
 );
     // Declaration section
@@ -15,10 +14,7 @@ module ALU
     wire most_significant_bit, local_overflow, channel_A_msb, channel_B_msb;
     reg use_negative_B;
 
-    // Z Flag
-    assign Zero_ALU_flag = (operation_result == 0);
 
-    
     // OVERFLOW Flag calculation    
     assign most_significant_bit = operation_result[DATA_WIDTH - 1];
     assign channel_A_msb = channel_A[DATA_WIDTH -1];
@@ -46,6 +42,7 @@ module ALU
                 {Carry_ALU_flag, operation_result} =  channel_A + channel_B + previous_specreg_carry;
                 oVerflow_ALU_flag = local_overflow;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             2:  // ADD
@@ -53,18 +50,21 @@ module ALU
                 {Carry_ALU_flag, operation_result} =  channel_A + channel_B;
                 oVerflow_ALU_flag = local_overflow;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             3:  // AND
             begin 
                 operation_result = channel_A & channel_B;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             4:  // BIC
             begin 
                 operation_result = channel_A & (~channel_B);
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             5:  // SUB or CMP
@@ -73,6 +73,7 @@ module ALU
                 {Carry_ALU_flag, operation_result} =  channel_A + channel_B_negative;
                 oVerflow_ALU_flag = local_overflow;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             6:  // NEG
@@ -80,12 +81,14 @@ module ALU
                 {Carry_ALU_flag, operation_result} =  - channel_A;
                 oVerflow_ALU_flag = local_overflow;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             7:  // OR
             begin
                 operation_result = channel_A | channel_B;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             8:  // SBC
@@ -93,45 +96,60 @@ module ALU
                 {Carry_ALU_flag, operation_result} =  channel_A - channel_B - ~previous_specreg_carry;
                 oVerflow_ALU_flag = local_overflow;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             9:  // MULTIPLY
             begin
                 operation_result = channel_A * channel_B;
                 Negative_ALU_flag  =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             10: // DIV
             begin 
                 oVerflow_ALU_flag = (channel_B == 0);
                 operation_result = (oVerflow_ALU_flag) ? 0 : channel_A / channel_B;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             11: // MOD
             begin
                 oVerflow_ALU_flag  = (channel_B == 0);
                 operation_result = (oVerflow_ALU_flag) ? 0 : channel_A % channel_B;
+                Zero_ALU_flag = (operation_result == 0);
             end
 
             12: // BarrelShifter
             begin
                 operation_result = channel_B;
+                Zero_ALU_flag = (operation_result == 0);
             end
             13: // XOR
             begin
                 operation_result = channel_A ^ channel_B;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
             14: // LOGICAL AND
             begin
                 operation_result = channel_A && channel_B;
                 Negative_ALU_flag =  most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
+            end
+            15: // Paste Special Register
+            begin
+                Negative_ALU_flag = channel_A[3];
+                Zero_ALU_flag = channel_A[2];
+                Carry_ALU_flag = channel_A[1];
+                oVerflow_ALU_flag = channel_A[0];
             end
 
             default:    // channel_A is OUTPUT
             begin 
                 operation_result = channel_A;
                 Negative_ALU_flag = most_significant_bit;
+                Zero_ALU_flag = (operation_result == 0);
             end
         endcase
     end

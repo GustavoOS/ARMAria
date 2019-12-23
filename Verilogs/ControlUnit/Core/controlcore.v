@@ -308,8 +308,8 @@ module ControlCore(
                 controlALU = 2;
                 should_fill_channel_b_with_offset = 1;
             end
-            58:begin
-                controlRB = 2;
+            58:begin // CXPR
+                controlRB = 6;
             end
             59:begin
                 control_channel_B_sign_extend_unit = 1;
@@ -394,7 +394,11 @@ module ControlCore(
                 enable = 0;
                 specreg_update_mode = 0;
             end
-            76: begin //Branch Absolute
+            76:begin // PXR Paste special register
+                controlALU = 15;
+                specreg_update_mode = 2;
+            end
+            77: begin //Branch Absolute
                 controlALU = 12;
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 0;
@@ -402,7 +406,7 @@ module ControlCore(
                 controlRB = 0;
                 should_fill_channel_b_with_offset = 0;
             end
-            77: begin //HALT Leave BIOS
+            78: begin //HALT Leave BIOS
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 12;
                 controlBS = 0;

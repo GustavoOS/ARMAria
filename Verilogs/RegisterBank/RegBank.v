@@ -4,7 +4,8 @@ module RegBank
     parameter REGISTER_LENGTH = 32,
     parameter MAX_NUMBER = 32'hffffffff,
     parameter ADDR_WIDTH = 32,
-    parameter PC_REGISTER = 15
+    parameter PC_REGISTER = 15,
+    parameter SPECREG_LENGTH = 4
 )(
     input   privileged_mode, enable, reset, slow_clock, fast_clock, should_branch,
     input   [2:0]   control, 
@@ -13,7 +14,8 @@ module RegBank
     input   [REGISTER_LENGTH -1:0]  new_SP,
     input   [ADDR_WIDTH - 1:0] new_PC,
     output  [REGISTER_LENGTH -1:0]  read_data_A, read_data_B,
-    output  [REGISTER_LENGTH -1:0]  current_PC, current_SP, memory_output
+    output  [REGISTER_LENGTH -1:0]  current_PC, current_SP, memory_output,
+    input   [(SPECREG_LENGTH - 1) : 0] special_register
 );
 
     reg [REGISTER_LENGTH -1:0] Bank [16:0];
@@ -75,6 +77,9 @@ module RegBank
                     end
                     5:begin //Exit privileged mode
                         Bank[14] <= Bank[5];            // Recover user SP
+                    end
+                    6:begin // CPXR COPY SPECIAL REGISTER
+                        Bank[register_Dest] <= special_register;
                     end
                 endcase
 

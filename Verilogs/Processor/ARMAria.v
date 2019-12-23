@@ -13,7 +13,7 @@ module ARMAria
     output [IO_WIDTH - 1:0] rled,
     output [FLAG_COUNT - 1:0] gled,
     output [SEGMENTS_COUNT - 1:0] sseg,
-    output slow_clock, reset, is_bios,
+    output slow_clock, reset, should_take_branch,
     output is_input, is_output, enable
 );
 
@@ -24,7 +24,7 @@ module ARMAria
     wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
     wire allow_write_on_memory, should_fill_channel_b_with_offset;
     wire should_read_from_input_instead_of_memory;
-    wire isStorage, should_take_branch;
+    wire isStorage, is_bios;
     wire [2:0] controlMAH, control_channel_B_sign_extend_unit;
     wire [2:0] control_load_sign_extend_unit, controlRB;
     wire [3:0] RegD, RegA, RegB, controlALU, controlBS;
@@ -108,12 +108,13 @@ module ARMAria
     RegBank ARMARIAbank(
         mode_flag, enable, reset, slow_clock, fast_clock, should_take_branch,
         controlRB, 
-        RegA, RegB, RegD, 
+        RegA, RegB, RegD,
         RESULT, MemIn,
         next_SP, next_PC, 
         Abus, Bbus,
         PC, SP, 
-        MemOut
+        MemOut,
+        {negative_flag, zero_flag, carry_flag, overflow_flag}
     );
 
     MUXBS muxbusb(
