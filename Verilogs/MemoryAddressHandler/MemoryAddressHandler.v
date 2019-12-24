@@ -35,13 +35,13 @@ module MemoryAddressHandler #(
         case (control)
             /* PUSH address math: Store in Memory, remove from Register*/
             1:begin
-                next_SP = (current_SP > top_stack) ? top_stack : current_SP - 1;
+                next_SP = (current_SP > top_stack) ? current_SP - 1 : top_stack;
                 output_address = next_SP;
             end
 
             /* POP address math: Load into Register, remove from memory*/
             2:begin
-                next_SP = (current_SP < bottom_stack) ? bottom_stack : current_SP + 1;
+                next_SP = (current_SP < bottom_stack) ? current_SP + 1 : bottom_stack;
                 output_address = current_SP;
             end
             default: begin
