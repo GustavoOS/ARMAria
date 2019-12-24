@@ -183,7 +183,6 @@ module ControlCore(
                 controlALU = 2;
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 0;
-                controlMAH = 0;
                 controlRB = 0;
                 should_fill_channel_b_with_offset = 0;
             end
@@ -192,93 +191,78 @@ module ControlCore(
                 controlBS = 1;
                 should_fill_channel_b_with_offset = 1;
                 controlRB = 3;
-                controlMAH = 5;
             end
             40:begin
                 controlALU = 2;
-                controlMAH = 5;
                 allow_write_on_memory = 1;
                 controlRB = 0;
             end
             41:begin
                 controlALU = 2;
-                controlMAH = 4;
                 allow_write_on_memory = 1;
                 controlRB = 0;
             end
             42:begin
                 controlALU = 2;
-                controlMAH = 3;
                 allow_write_on_memory = 1;
                 controlRB = 0;
             end
             43:begin
                 controlALU = 2;
-                controlMAH = 3;
                 control_load_sign_extend_unit = 2;
                 controlRB = 3;
             end
             44:begin
                 controlALU = 2;
-                controlMAH = 5;
                 controlRB = 3;
             end
             45:begin
                 controlALU = 2;
-                controlMAH = 4;
                 control_load_sign_extend_unit = 3;
                 controlRB = 3;
             end
             46:begin
                 controlALU = 2;
-                controlMAH = 3;
                 control_load_sign_extend_unit = 4;
                 controlRB = 3;
             end
             47:begin
                 controlALU = 2;
-                controlMAH = 4;
                 control_load_sign_extend_unit = 1;
                 controlRB = 3;
             end
             48:begin
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 2;
-                controlMAH = 5;
                 allow_write_on_memory = 1;
                 controlRB = 0;
             end
             49:begin
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 2;
-                controlMAH = 5;
                 controlRB = 3;
             end
             50:begin
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 2;
-                controlMAH = 3;
                 allow_write_on_memory = 1;
                 controlRB    = 0;
             end
             51:begin
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 2;
-                controlMAH = 3;
                 control_load_sign_extend_unit = 4;
                 controlRB = 3;
             end
             52:begin
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 2;
-                controlMAH = 4;
                 allow_write_on_memory = 1;
                 controlRB = 0;
             end
             53:begin
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 2;
-                controlMAH = 4;
                 controlRB =3;
                 control_load_sign_extend_unit = 3;
             end
@@ -286,7 +270,6 @@ module ControlCore(
                 should_fill_channel_b_with_offset = 1;
                 control_channel_B_sign_extend_unit = 2;
                 controlALU = 2;
-                controlMAH = 5;
                 allow_write_on_memory = 1;
                 controlRB = 0;
             end
@@ -294,7 +277,6 @@ module ControlCore(
                 should_fill_channel_b_with_offset =1;
                 control_channel_B_sign_extend_unit = 2;
                 controlALU = 2;
-                controlMAH = 5;
                 controlRB = 3;
             end
             56:begin
@@ -365,7 +347,6 @@ module ControlCore(
                 controlRB = 3;
                 control_channel_B_sign_extend_unit = 0;
                 control_load_sign_extend_unit = 3;
-                controlMAH = 0;
                 should_fill_channel_b_with_offset = 0;
                 should_read_from_input_instead_of_memory = 1;
                 allow_write_on_memory = 0;
@@ -374,7 +355,6 @@ module ControlCore(
             end
             72:begin //SWI
                 specreg_update_mode = 5;
-                controlMAH = 0;
                 should_fill_channel_b_with_offset = 1;
                 controlRB = mode_flag ? 5 : 4;
             end
@@ -383,7 +363,6 @@ module ControlCore(
                 controlALU = 2;
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 2;
-                controlMAH = 0;
                 controlRB = 0;
             end
             74:begin //NOP
@@ -403,7 +382,6 @@ module ControlCore(
                 controlALU = 12;
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 0;
-                controlMAH = 0;
                 controlRB = 0;
                 should_fill_channel_b_with_offset = 0;
             end
@@ -412,7 +390,6 @@ module ControlCore(
                 should_fill_channel_b_with_offset = 1;
                 controlALU = 12;
                 controlBS = 0;
-                controlMAH = 0;
                 controlRB = 4;
                 specreg_update_mode = 7;
             end
