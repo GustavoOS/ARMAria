@@ -4,10 +4,11 @@ module InstructionDecoder #(
   parameter ID_WIDTH = 7,
   parameter REGISTER_WIDTH = 4,
   parameter OFFSET_WIDTH = 12,
-  parameter BRANCH_CONDITION_WIDTH = 5
+  parameter BRANCH_CONDITION_WIDTH = 5,
+  parameter OS_START = 2048
 )(
   input [(INSTRUCTION_WIDTH - 1):0] Instruction,
-  input is_bios,
+  input is_bios, is_kernel,
   output reg [(ID_WIDTH - 1):0] ID,
   output reg [(REGISTER_WIDTH - 1):0] RegD, RegA, RegB,
   output reg [(OFFSET_WIDTH - 1):0] Offset,
@@ -206,7 +207,7 @@ always @ ( * ) begin
           end//Opcode=4. funct2=6
           7:begin//Instruction 38 BX
             branch_condition={1'b0, Instruction[7:4]};
-            ID = (branch_condition == 5'hf) ? 7'h4c : 7'h26;
+            ID = (branch_condition == 5'hf) ? 7'h4d : 7'h26;
             RegA = 4'hf;
             RegB[2:0]=Instruction[2:0];
           end
@@ -272,8 +273,10 @@ always @ ( * ) begin
         op=Instruction[7];
         funct1=Instruction[7:6];
         case(funct2)
-          0:begin//Instructions 58
-            ID=7'h3a;
+          0:begin//Instructions 58 CPXR & 76 PXR
+            RegD[2:0] = Instruction[2:0];
+            RegA[2:0] = Instruction[2:0];
+            ID = funct1 == 1 ? 76 : 7'h3a;
           end
           2:begin//Instructions 59 ~ 62
             RegD[2:0]=Instruction[2:0];
@@ -320,7 +323,7 @@ always @ ( * ) begin
 
       12:begin//Instruction 72 - SWI
         ID=7'h48;
-        Offset = 9; //Branches to 0x9
+        Offset = is_kernel? 0 : OS_START; //Branches to OS
         RegB=4'hd;  //Link Register
         branch_condition = 5'he; //Always branches
       end
@@ -337,9 +340,9 @@ always @ ( * ) begin
         ID = op?  7'h4b : 7'h4a; //HLT or NOP
         if(ID == 75 && is_bios)
         begin
-          ID = 77;
+          ID = 78;
           branch_condition = 5'hf;
-          Offset = 2048;
+          Offset = OS_START;
           RegA= 4'hf; //PC
         end
       end

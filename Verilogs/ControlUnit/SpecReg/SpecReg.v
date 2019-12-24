@@ -9,7 +9,7 @@ module SpecReg(
 
     reg [4:0] SPECREG;
 
-    assign {negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag} = enable ? SPECREG : 5'h1f;
+    assign {negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag} = SPECREG;
 
     initial begin
         SPECREG <= 0;
@@ -43,11 +43,12 @@ module SpecReg(
                     end
 
                     5: begin//SWI
-                        SPECREG[0] <= !SPECREG[0];
+                        SPECREG[0] <= ~SPECREG[0];
                     end
 
                     7: begin //Turn off BIOS
                         is_bios <= 0;
+                        SPECREG[0] <= 1'b1;
                     end
                    
                 endcase
