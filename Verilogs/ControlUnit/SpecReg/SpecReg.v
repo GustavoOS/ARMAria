@@ -43,7 +43,7 @@ module SpecReg(
                     end
 
                     5: begin//SWI
-                        SPECREG[0] <= !SPECREG[0];
+                        SPECREG[0] <= ~SPECREG[0];
                     end
 
                     7: begin //Turn off BIOS
