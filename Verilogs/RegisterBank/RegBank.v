@@ -1,6 +1,5 @@
 module RegBank
 #(
-    parameter DATA_AREA_START = 8192,
     parameter REGISTER_LENGTH = 32,
     parameter MAX_NUMBER = 32'hffffffff,
     parameter ADDR_WIDTH = 32,
@@ -37,7 +36,6 @@ module RegBank
 
     always @ (posedge slow_clock) begin
         if (reset) begin
-            Bank[0] <= DATA_AREA_START;
             Bank[14] <= USER_STACK;
             Bank[PC_REGISTER] <= 1;
             Bank[16] <= KERNEL_STACK;
