@@ -5,7 +5,9 @@ module RegBank
     parameter MAX_NUMBER = 32'hffffffff,
     parameter ADDR_WIDTH = 32,
     parameter PC_REGISTER = 15,
-    parameter SPECREG_LENGTH = 4
+    parameter SPECREG_LENGTH = 4,
+    parameter KERNEL_STACK = 6143,
+    parameter USER_STACK = 8191
 )(
     input   enable, reset, slow_clock, fast_clock, should_branch,
     input   [2:0]   control, 
@@ -24,13 +26,6 @@ module RegBank
 
     assign RD_isnt_special = register_Dest != PC_REGISTER && register_Dest!= 14;
 
-    initial begin
-        Bank[0] = DATA_AREA_START;
-        Bank[14] = MAX_NUMBER;//User Stack
-        Bank[PC_REGISTER] = 0;  //PC
-        Bank[16] = MAX_NUMBER; //Privileged Stack
-    end
-
     always @ (posedge fast_clock) begin
         read_data_A <= Bank[register_source_A];
         read_data_B <= Bank[register_source_B];
@@ -43,9 +38,9 @@ module RegBank
     always @ (posedge slow_clock) begin
         if (reset) begin
             Bank[0] <= DATA_AREA_START;
-            Bank[14] <= MAX_NUMBER;//User Stack
+            Bank[14] <= USER_STACK;
             Bank[PC_REGISTER] <= 1;
-            Bank[16] <= MAX_NUMBER; //Privileged Stack
+            Bank[16] <= KERNEL_STACK;
         end else begin
             if (enable) begin
 
