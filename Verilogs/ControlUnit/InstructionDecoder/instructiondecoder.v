@@ -274,8 +274,8 @@ always @ ( * ) begin
         funct1=Instruction[7:6];
         case(funct2)
           0:begin//Instructions 58 CPXR & 76 PXR
-            RegD[2:0] = Instruction[2:0];
-            RegA[2:0] = Instruction[2:0];
+            RegD[3:0] = {1'b1, Instruction[2:0]};
+            RegA[3:0] = {1'b1, Instruction[2:0]};
             ID = funct1 == 1 ? 76 : 7'h3a;
           end
           2:begin//Instructions 59 ~ 62
