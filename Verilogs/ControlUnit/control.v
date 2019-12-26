@@ -27,7 +27,7 @@ module Control
 
     InstructionDecoder id(
         Instruction,
-        is_bios, mode_flag,
+        is_bios,
         ID, 
         RegD, 
         RegA, 
