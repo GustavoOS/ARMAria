@@ -357,6 +357,7 @@ module ControlCore(
                 specreg_update_mode = 5;
                 should_fill_channel_b_with_offset = 1;
                 controlRB = mode_flag ? 5 : 4;
+                controlALU = 12;
             end
             73:begin //B immediate
                 should_fill_channel_b_with_offset = 1;

@@ -8,7 +8,7 @@ module InstructionDecoder #(
   parameter OS_START = 2048
 )(
   input [(INSTRUCTION_WIDTH - 1):0] Instruction,
-  input is_bios, is_kernel,
+  input is_bios,
   output reg [(ID_WIDTH - 1):0] ID,
   output reg [(REGISTER_WIDTH - 1):0] RegD, RegA, RegB,
   output reg [(OFFSET_WIDTH - 1):0] Offset,
@@ -323,7 +323,7 @@ always @ ( * ) begin
 
       12:begin//Instruction 72 - SWI
         ID=7'h48;
-        Offset = is_kernel? 0 : OS_START; //Branches to OS
+        Offset = OS_START; //Branches to OS
         RegB=4'hd;  //Link Register
         branch_condition = 5'he; //Always branches
       end
