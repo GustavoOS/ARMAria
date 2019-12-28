@@ -1,6 +1,6 @@
 module FrequencyDivider
 #(
-    parameter COUNTER_WIDTH = 23,
+    parameter COUNTER_WIDTH = 15,
     parameter MAX_COUNTER_VALUE = 2**COUNTER_WIDTH - 1
 )(
     input clock_50mhz,   
