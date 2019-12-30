@@ -23,22 +23,18 @@ module ARMAria
     wire alu_negative, alu_zero, alu_carry, alu_overflow;
     wire bs_negative, bs_zero, bs_carry, confirmation;
     wire continue_debounced, n_flag, z_flag;
-    wire c_flag, v_flag, is_kernel;
-    wire allow_write_on_memory, should_fill_b_offset;
-    wire isStorage, is_bios, user_request;
+    wire c_flag, v_flag, is_os, is_memory_write;
+    wire should_fill_b_offset, is_bios, user_request;
     wire [2 : 0] controlMAH, b_sign_extend;
     wire [2 : 0] load_sign_extend, controlRB;
     wire [3 : 0] RegD, RegA, RegB, controlALU, controlBS;
-    wire [6 : 0] ID;
     wire [(OFFSET_WIDTH - 1) : 0] OffImmed;
-    wire [(IO_WIDTH - 1) : 0] rledsignal;
     wire [(INSTRUCTION_WIDTH -1) : 0] Instruction;
     wire [(ADDR_WIDTH - 1) : 0] instruction_address, next_PC;
-    wire [(ADDR_WIDTH - 1) : 0] data_address, storage_addres;
-    wire [(DATA_WIDTH - 1) : 0] display7, PC, SP, memory_read_data;
+    wire [(ADDR_WIDTH - 1) : 0] data_address;
+    wire [(DATA_WIDTH - 1) : 0] PC, SP, memory_read_data, Bse;
     wire [(DATA_WIDTH - 1) : 0] PreMemIn, MemIn, Bbus, IData, PreB;
     wire [(DATA_WIDTH - 1) : 0] next_SP, RESULT, Abus, MemOut, Bsh;
-    wire [(DATA_WIDTH - 1) : 0] Bse;
 
     /* Buttons startup  */
 
@@ -60,19 +56,17 @@ module ARMAria
         bs_zero, bs_carry, reset, slow_clock,
         confirmation, user_request,
         OffImmed,
-        ID, 
         RegD, RegA, RegB,
         controlBS, controlALU, 
         controlRB, controlMAH, 
         b_sign_extend, load_sign_extend,
-        allow_write_on_memory, should_fill_b_offset,
-        n_flag, z_flag, c_flag,
-        v_flag, is_kernel, enable,
+        is_memory_write, should_fill_b_offset,
+        n_flag, z_flag, c_flag, v_flag, is_os, enable,
         should_branch, is_input, is_output, is_bios
     );
 
     MemoryUnit mu(
-        allow_write_on_memory, slow_clock, fast_clock,
+        is_memory_write, slow_clock, fast_clock,
         data_address, instruction_address, MemOut,
         is_bios,
         Instruction,
@@ -84,14 +78,14 @@ module ARMAria
         is_output & (~is_input),
         reset, enable,
         MemOut, IData, sw,
-        n_flag, z_flag, c_flag, v_flag, is_kernel,
+        n_flag, z_flag, c_flag, v_flag, is_os,
         rled, gled, sseg, instruction_address , Instruction
     );
 
     MemoryAddressHandler mah(
         RESULT, PC, SP,
         controlMAH,
-        reset, is_kernel,
+        reset, is_os,
         next_SP,
         data_address,
         instruction_address, next_PC

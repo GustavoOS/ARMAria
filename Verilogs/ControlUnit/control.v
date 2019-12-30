@@ -8,25 +8,24 @@ module Control
     parameter CONDITION_WIDTH = 5,
     parameter INTERRUPTION_SIZE = 2
 )(
-    input [INSTRUCTION_WIDTH - 1:0] Instruction,
+    input [INSTRUCTION_WIDTH - 1 : 0] Instruction,
     input alu_negative, alu_carry, alu_overflow,
     input alu_zero, continue_button, bs_negative,
     input bs_zero, bs_carry, reset, clock,
     input confirmation, is_user_request,
-    output [(OFFSET_WIDTH - 1):0] OffImmed,
-    output [(ID_WIDTH - 1):0] ID,
-    output [(REGISTER_ID - 1):0] RegD, RegA, RegB,
-    output [3:0] controlBS, controlALU,
-    output [2:0] controlRB, controlMAH,
-    output [2:0] b_sign_extend, load_sign_extend,
-    output allow_write_on_memory, shoud_fill_b_offset,
-    output negative_flag, zero_flag, carry_flag,
-    output overflow_flag, mode_flag, enable,
+    output [(OFFSET_WIDTH - 1) : 0] OffImmed,
+    output [(REGISTER_ID - 1) : 0] RegD, RegA, RegB,
+    output [3 : 0] controlBS, controlALU,
+    output [2 : 0] controlRB, controlMAH,
+    output [2 : 0] b_sign_extend, load_sign_extend,
+    output is_memory_write, shoud_fill_b_offset,
+    output n_flag, z_flag, c_flag, v_flag, is_os, enable,
     output should_branch, is_input, is_output, is_bios
 );
 
-    wire [(CONDITION_WIDTH -1):0] condition_code;
-    wire [3:0] specreg_update_mode;
+    wire [(ID_WIDTH - 1) : 0] ID;
+    wire [(CONDITION_WIDTH -1) : 0] condition_code;
+    wire [3 : 0] specreg_update_mode;
     wire [(INTERRUPTION_SIZE - 1) : 0] interruption;
     
     InstructionDecoder id(
@@ -42,24 +41,24 @@ module Control
     SpecReg sr(
         clock, reset, enable,
         specreg_update_mode,
-        negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag,
+        n_flag, z_flag, c_flag, v_flag, is_os,
         alu_negative, alu_zero, alu_carry, alu_overflow,
         bs_negative, bs_zero, bs_carry, is_bios
     );
 
     Ramifier rm(
         condition_code,
-        negative_flag,
-        zero_flag,
-        carry_flag,
-        overflow_flag,
+        n_flag,
+        z_flag,
+        c_flag,
+        v_flag,
         should_branch
     );
 
     ControlCore core(
-        confirmation, continue_button, mode_flag,
+        confirmation, continue_button, is_os,
         ID,
-        enable, allow_write_on_memory, shoud_fill_b_offset,
+        enable, is_memory_write, shoud_fill_b_offset,
         is_input, is_output,
         b_sign_extend, load_sign_extend,
         controlRB, controlMAH,
@@ -68,7 +67,7 @@ module Control
     
     Watchdog pitbull(
         clock,
-        is_bios, mode_flag,
+        is_bios, is_os,
         is_input, is_output,
         is_user_request,
         interruption
