@@ -24,7 +24,7 @@ module Control
     output overflow_flag, mode_flag, enable,
     output should_branch, is_input, is_output, is_bios
 );
-    
+
     wire [(CONDITION_WIDTH -1):0] condition_code;
     wire [3:0] specreg_update_mode;
     wire [(INTERRUPTION_SIZE - 1) : 0] interruption;
@@ -38,7 +38,7 @@ module Control
         OffImmed,
         condition_code
     );
-    
+
     SpecReg sr(
         clock, reset, enable,
         specreg_update_mode,
@@ -46,7 +46,7 @@ module Control
         alu_negative, alu_zero, alu_carry, alu_overflow,
         bs_negative, bs_zero, bs_carry, is_bios
     );
-    
+
     Ramifier rm(
         condition_code,
         negative_flag,
@@ -55,7 +55,7 @@ module Control
         overflow_flag,
         should_branch
     );
-    
+
     ControlCore core(
         confirmation, continue_button, mode_flag,
         ID,
