@@ -23,7 +23,6 @@ module ARMAria
     wire bs_negative, bs_zero, bs_carry, confirmation, continue_debounced;
     wire negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag;
     wire allow_write_on_memory, should_fill_channel_b_with_offset;
-    wire should_read_from_input_instead_of_memory;
     wire isStorage, is_bios;
     wire [2:0] controlMAH, control_channel_B_sign_extend_unit;
     wire [2:0] control_load_sign_extend_unit, controlRB;
@@ -61,8 +60,7 @@ module ARMAria
         controlBS, controlALU, 
         controlRB, controlMAH, 
         control_channel_B_sign_extend_unit, control_load_sign_extend_unit,
-        allow_write_on_memory, should_fill_channel_b_with_offset, 
-        should_read_from_input_instead_of_memory, 
+        allow_write_on_memory, should_fill_channel_b_with_offset,
         negative_flag, zero_flag, carry_flag, overflow_flag, mode_flag, 
         enable, should_take_branch, is_input, is_output, is_bios
     );
@@ -94,7 +92,7 @@ module ARMAria
     );
 
     MemoryDataHandler mdh(
-        should_read_from_input_instead_of_memory,
+        is_input,
         IData, data_read_from_memory,
         PreMemIn
     );

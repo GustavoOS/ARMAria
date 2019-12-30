@@ -2,7 +2,7 @@ module ControlCore(
     input confirmation, continue_button, mode_flag,
     input [6:0] ID,
     output reg enable, allow_write_on_memory, should_fill_channel_b_with_offset,
-    output reg should_read_from_input_instead_of_memory, is_input, is_output,
+    output reg is_input, is_output,
     output reg [2:0] control_channel_B_sign_extend_unit, control_load_sign_extend_unit,
     output reg [2:0] controlRB, controlMAH,
     output reg [3:0] controlALU, controlBS, specreg_update_mode
@@ -15,7 +15,6 @@ module ControlCore(
         control_channel_B_sign_extend_unit = 0;
         control_load_sign_extend_unit = 0;
         controlMAH = 0;
-        should_read_from_input_instead_of_memory = 0;
         allow_write_on_memory = 0;
         should_fill_channel_b_with_offset = 0;
         enable = 1;
@@ -348,7 +347,6 @@ module ControlCore(
                 control_channel_B_sign_extend_unit = 0;
                 control_load_sign_extend_unit = 3;
                 should_fill_channel_b_with_offset = 0;
-                should_read_from_input_instead_of_memory = 1;
                 allow_write_on_memory = 0;
                 is_input = 1;
                 enable = confirmation;
