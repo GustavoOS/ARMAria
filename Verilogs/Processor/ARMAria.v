@@ -14,7 +14,7 @@ module ARMAria
     output [(IO_WIDTH - 1) : 0] rled,
     output [(FLAG_COUNT - 1) : 0] gled,
     output [(SEGMENTS_COUNT - 1) : 0] sseg,
-    output slow_clock, reset, should_branch,
+    output slow_clock, reset,
     output is_input, is_output, enable
 );
 
@@ -22,7 +22,7 @@ module ARMAria
 
     wire alu_negative, alu_zero, alu_carry, alu_overflow;
     wire bs_negative, bs_zero, bs_carry, confirmation;
-    wire continue_debounced, n_flag, z_flag;
+    wire continue_debounced, n_flag, z_flag, should_branch;
     wire c_flag, v_flag, is_os, is_memory_write;
     wire should_fill_b_offset, is_bios, user_request;
     wire [2 : 0] controlMAH, b_sign_extend;
@@ -92,7 +92,7 @@ module ARMAria
     );
 
     MemoryDataHandler mdh(
-        is_input,
+        (is_input && !is_output),
         IData, memory_read_data,
         PreMemIn
     );

@@ -5,24 +5,24 @@ module InstructionDecoder #(
     parameter REGISTER_WIDTH = 4,
     parameter OFFSET_WIDTH = 12,
     parameter BRANCH_CONDITION_WIDTH = 5,
-    parameter OS_START = 2048,
-    parameter INTERRUPTION_WIDTH = 2
+    parameter OS_START = 2048
 )(
-    input [(INSTRUCTION_WIDTH - 1):0] Instruction,
-    input is_bios,
-    input [(INTERRUPTION_WIDTH - 1) : 0] interruption,
-    output reg [(ID_WIDTH - 1):0] ID,
-    output reg [(REGISTER_WIDTH - 1):0] RegD, RegA, RegB,
-    output reg [(OFFSET_WIDTH - 1):0] Offset,
-    output reg [(BRANCH_CONDITION_WIDTH - 1):0] branch_condition
+    input [(INSTRUCTION_WIDTH - 1) : 0] Instruction,
+    input is_bios, is_user_request, wd_interruption,
+    output reg [(ID_WIDTH - 1) : 0] ID,
+    output reg [(REGISTER_WIDTH - 1) : 0] RegD, RegA, RegB,
+    output reg [(OFFSET_WIDTH - 1) : 0] Offset,
+    output reg [(BRANCH_CONDITION_WIDTH - 1) : 0] branch_condition
 );
 
     reg op;
-    reg [1:0] funct1;
-    reg [2:0] aux;
-    reg [3:0] funct2;
-    wire [3:0] Opcode;
+    reg [1 : 0] funct1;
+    reg [2 : 0] aux;
+    reg [3 : 0] funct2;
+    wire [1 : 0] interruption;
+    wire [3 : 0] Opcode;
 
+    assign interruption = {wd_interruption, is_user_request};
     assign Opcode = Instruction[15:12];
 
     always @ ( * ) begin
@@ -41,6 +41,9 @@ module InstructionDecoder #(
                 
             end
             2:begin // Automatic Interruption
+                
+            end
+            3:begin // Both on
                 
             end
             default:begin

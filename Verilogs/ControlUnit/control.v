@@ -5,8 +5,7 @@ module Control
     parameter INSTRUCTION_WIDTH = 16,
     parameter REGISTER_ID = 4,
     parameter OFFSET_WIDTH = 12,
-    parameter CONDITION_WIDTH = 5,
-    parameter INTERRUPTION_SIZE = 2
+    parameter CONDITION_WIDTH = 5
 )(
     input [INSTRUCTION_WIDTH - 1 : 0] Instruction,
     input alu_negative, alu_carry, alu_overflow,
@@ -26,11 +25,11 @@ module Control
     wire [(ID_WIDTH - 1) : 0] ID;
     wire [(CONDITION_WIDTH -1) : 0] condition_code;
     wire [3 : 0] specreg_update_mode;
-    wire [(INTERRUPTION_SIZE - 1) : 0] interruption;
+    wire interruption;
     
     InstructionDecoder id(
         Instruction,
-        is_bios,
+        is_bios, is_user_request,
         interruption,
         ID,
         RegD, RegA, RegB,
@@ -68,8 +67,7 @@ module Control
     Watchdog pitbull(
         clock,
         is_bios, is_os,
-        is_input, is_output,
-        is_user_request,
+        enable,
         interruption
     );
     
