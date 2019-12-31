@@ -6,7 +6,8 @@ module RegBank
     parameter PC_REGISTER = 15,
     parameter SPECREG_LENGTH = 4,
     parameter KERNEL_STACK = 6143,
-    parameter USER_STACK = 8191
+    parameter USER_STACK = 8191,
+    parameter OS_START = 2048
 )(
     input   enable, reset, slow_clock, fast_clock, should_branch,
     input   [2:0]   control, 
@@ -59,9 +60,10 @@ module RegBank
                     end
                     4:begin //Enter privileged mode
                         Bank[5] <= Bank[14];            // Save user SP
-                        Bank[13] <= Bank[PC_REGISTER];  //LR = actual next Instruction address
-                        Bank[14] <= Bank[16];           //Switch stack
-                        Bank[PC_REGISTER] <= calculated_next_pc;
+                        Bank[13] <= Bank[PC_REGISTER];  // LR = actual next Instruction address
+                        Bank[14] <= Bank[16];           // Switch stack
+                        Bank[PC_REGISTER] <= OS_START;  // Jump to OS
+                        Bank[7] <= ALU_result;          // Set System Call Register
                     end
                     5:begin //Exit privileged mode
                         Bank[16] <= Bank[14];           // Switch stack

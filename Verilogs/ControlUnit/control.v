@@ -29,7 +29,7 @@ module Control
     
     InstructionDecoder id(
         Instruction,
-        is_bios, is_user_request,
+        is_user_request,
         interruption,
         ID,
         RegD, RegA, RegB,
