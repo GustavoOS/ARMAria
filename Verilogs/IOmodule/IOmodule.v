@@ -24,8 +24,9 @@ module IOmodule #(
     reg [31:0] info, q;
 
     assign RedLEDs = switches[16] ? Instruction : instruction_address;
-    assign GreenLEDs = enable ? {Neg, Zero, Carry, V, M} : 5'h1f;
-    assign imported_data = {16'h0, switches[15:0]};
+    assign GreenLEDs[4 : 1] = enable ? {Neg, Zero, Carry, V} : 4'hf;
+    assign GreenLEDs[0] = M;
+    assign imported_data = {16'h0, switches[15 : 0]};
 
 
     initial begin
