@@ -1,26 +1,32 @@
 module Watchdog
 #(
-    parameter COUNTER_SIZE = 4
+    parameter COUNTER_SIZE = 5
 )(
     input clock,
-    input is_Bios, is_kernel,
-    input enable,
-    output interruption
+    input is_special_mode,
+    input is_io,
+    output reg interruption
 );
 
     reg [(COUNTER_SIZE - 1) : 0] counter;
-    assign interruption = counter[(COUNTER_SIZE - 1)];
+    wire reset;
+    assign reset = !(is_special_mode || is_io);
 
     initial begin
         counter = 0;
     end
 
     always @(posedge clock) begin
-        if(enable) begin
-            if(is_Bios || is_kernel)
+        if(reset) begin
+            if(counter[(COUNTER_SIZE - 1)])begin
+                interruption = 1'b1;
                 counter <= 0;
-            else
+            end else
                 counter <= counter + 1;
+                interruption = 1'b0;
+        end else begin
+            counter <= 0;
+            interruption = 1'b0;
         end
     end
 

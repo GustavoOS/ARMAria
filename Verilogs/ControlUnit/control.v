@@ -29,8 +29,7 @@ module Control
     
     InstructionDecoder id(
         Instruction,
-        is_user_request,
-        interruption,
+        is_user_request, interruption,
         ID,
         RegD, RegA, RegB,
         OffImmed,
@@ -66,8 +65,8 @@ module Control
     
     Watchdog pitbull(
         clock,
-        is_bios, is_os,
-        enable,
+        (is_bios || is_os),
+        (is_input || is_output),
         interruption
     );
     
