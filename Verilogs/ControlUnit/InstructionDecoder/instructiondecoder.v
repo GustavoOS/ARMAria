@@ -19,10 +19,8 @@ module InstructionDecoder #(
     reg [1 : 0] funct1;
     reg [2 : 0] aux;
     reg [3 : 0] funct2;
-    wire [1 : 0] interruption;
     wire [3 : 0] Opcode;
 
-    assign interruption = {wd_interruption, is_user_request};
     assign Opcode = Instruction[15:12];
 
     always @ ( * ) begin
@@ -37,7 +35,7 @@ module InstructionDecoder #(
         op = 0;
         aux = 0;
 
-        if (interruption == 0) begin        
+        if (~(wd_interruption || is_user_request)) begin        
             case(Opcode)
                 0:begin//Instructions 1 & 2
                     op = Instruction[11];

@@ -29,7 +29,7 @@ module Control
     
     InstructionDecoder id(
         Instruction,
-        is_user_request, interruption,
+        (is_user_request && (!is_os)), 1'b0,
         ID,
         RegD, RegA, RegB,
         OffImmed,
@@ -63,12 +63,12 @@ module Control
         controlALU, controlBS, specreg_update_mode
     );
     
-    Watchdog pitbull(
-        clock,
-        (is_bios || is_os),
-        (is_input || is_output),
-        interruption
-    );
+    // Watchdog pitbull(
+    //     clock,
+    //     (is_bios || is_os),
+    //     (is_input || is_output),
+    //     interruption
+    // );
     
     
 endmodule

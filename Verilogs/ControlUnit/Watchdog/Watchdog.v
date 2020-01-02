@@ -18,7 +18,7 @@ module Watchdog
 
     always @(posedge clock) begin
         if(reset) begin
-            if(counter[(COUNTER_SIZE - 1)])begin
+            if(counter[(COUNTER_SIZE - 1)]) begin
                 interruption = 1'b1;
                 counter <= 0;
             end else
