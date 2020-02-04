@@ -71,7 +71,8 @@ module RegBank
                         Bank[PC_REGISTER] <= Bank[13];  // Return to the same point
                     end
                     6:begin // CPXR COPY SPECIAL REGISTER
-                        Bank[register_Dest] <= special_register;
+                        if(RD_isnt_special)
+                            Bank[register_Dest] <= special_register;
                         Bank[PC_REGISTER] <= calculated_next_pc;
                     end
                     default:begin

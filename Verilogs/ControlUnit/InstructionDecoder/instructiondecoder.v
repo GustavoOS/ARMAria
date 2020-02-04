@@ -215,9 +215,10 @@ module InstructionDecoder #(
 
                             7:begin//Instruction 38 BX
                                 branch_condition = {1'b0, Instruction[7:4]};
-                                ID = (branch_condition == 5'hf) ? 7'h4d : 7'h26;
+                                ID = (branch_condition == 5'hf) ? 7'h4f : 7'h26;
                                 RegA = 4'hf;
                                 RegB[2:0] = Instruction[2:0];
+                                RegD = 4'hc;
                             end
 
                             default:begin
@@ -284,10 +285,14 @@ module InstructionDecoder #(
 
                     case(funct2)
 
-                        0:begin//Instructions 58 CPXR & 76 PXR
-                            RegD[3:0] = {1'b1, Instruction[2:0]};
-                            RegA[3:0] = {1'b1, Instruction[2:0]};
-                            ID = funct1 == 1 ? 76 : 7'h3a;
+                        0:begin // Instructions 58 && 76
+                            if (funct1 == 1) begin // Instruction 76 - PXR
+                                ID = 7'h4c;
+                                RegA[3:0] = Instruction[3:0];
+                            end else begin // Instruction 58 = CPXR
+                                ID = 7'h3a;
+                                RegD[3:0] = Instruction[3:0];
+                            end
                         end
 
                         2:begin//Instructions 59 ~ 62
@@ -296,9 +301,16 @@ module InstructionDecoder #(
                             ID = 7'h3b+funct1;
                         end
 
-                        4:begin//Instruction 67
-                            ID = 7'h43;
-                            RegD = Instruction[2:0];
+                        4:begin
+                            if(Instruction[7])
+                            begin   // Instruction 77 - PUSHM
+                                ID = 7'h4d;
+                                Offset[6:0] = Instruction[6:0];
+                                RegA = 4'he;
+                            end else begin  // Instruction 67 - PUSH
+                                ID = 7'h43;
+                                RegD = Instruction[2:0];
+                            end
                         end
 
                         10:begin//Instructions 63 ~ 66
@@ -307,9 +319,15 @@ module InstructionDecoder #(
                             ID = 7'h3f+funct1;
                         end
 
-                        13:begin//Instruction 68
-                            ID = 7'h44;
-                            RegD = Instruction[2:0];
+                        13:begin
+                            if (Instruction[7]) begin   // Instruction 78 - POPM
+                                ID = 7'h4e;
+                                Offset[6:0] = Instruction[6:0];
+                                RegA = 4'he;
+                            end else begin  // Instruction 68 - POP
+                                ID = 7'h44;
+                                RegD = Instruction[2:0];
+                            end
                         end
 
                         14:begin
@@ -345,15 +363,15 @@ module InstructionDecoder #(
 
                 12:begin//Instruction 72 - SWI
                     ID = 7'h48;
-                    Offset = Instruction[10 : 6]; // Fills the System Call Register
-                    RegB = 4'h7;  //Link Register
+                    Offset[7:0] = Instruction[7 : 0]; // Fills the System Call Register
                 end
 
                 13:begin//Instruction 73 - B immediate
-                    ID = 7'h49;
                     branch_condition = {1'b0, Instruction[11:8]};
-                    Offset = {4'h0, Instruction[7:0]};
+                    ID = (branch_condition == 5'hf) ? 7'h4f : 7'h49;
+                    Offset[7:0] = Instruction[7:0];
                     RegA =  4'hf; //PC
+                    RegD = 4'hc; // Link Register
                 end
 
                 14:begin//Instructions 74 & 75

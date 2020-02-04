@@ -44,6 +44,13 @@ module MemoryAddressHandler #(
                 next_SP = (current_SP < bottom_stack) ? current_SP + 1 : bottom_stack;
                 output_address = current_SP;
             end
+
+            /* ALU Calculated SP change */
+            3:begin
+                next_SP = input_address;
+                output_address = input_address[ADDR_WIDTH - 1:0];
+            end
+
             default: begin
                 output_address = input_address[ADDR_WIDTH - 1:0];
                 next_SP = (current_SP == 0) ? bottom_stack: current_SP;
@@ -51,8 +58,4 @@ module MemoryAddressHandler #(
         endcase
     end
 
-
-
-
-    
 endmodule

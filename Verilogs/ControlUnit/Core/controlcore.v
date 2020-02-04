@@ -377,12 +377,34 @@ module ControlCore(
                 specreg_update_mode = 2;
             end
 
-            77: begin //Branch Absolute
+            77:begin //PUSHN
+                controlMAH = 3;
+                should_fill_channel_b_with_offset = 1;
+                controlALU = 5;
+                controlRB = 0;
+            end
+
+            78:begin //POPN
+                controlMAH = 3;
+                should_fill_channel_b_with_offset = 1;
+                controlALU = 2;
+                controlRB = 0;
+            end
+
+            79: begin //BLX
                 controlALU = 12;
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 0;
-                controlRB = 0;
+                controlRB = 3;
                 should_fill_channel_b_with_offset = 0;
+            end
+
+            80:begin //BL
+                should_fill_channel_b_with_offset = 1;
+                controlALU = 2;
+                controlBS = 0;
+                control_channel_B_sign_extend_unit = 2;
+                controlRB = 3;
             end
 
             default: controlRB = 0;
