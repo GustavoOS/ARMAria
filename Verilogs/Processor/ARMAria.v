@@ -85,7 +85,7 @@ module ARMAria
     MemoryAddressHandler mah(
         RESULT, PC, SP,
         controlMAH,
-        reset, is_os,
+        is_os, should_branch, reset,
         next_SP,
         data_address,
         instruction_address, next_PC
@@ -104,7 +104,7 @@ module ARMAria
     );
 
     RegBank ARMARIAbank(
-        enable, reset, slow_clock, fast_clock, should_branch,
+        enable, reset, slow_clock, fast_clock,
         controlRB, 
         RegA, RegB, RegD,
         RESULT, MemIn,

@@ -214,8 +214,8 @@ module InstructionDecoder #(
                             end
 
                             7:begin//Instruction 38 BX
-                                branch_condition = {1'b0, Instruction[7:4]};
-                                ID = (branch_condition == 5'hf) ? 7'h4f : 7'h26;
+                                branch_condition = Instruction[7:4];
+                                ID = (branch_condition == 15) ? 7'h4f : 7'h26;
                                 RegA = 4'hf;
                                 RegB[2:0] = Instruction[2:0];
                                 RegD = 4'hc;
@@ -369,7 +369,7 @@ module InstructionDecoder #(
                 13:begin//Instruction 73 - B immediate
                     branch_condition = {1'b0, Instruction[11:8]};
                     ID = (branch_condition == 5'hf) ? 7'h4f : 7'h49;
-                    Offset[7:0] = Instruction[7:0];
+                    Offset = Instruction[7:0];
                     RegA =  4'hf; //PC
                     RegD = 4'hc; // Link Register
                 end

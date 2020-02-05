@@ -55,7 +55,7 @@ module Ramifier
             14:begin  //Al
                 take = 1;
             end
-            15:begin    //ABSOLUTE JUMP ALWAYS AB
+            15:begin    // L
                 take = 1;
             end
             default: begin

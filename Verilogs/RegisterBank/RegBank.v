@@ -9,7 +9,7 @@ module RegBank
     parameter USER_STACK = 8191,
     parameter OS_START = 2048
 )(
-    input   enable, reset, slow_clock, fast_clock, should_branch,
+    input   enable, reset, slow_clock, fast_clock,
     input   [2:0]   control, 
     input   [3:0]   register_source_A, register_source_B, register_Dest,
     input   [REGISTER_LENGTH -1:0]  ALU_result, data_from_memory,
@@ -23,9 +23,7 @@ module RegBank
     reg [REGISTER_LENGTH -1:0] Bank [16:0];
 
     wire RD_isnt_special;
-    wire [(REGISTER_LENGTH - 1) : 0] calculated_next_pc;
 
-    assign calculated_next_pc = should_branch ? ALU_result : new_PC;
     assign RD_isnt_special = register_Dest != PC_REGISTER && register_Dest!= 14;
 
     always @ (posedge fast_clock) begin
@@ -40,7 +38,7 @@ module RegBank
     always @ (posedge slow_clock) begin
         if (reset) begin
             Bank[14] <= USER_STACK;
-            Bank[PC_REGISTER] <= 1;
+            Bank[PC_REGISTER] <= 0;
             Bank[16] <= KERNEL_STACK;
         end else begin
             if (enable) begin
@@ -49,14 +47,14 @@ module RegBank
                         if(RD_isnt_special) begin
                             Bank[register_Dest] <= ALU_result;
                         end
-                        Bank[PC_REGISTER] <= calculated_next_pc;
+                        Bank[PC_REGISTER] <= new_PC;
                     end
                     3:begin //RD=data_from_memory
                         if(RD_isnt_special)begin
                             Bank[register_Dest] <= data_from_memory;
                         end
                         Bank[14] <= new_SP;
-                        Bank[PC_REGISTER] <= calculated_next_pc;
+                        Bank[PC_REGISTER] <= new_PC;
                     end
                     4:begin //Enter privileged mode
                         Bank[5] <= Bank[14];            // Save user SP
@@ -73,11 +71,11 @@ module RegBank
                     6:begin // CPXR COPY SPECIAL REGISTER
                         if(RD_isnt_special)
                             Bank[register_Dest] <= special_register;
-                        Bank[PC_REGISTER] <= calculated_next_pc;
+                        Bank[PC_REGISTER] <= new_PC;
                     end
                     default:begin
                         Bank[14] <= new_SP;
-                        Bank[PC_REGISTER] <= calculated_next_pc;
+                        Bank[PC_REGISTER] <= new_PC;
                     end
                 endcase
 

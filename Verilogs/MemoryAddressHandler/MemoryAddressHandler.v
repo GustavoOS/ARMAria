@@ -10,7 +10,7 @@ module MemoryAddressHandler #(
 )(
     input [DATA_WIDTH -1:0]  input_address, current_PC, current_SP,
     input [2:0] control,
-    input reset, is_kernel,    
+    input is_kernel, should_branch, reset,
     output reg [DATA_WIDTH -1:0] next_SP,
     output reg [ADDR_WIDTH - 1:0] output_address, 
     output [ADDR_WIDTH - 1:0] instruction_address, next_PC
@@ -18,12 +18,7 @@ module MemoryAddressHandler #(
 
     /* PC behavior */
     assign instruction_address = reset ? 0 : current_PC;
-    Incrementor PC_incr(
-        1,
-        current_PC,
-        1,
-        next_PC
-        );
+    assign next_PC = should_branch ? input_address : instruction_address + 1;
 
     //Stack behavior
     wire [DATA_WIDTH - 1: 0] top_stack, bottom_stack;
