@@ -18,7 +18,7 @@ module MemoryAddressHandler #(
 
     /* PC behavior */
     assign instruction_address = reset ? 0 : current_PC;
-    assign next_PC = should_branch ? input_address : instruction_address + 1;
+    assign next_PC = reset ? 1 : should_branch ? input_address : current_PC + 1;
 
     //Stack behavior
     wire [DATA_WIDTH - 1: 0] top_stack, bottom_stack;
