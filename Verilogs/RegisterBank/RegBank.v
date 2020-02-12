@@ -4,6 +4,7 @@ module RegBank
     parameter MAX_NUMBER = 32'hffffffff,
     parameter ADDR_WIDTH = 32,
     parameter PC_REGISTER = 15,
+    parameter SP_REGISTER = 14,
     parameter SPECREG_LENGTH = 4,
     parameter KERNEL_STACK = 6143,
     parameter USER_STACK = 8191,
@@ -57,15 +58,15 @@ module RegBank
                         Bank[PC_REGISTER] <= new_PC;
                     end
                     4:begin //Enter privileged mode
-                        Bank[5] <= Bank[14];            // Save user SP
+                        Bank[5] <= Bank[SP_REGISTER];            // Save user SP
                         Bank[13] <= Bank[PC_REGISTER];  // LR = actual next Instruction address
-                        Bank[14] <= Bank[16];           // Switch stack
+                        Bank[SP_REGISTER] <= Bank[16];           // Switch stack
                         Bank[PC_REGISTER] <= OS_START;  // Jump to OS
                         Bank[7] <= ALU_result;          // Set System Call Register
                     end
                     5:begin //Exit privileged mode
-                        Bank[16] <= Bank[14];           // Switch stack
-                        Bank[14] <= Bank[5];            // Recover user SP
+                        Bank[16] <= Bank[SP_REGISTER];           // Switch stack
+                        Bank[SP_REGISTER] <= Bank[5];            // Recover user SP
                         Bank[PC_REGISTER] <= Bank[13];  // Return to the same point
                     end
                     6:begin // CPXR COPY SPECIAL REGISTER
@@ -74,7 +75,7 @@ module RegBank
                         Bank[PC_REGISTER] <= new_PC;
                     end
                     default:begin
-                        Bank[14] <= new_SP;
+                        Bank[SP_REGISTER] <= new_SP;
                         Bank[PC_REGISTER] <= new_PC;
                     end
                 endcase

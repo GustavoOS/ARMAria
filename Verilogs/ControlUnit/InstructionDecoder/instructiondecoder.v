@@ -5,7 +5,8 @@ module InstructionDecoder #(
     parameter REGISTER_WIDTH = 4,
     parameter OFFSET_WIDTH = 12,
     parameter BRANCH_CONDITION_WIDTH = 5,
-    parameter OS_START = 2048
+    parameter OS_START = 2048,
+    parameter LINK_REGISTER = 12
 )(
     input [(INSTRUCTION_WIDTH - 1) : 0] Instruction,
     input is_user_request, wd_interruption,
@@ -218,7 +219,7 @@ module InstructionDecoder #(
                                 ID = (branch_condition == 15) ? 7'h4f : 7'h26;
                                 RegA = 4'hf;
                                 RegB[2:0] = Instruction[2:0];
-                                RegD = 4'hc;
+                                RegD = LINK_REGISTER;
                             end
 
                             default:begin
@@ -371,7 +372,7 @@ module InstructionDecoder #(
                     ID = (branch_condition == 5'hf) ? 7'h4f : 7'h49;
                     Offset = Instruction[7:0];
                     RegA =  4'hf; //PC
-                    RegD = 4'hc; // Link Register
+                    RegD = LINK_REGISTER; // Link Register
                 end
 
                 14:begin//Instructions 74 & 75
