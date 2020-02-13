@@ -6,7 +6,9 @@ module InstructionDecoder #(
     parameter OFFSET_WIDTH = 12,
     parameter BRANCH_CONDITION_WIDTH = 4,
     parameter OS_START = 2048,
-    parameter LINK_REGISTER = 12
+    parameter LINK_REGISTER = 4'hc,
+    parameter SP_REGISTER = 4'he,
+    parameter PC_REGISTER = 4'hf
 )(
     input [(INSTRUCTION_WIDTH - 1) : 0] Instruction,
     input is_user_request, wd_interruption,
@@ -118,7 +120,7 @@ module InstructionDecoder #(
                         ID = 7'h27;
                         Offset = {4'h0, Instruction[7:0]};
                         RegD[2:0] = Instruction[10:8];
-                        RegA = 4'hf;
+                        RegA = PC_REGISTER;
                         RegB = Instruction[10:8];
                     end else begin
                         RegD[2:0] = Instruction[2:0];
@@ -217,7 +219,7 @@ module InstructionDecoder #(
                             7:begin//Instruction 38 BX
                                 branch_condition = Instruction[7:4];
                                 ID = 7'h26;
-                                RegA = 4'hf; // PC
+                                RegA = PC_REGISTER;
                                 RegB[2:0] = Instruction[2:0];
                             end
 
@@ -264,7 +266,7 @@ module InstructionDecoder #(
                 9:begin//Instructions 54 & 55
                     Offset = {4'h0, Instruction[7:0]};
                     RegD[2:0] = Instruction[10:8];
-                    RegA = 4'he;
+                    RegA = SP_REGISTER;
                     op = Instruction[11];
                     ID = (op)?7'h37:7'h36;
                 end
@@ -273,7 +275,7 @@ module InstructionDecoder #(
                     Offset = {4'h0, Instruction[7:0]};
                     RegD = {1'b0, Instruction[10:8]};
                     op = Instruction[11];
-                    RegA = (op) ? 4'he : 4'hf;
+                    RegA = (op) ? SP_REGISTER : PC_REGISTER;
                     ID = (op)?7'h39:7'h38;
                 end
 
@@ -295,10 +297,11 @@ module InstructionDecoder #(
                             end
                         end
 
-                        1:begin // Instructions 79 BLX && 80 BX
+                        1:begin // Instructions 79 BL && 80 BX
                             ID = op ? 7'h50 : 7'h4f;
                             branch_condition = 4'he; // AL
-                            RegA = Instruction[3 : 0];
+                            RegA = PC_REGISTER;
+                            RegB = Instruction[3 : 0];
                             RegD = LINK_REGISTER;
                         end
 
@@ -313,7 +316,7 @@ module InstructionDecoder #(
                             begin   // Instruction 77 - PUSHM
                                 ID = 7'h4d;
                                 Offset[6:0] = Instruction[6:0];
-                                RegA = 4'he;
+                                RegA = SP_REGISTER;
                             end else begin  // Instruction 67 - PUSH
                                 ID = 7'h43;
                                 RegD = Instruction[2:0];
@@ -330,7 +333,7 @@ module InstructionDecoder #(
                             if (Instruction[7]) begin   // Instruction 78 - POPM
                                 ID = 7'h4e;
                                 Offset[6:0] = Instruction[6:0];
-                                RegA = 4'he;
+                                RegA = SP_REGISTER;
                             end else begin  // Instruction 68 - POP
                                 ID = 7'h44;
                                 RegD = Instruction[2:0];
@@ -377,7 +380,7 @@ module InstructionDecoder #(
                     branch_condition = Instruction[11:8];
                     ID = 7'h49;
                     Offset = Instruction[7:0];
-                    RegA =  4'hf; //PC
+                    RegA =  PC_REGISTER;
                 end
 
                 14:begin//Instructions 74 & 75

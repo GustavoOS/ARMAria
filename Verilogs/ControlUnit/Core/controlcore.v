@@ -329,7 +329,6 @@ module ControlCore(
                 control_load_sign_extend_unit = 0;
             end
             69:begin    // OUTPUT
-                controlALU = 0;
                 controlRB = 0;
                 enable = confirmation;
                 is_output = 1;
@@ -342,7 +341,6 @@ module ControlCore(
                 is_output = 1;
             end
             71:begin    // INPUT
-                controlALU = 0;
                 controlBS = 0;
                 controlRB = 2;
                 control_channel_B_sign_extend_unit = 0;
@@ -356,7 +354,6 @@ module ControlCore(
                 specreg_update_mode = 5;
                 should_fill_channel_b_with_offset = 1;
                 controlRB = mode_flag ? 4 : 3;
-                controlALU = 12;
             end
             73:begin //B immediate
                 should_fill_channel_b_with_offset = 1;
@@ -393,14 +390,13 @@ module ControlCore(
                 controlRB = 0;
             end
 
-            79: begin // BLX
-                controlALU = 0;
+            79: begin // BL
+                controlALU = 2;
                 controlRB = 1;
                 controlMAH = 4;
             end
 
             80:begin // BX
-                controlALU = 0;
                 controlRB = 0;
                 controlMAH = 4;
             end
