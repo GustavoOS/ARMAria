@@ -184,6 +184,7 @@ module ControlCore(
                 control_channel_B_sign_extend_unit = 0;
                 controlRB = 0;
                 should_fill_channel_b_with_offset = 0;
+                controlMAH = 4;
             end
             39:begin
                 controlALU = 2;
@@ -363,6 +364,7 @@ module ControlCore(
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 2;
                 controlRB = 0;
+                controlMAH = 4;
             end
             74:begin //NOP
                 controlRB = 0;
@@ -393,8 +395,9 @@ module ControlCore(
 
             79: begin //BLX
                 controlALU = 12;
-                controlRB = 0;
+                controlRB = 1;
                 should_fill_channel_b_with_offset = 0;
+                controlMAH = 4;
             end
 
             80:begin //BL
@@ -402,7 +405,8 @@ module ControlCore(
                 controlALU = 2;
                 controlBS = 0;
                 control_channel_B_sign_extend_unit = 2;
-                controlRB = 0;
+                controlRB = 1;
+                controlMAH = 4;
             end
 
             default: controlRB = 0;

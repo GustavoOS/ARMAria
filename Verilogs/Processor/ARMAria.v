@@ -1,11 +1,10 @@
 module ARMAria
 #(
-    parameter ADDR_WIDTH = 32,
+    parameter WORD_SIZE = 32,
     parameter INSTRUCTION_WIDTH = 16,
     parameter FLAG_COUNT = 5,
     parameter IO_WIDTH = 16,
     parameter SEGMENTS_COUNT = 7*8,
-    parameter DATA_WIDTH = 32,
     parameter OFFSET_WIDTH = 12
 )(
     input fast_clock, confirmation_button, reset_button,
@@ -30,11 +29,11 @@ module ARMAria
     wire [3 : 0] RegD, RegA, RegB, controlALU, controlBS;
     wire [(OFFSET_WIDTH - 1) : 0] OffImmed;
     wire [(INSTRUCTION_WIDTH -1) : 0] Instruction;
-    wire [(ADDR_WIDTH - 1) : 0] instruction_address, next_PC;
-    wire [(ADDR_WIDTH - 1) : 0] data_address;
-    wire [(DATA_WIDTH - 1) : 0] PC, SP, memory_read_data, Bse;
-    wire [(DATA_WIDTH - 1) : 0] PreMemIn, MemIn, Bbus, IData, PreB;
-    wire [(DATA_WIDTH - 1) : 0] next_SP, RESULT, Abus, MemOut, Bsh;
+    wire [(WORD_SIZE - 1) : 0] instruction_address, next_PC;
+    wire [(WORD_SIZE - 1) : 0] data_address, ALU_result, final_result;
+    wire [(WORD_SIZE - 1) : 0] PC, SP, memory_read_data, Bse;
+    wire [(WORD_SIZE - 1) : 0] PreMemIn, MemIn, Bbus, IData, PreB;
+    wire [(WORD_SIZE - 1) : 0] next_SP, Abus, MemOut, Bsh;
 
     /* Buttons startup  */
 
@@ -83,12 +82,12 @@ module ARMAria
     );
 
     MemoryAddressHandler mah(
-        RESULT, PC, SP,
-        controlMAH,
         is_os, should_branch, reset,
-        next_SP,
-        data_address,
-        instruction_address, next_PC
+        controlMAH,
+        ALU_result, PC, SP,
+        next_SP, data_address,
+        final_result, next_PC,
+        instruction_address
     );
 
     MemoryDataHandler mdh(
@@ -107,11 +106,10 @@ module ARMAria
         enable, reset, slow_clock, fast_clock,
         controlRB, 
         RegA, RegB, RegD,
-        RESULT, MemIn,
+        final_result, MemIn,
         next_SP, next_PC, 
         Abus, Bbus,
-        PC, SP, 
-        MemOut,
+        PC, SP, MemOut,
         {n_flag, z_flag, c_flag, v_flag}
     );
 
@@ -136,7 +134,7 @@ module ARMAria
 
     ALU arithmeticlogicunit(
         Abus, Bsh,
-        RESULT,
+        ALU_result,
         controlALU,
         c_flag,
         alu_negative, alu_zero, alu_carry, alu_overflow

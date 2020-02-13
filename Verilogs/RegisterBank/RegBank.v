@@ -1,8 +1,7 @@
 module RegBank
 #(
-    parameter REGISTER_LENGTH = 32,
+    parameter WORD_SIZE = 32,
     parameter MAX_NUMBER = 32'hffffffff,
-    parameter ADDR_WIDTH = 32,
     parameter PC_REGISTER = 15,
     parameter SP_REGISTER = 14,
     parameter SPECREG_LENGTH = 4,
@@ -13,15 +12,14 @@ module RegBank
     input   enable, reset, slow_clock, fast_clock,
     input   [2:0]   control, 
     input   [3:0]   register_source_A, register_source_B, register_Dest,
-    input   [REGISTER_LENGTH -1:0]  ALU_result, data_from_memory,
-    input   [REGISTER_LENGTH -1:0]  new_SP,
-    input   [ADDR_WIDTH - 1:0] new_PC,
-    output  reg [REGISTER_LENGTH -1:0]  read_data_A, read_data_B,
-    output  reg [REGISTER_LENGTH -1:0]  current_PC, current_SP, memory_output,
+    input   [(WORD_SIZE - 1) : 0]  ALU_result, data_from_memory,
+    input   [(WORD_SIZE - 1) : 0]  new_SP, new_PC,
+    output  reg [(WORD_SIZE - 1) : 0]  read_data_A, read_data_B,
+    output  reg [(WORD_SIZE - 1) : 0]  current_PC, current_SP, memory_output,
     input   [(SPECREG_LENGTH - 1) : 0] special_register
 );
 
-    reg [REGISTER_LENGTH -1:0] Bank [16:0];
+    reg [(WORD_SIZE - 1) : 0] Bank [16:0];
 
     wire RD_isnt_special;
 
@@ -31,7 +29,7 @@ module RegBank
         read_data_A <= Bank[register_source_A];
         read_data_B <= Bank[register_source_B];
         current_PC <= Bank[PC_REGISTER];
-        current_SP <= Bank[14];
+        current_SP <= Bank[SP_REGISTER];
         memory_output <= Bank[register_Dest];
     end
 
