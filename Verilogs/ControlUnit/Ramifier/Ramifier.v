@@ -1,6 +1,6 @@
 module Ramifier
 #(
-    parameter BRANCH_CONDITION_WIDTH = 5
+    parameter BRANCH_CONDITION_WIDTH = 4
 )(
   input [(BRANCH_CONDITION_WIDTH - 1):0] condition,
   input negative_flag, zero_flag, carry_flag, overflow_flag,
@@ -53,9 +53,6 @@ module Ramifier
                 take = (zero_flag) || (negative_flag ^ overflow_flag);
             end
             14:begin  //Al
-                take = 1;
-            end
-            15:begin    // L
                 take = 1;
             end
             default: begin

@@ -4,7 +4,7 @@ module InstructionDecoder #(
     parameter ID_WIDTH = 7,
     parameter REGISTER_WIDTH = 4,
     parameter OFFSET_WIDTH = 12,
-    parameter BRANCH_CONDITION_WIDTH = 5,
+    parameter BRANCH_CONDITION_WIDTH = 4,
     parameter OS_START = 2048,
     parameter LINK_REGISTER = 12
 )(
@@ -29,7 +29,7 @@ module InstructionDecoder #(
         RegD = 0;
         RegA = 0;
         RegB = 0;
-        branch_condition = 5'h1f;
+        branch_condition = 4'hf;
         ID = 0;
         funct1 = 0;
         funct2 = Instruction[11:8];
@@ -216,10 +216,9 @@ module InstructionDecoder #(
 
                             7:begin//Instruction 38 BX
                                 branch_condition = Instruction[7:4];
-                                ID = (branch_condition == 15) ? 7'h4f : 7'h26;
-                                RegA = 4'hf;
+                                ID = 7'h26;
+                                RegA = 4'hf; // PC
                                 RegB[2:0] = Instruction[2:0];
-                                RegD = LINK_REGISTER;
                             end
 
                             default:begin
@@ -278,7 +277,7 @@ module InstructionDecoder #(
                     ID = (op)?7'h39:7'h38;
                 end
 
-                11:begin  //Instructions 58 ~ 68
+                11:begin
 
                     funct2 = Instruction[11:8];
                     op = Instruction[7];
@@ -294,6 +293,13 @@ module InstructionDecoder #(
                                 ID = 7'h3a;
                                 RegD[3:0] = Instruction[3:0];
                             end
+                        end
+
+                        1:begin // Instructions 79 BLX && 80 BX
+                            ID = op ? 7'h50 : 7'h4f;
+                            branch_condition = 4'he; // AL
+                            RegA = Instruction[3 : 0];
+                            RegD = LINK_REGISTER;
                         end
 
                         2:begin//Instructions 59 ~ 62
@@ -368,11 +374,10 @@ module InstructionDecoder #(
                 end
 
                 13:begin//Instruction 73 - B immediate
-                    branch_condition = {1'b0, Instruction[11:8]};
-                    ID = (branch_condition == 5'hf) ? 7'h50 : 7'h49;
+                    branch_condition = Instruction[11:8];
+                    ID = 7'h49;
                     Offset = Instruction[7:0];
                     RegA =  4'hf; //PC
-                    RegD = LINK_REGISTER; // Link Register
                 end
 
                 14:begin//Instructions 74 & 75

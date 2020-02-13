@@ -5,7 +5,7 @@ module Control
     parameter INSTRUCTION_WIDTH = 16,
     parameter REGISTER_ID = 4,
     parameter OFFSET_WIDTH = 12,
-    parameter CONDITION_WIDTH = 5
+    parameter CONDITION_WIDTH = 4
 )(
     input [INSTRUCTION_WIDTH - 1 : 0] Instruction,
     input alu_negative, alu_carry, alu_overflow,

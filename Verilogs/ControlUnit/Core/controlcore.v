@@ -393,19 +393,15 @@ module ControlCore(
                 controlRB = 0;
             end
 
-            79: begin //BLX
-                controlALU = 12;
+            79: begin // BLX
+                controlALU = 0;
                 controlRB = 1;
-                should_fill_channel_b_with_offset = 0;
                 controlMAH = 4;
             end
 
-            80:begin //BL
-                should_fill_channel_b_with_offset = 1;
-                controlALU = 2;
-                controlBS = 0;
-                control_channel_B_sign_extend_unit = 2;
-                controlRB = 1;
+            80:begin // BX
+                controlALU = 0;
+                controlRB = 0;
                 controlMAH = 4;
             end
 

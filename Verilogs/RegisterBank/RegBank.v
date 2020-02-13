@@ -47,12 +47,13 @@ module RegBank
                             Bank[register_Dest] <= ALU_result;
                         end
                         Bank[PC_REGISTER] <= new_PC;
+                        Bank[SP_REGISTER] <= new_SP;
                     end
                     2:begin //RD=data_from_memory
                         if(RD_isnt_special)begin
                             Bank[register_Dest] <= data_from_memory;
                         end
-                        Bank[14] <= new_SP;
+                        Bank[SP_REGISTER] <= new_SP;
                         Bank[PC_REGISTER] <= new_PC;
                     end
                     3:begin //Enter privileged mode
@@ -71,6 +72,7 @@ module RegBank
                         if(RD_isnt_special)
                             Bank[register_Dest] <= special_register;
                         Bank[PC_REGISTER] <= new_PC;
+                        Bank[SP_REGISTER] <= new_SP;
                     end
                     default:begin
                         Bank[SP_REGISTER] <= new_SP;
