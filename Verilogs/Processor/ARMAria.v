@@ -9,7 +9,7 @@ module ARMAria
 )(
     input fast_clock, confirmation_button, reset_button,
     input continue_button, request_os_button,
-    input [IO_WIDTH :0] sw,
+    input  [(IO_WIDTH - 1) : 0] sw,
     output [(IO_WIDTH - 1) : 0] rled,
     output [(FLAG_COUNT - 1) : 0] gled,
     output [(SEGMENTS_COUNT - 1) : 0] sseg,
@@ -78,7 +78,7 @@ module ARMAria
         reset, enable,
         MemOut, IData, sw,
         n_flag, z_flag, c_flag, v_flag, is_os,
-        rled, gled, sseg, instruction_address , Instruction
+        rled, gled, sseg, instruction_address
     );
 
     MemoryAddressHandler mah(

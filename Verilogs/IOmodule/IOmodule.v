@@ -1,6 +1,6 @@
 module IOmodule #(
     parameter DISPLAY_SIZE = 32,
-    parameter SWITCH_SIZE = 17,
+    parameter SWITCH_SIZE = 16,
     parameter DATA_SIZE = 32,
     parameter SPECREG_LEN = 5,
     parameter SEGMENT_COUNT = 56,
@@ -17,13 +17,12 @@ module IOmodule #(
     output [(SWITCH_SIZE - 2) : 0] RedLEDs,
     output [(SPECREG_LEN - 1) : 0] GreenLEDs,
     output [(SEGMENT_COUNT - 1) : 0] SevenSegDisplays,
-    input [(INSTRUCTION_ADDR_LEN - 1) : 0] instruction_address,
-    input [(INSTRUCTION_LEN - 1) : 0] Instruction
+    input [(INSTRUCTION_ADDR_LEN - 1) : 0] instruction_address
 );
   
     reg [31:0] info, q;
 
-    assign RedLEDs = switches[16] ? Instruction : instruction_address;
+    assign RedLEDs = instruction_address;
     assign GreenLEDs[4 : 1] = enable ? {Neg, Zero, Carry, V} : 4'hf;
     assign GreenLEDs[0] = M;
     assign imported_data = {16'h0, switches[15 : 0]};
