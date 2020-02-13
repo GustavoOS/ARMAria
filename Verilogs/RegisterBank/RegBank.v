@@ -48,26 +48,26 @@ module RegBank
                         end
                         Bank[PC_REGISTER] <= new_PC;
                     end
-                    3:begin //RD=data_from_memory
+                    2:begin //RD=data_from_memory
                         if(RD_isnt_special)begin
                             Bank[register_Dest] <= data_from_memory;
                         end
                         Bank[14] <= new_SP;
                         Bank[PC_REGISTER] <= new_PC;
                     end
-                    4:begin //Enter privileged mode
+                    3:begin //Enter privileged mode
                         Bank[5] <= Bank[SP_REGISTER];            // Save user SP
                         Bank[13] <= Bank[PC_REGISTER];  // LR = actual next Instruction address
                         Bank[SP_REGISTER] <= Bank[16];           // Switch stack
                         Bank[PC_REGISTER] <= OS_START;  // Jump to OS
                         Bank[7] <= ALU_result;          // Set System Call Register
                     end
-                    5:begin //Exit privileged mode
+                    4:begin //Exit privileged mode
                         Bank[16] <= Bank[SP_REGISTER];           // Switch stack
                         Bank[SP_REGISTER] <= Bank[5];            // Recover user SP
                         Bank[PC_REGISTER] <= Bank[13];  // Return to the same point
                     end
-                    6:begin // CPXR COPY SPECIAL REGISTER
+                    5:begin // CPXR COPY SPECIAL REGISTER
                         if(RD_isnt_special)
                             Bank[register_Dest] <= special_register;
                         Bank[PC_REGISTER] <= new_PC;
