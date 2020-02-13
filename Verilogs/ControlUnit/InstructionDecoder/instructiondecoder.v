@@ -369,7 +369,7 @@ module InstructionDecoder #(
 
                 13:begin//Instruction 73 - B immediate
                     branch_condition = {1'b0, Instruction[11:8]};
-                    ID = (branch_condition == 5'hf) ? 7'h4f : 7'h49;
+                    ID = (branch_condition == 5'hf) ? 7'h50 : 7'h49;
                     Offset = Instruction[7:0];
                     RegA =  4'hf; //PC
                     RegD = LINK_REGISTER; // Link Register
