@@ -48,7 +48,7 @@ module MemoryAddressHandler #(
             /* ALU Calculated SP change */
             3:begin
                 next_SP = ALU_result;
-                output_address = ALU_result[(WORD_SIZE - 1) : 0];
+                output_address = ALU_result;
                 next_PC = r_incr_pc;
                 final_result = ALU_result;
             end
@@ -64,7 +64,7 @@ module MemoryAddressHandler #(
             default: begin
                 next_PC = r_incr_pc;
                 final_result = ALU_result;
-                output_address = ALU_result[(WORD_SIZE - 1):0];
+                output_address = ALU_result;
                 next_SP = (current_SP == 0) ? bottom_stack: current_SP;
             end
         endcase
