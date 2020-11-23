@@ -1,6 +1,6 @@
 # ARMAria
 Processor designed to work on the FPGA system Altera DE2 - 115.
 
-![Processor Architecture](./Images/Architecture.PNG)
+![Processor Architecture](./img/Architecture.PNG)
 
-![Memory map](./Images/MemoryMap.PNG)
+![Memory map](./img/MemoryMap.PNG)
