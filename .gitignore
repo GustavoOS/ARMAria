@@ -19,5 +19,6 @@
 ### Quartus
 
 ./db/*
-
 *.bak
+bin/
+!test/bin/
