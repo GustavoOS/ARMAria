@@ -21,3 +21,4 @@
 ./db/*
 *.bak
 bin/
+!test/bin/
