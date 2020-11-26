@@ -1,0 +1,36 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile",
+            "type": "shell",
+            "command": "quartus_cdb.exe --update_mif .\\bin\\ARMAria.qpf"
+        },
+        {
+            "label": "Mount",
+            "type": "shell",
+            "command": "quartus_asm.exe .\\bin\\ARMAria.qpf"
+        },
+        {
+            "label": "Programmer",
+            "type": "shell",
+            "command": "quartus_pgm.exe --mode=jtag -o 'p;.\\bin\\output_files\\ARMAria.sof'"
+        },
+        {
+            "label": "Build",
+            "dependsOn": [
+                "Compile",
+                "Mount",
+                "Programmer"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
