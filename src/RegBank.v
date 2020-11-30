@@ -23,7 +23,7 @@ module RegBank
     input   [(SPECREG_LENGTH - 1) : 0] special_register
 );
 
-    reg [(WORD_SIZE - 1) : 0] Bank [16:0];
+    reg [(WORD_SIZE - 1) : 0] Bank [15:0];
 
     wire RD_isnt_special;
 
@@ -40,9 +40,8 @@ module RegBank
 
     always @ (posedge slow_clock) begin
         if (reset) begin
-            Bank[14] <= USER_STACK;
+            Bank[SP_REGISTER] <= USER_STACK;
             Bank[PC_REGISTER] <= 0;
-            Bank[16] <= KERNEL_STACK;
         end else begin
             if (enable) begin
                 case (control)
@@ -63,12 +62,11 @@ module RegBank
                     3:begin //Enter privileged mode
                         Bank[SP_KEEPER_REGISTER] <= Bank[SP_REGISTER]; // Save user SP
                         Bank[PC_KEEPER_REGISTER] <= Bank[PC_REGISTER];  // LR = actual next Instruction address
-                        Bank[SP_REGISTER] <= Bank[16];           // Switch stack
                         Bank[PC_REGISTER] <= OS_START;  // Jump to OS
+                        Bank[SP_REGISTER] <= KERNEL_STACK;
                         Bank[SYSTEM_CALL_REGISTER] <= ALU_result;          // Set System Call Register
                     end
                     4:begin //Exit privileged mode
-                        Bank[16] <= Bank[SP_REGISTER];           // Switch stack
                         Bank[SP_REGISTER] <= Bank[SP_KEEPER_REGISTER];            // Recover user SP
                         Bank[PC_REGISTER] <= Bank[PC_KEEPER_REGISTER];  // Return to the same point
                     end
