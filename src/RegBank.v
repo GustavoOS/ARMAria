@@ -60,15 +60,15 @@ module RegBank
                         Bank[PC_REGISTER] <= new_PC;
                     end
                     3:begin //Enter privileged mode
-                        Bank[SP_KEEPER_REGISTER] <= Bank[SP_REGISTER]; // Save user SP
-                        Bank[PC_KEEPER_REGISTER] <= Bank[PC_REGISTER];  // LR = actual next Instruction address
-                        Bank[PC_REGISTER] <= OS_START;  // Jump to OS
+                        Bank[SP_KEEPER_REGISTER] <= Bank[SP_REGISTER];
+                        Bank[PC_KEEPER_REGISTER] <= Bank[PC_REGISTER];
+                        Bank[PC_REGISTER] <= OS_START;
                         Bank[SP_REGISTER] <= KERNEL_STACK;
-                        Bank[SYSTEM_CALL_REGISTER] <= ALU_result;          // Set System Call Register
+                        Bank[SYSTEM_CALL_REGISTER] <= ALU_result;
                     end
                     4:begin //Exit privileged mode
-                        Bank[SP_REGISTER] <= Bank[SP_KEEPER_REGISTER];            // Recover user SP
-                        Bank[PC_REGISTER] <= Bank[PC_KEEPER_REGISTER];  // Return to the same point
+                        Bank[SP_REGISTER] <= Bank[SP_KEEPER_REGISTER];
+                        Bank[PC_REGISTER] <= Bank[PC_KEEPER_REGISTER];
                     end
                     5:begin // CPXR COPY SPECIAL REGISTER
                         if(RD_isnt_special)
