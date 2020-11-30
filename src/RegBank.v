@@ -7,7 +7,11 @@ module RegBank
     parameter SPECREG_LENGTH = 4,
     parameter KERNEL_STACK = 6143,
     parameter USER_STACK = 8191,
-    parameter OS_START = 2048
+    parameter OS_START = 2048,
+
+    parameter SP_KEEPER_REGISTER = 6,
+    parameter SYSTEM_CALL_REGISTER = 7,
+    parameter PC_KEEPER_REGISTER = 13
 )(
     input   enable, reset, slow_clock, fast_clock,
     input   [2:0]   control, 
@@ -57,16 +61,16 @@ module RegBank
                         Bank[PC_REGISTER] <= new_PC;
                     end
                     3:begin //Enter privileged mode
-                        Bank[5] <= Bank[SP_REGISTER];            // Save user SP
-                        Bank[13] <= Bank[PC_REGISTER];  // LR = actual next Instruction address
+                        Bank[SP_KEEPER_REGISTER] <= Bank[SP_REGISTER]; // Save user SP
+                        Bank[PC_KEEPER_REGISTER] <= Bank[PC_REGISTER];  // LR = actual next Instruction address
                         Bank[SP_REGISTER] <= Bank[16];           // Switch stack
                         Bank[PC_REGISTER] <= OS_START;  // Jump to OS
-                        Bank[7] <= ALU_result;          // Set System Call Register
+                        Bank[SYSTEM_CALL_REGISTER] <= ALU_result;          // Set System Call Register
                     end
                     4:begin //Exit privileged mode
                         Bank[16] <= Bank[SP_REGISTER];           // Switch stack
-                        Bank[SP_REGISTER] <= Bank[5];            // Recover user SP
-                        Bank[PC_REGISTER] <= Bank[13];  // Return to the same point
+                        Bank[SP_REGISTER] <= Bank[SP_KEEPER_REGISTER];            // Recover user SP
+                        Bank[PC_REGISTER] <= Bank[PC_KEEPER_REGISTER];  // Return to the same point
                     end
                     5:begin // CPXR COPY SPECIAL REGISTER
                         if(RD_isnt_special)
