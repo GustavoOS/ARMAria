@@ -374,6 +374,7 @@ module ControlCore(
             76:begin // PXR Paste special register
                 controlALU = 15;
                 specreg_update_mode = 2;
+                controlRB = 0;
             end
 
             77:begin //PUSHN
