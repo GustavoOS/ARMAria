@@ -1,8 +1,8 @@
 module MemoryAddressHandler #(
     parameter WORD_SIZE = 32,
-    parameter KERNEL_STACK_TOP = 4096,
-    parameter KERNEL_STACK_BOTTOM = 6143,
-    parameter USER_STACK_TOP = 6144,
+    parameter KERNEL_STACK_TOP = 6144,
+    parameter KERNEL_STACK_BOTTOM = 7167,
+    parameter USER_STACK_TOP = 7168,
     parameter USER_STACK_BOTTOM = 8191,
     parameter MAX_NUMBER = 32'hffffffff
 
