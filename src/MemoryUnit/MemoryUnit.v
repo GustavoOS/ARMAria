@@ -1,9 +1,10 @@
 module MemoryUnit
 #(
-	parameter DATA_WIDTH=32,
-	parameter ADDR_WIDTH=14,
-    parameter INSTRUCTION_SIZE = 16,
-    parameter BIOS_ADDRESS_SIZE = 9
+	parameter DATA_WIDTH = 32,
+	parameter MEMORY_ADDR_WIDTH = 13,
+    parameter BIOS_ADDRESS_WIDTH = 8,
+    parameter STORAGE_ADDR_WIDTH = 15,
+    parameter INSTRUCTION_SIZE = 16
 )(
 	input allow_write_on_memory, slow_clock, fast_clock,
 	input [(DATA_WIDTH -1):0] original_address,
@@ -13,30 +14,29 @@ module MemoryUnit
     output [(INSTRUCTION_SIZE -1):0] output_instruction,
 	output [(DATA_WIDTH-1):0] data_read_from_memory
 );
-
-    wire [(ADDR_WIDTH -1): 0] data_address,
-                                instruction_address;
+    wire [(STORAGE_ADDR_WIDTH - 1) : 0] storage_addr;
     wire [(DATA_WIDTH -1): 0] memory_data, storage_data;
     wire is_storage;
-    wire[(INSTRUCTION_SIZE -1):0] memory_instruction,
+    wire [(INSTRUCTION_SIZE -1) : 0] memory_instruction,
                                   bios_instruction;
 
     MemoryController controller(
-        original_address, original_instruction_address,
+        original_address,
         is_storage,
-        data_address, instruction_address
+        storage_addr
     );
 
     Memory main_memory(
         MemOut,
-        instruction_address, data_address,
+        original_instruction_address[(MEMORY_ADDR_WIDTH - 1) : 0],
+        original_address[(MEMORY_ADDR_WIDTH - 1) : 0],
         allow_write_on_memory, fast_clock, slow_clock,
         memory_instruction,
         memory_data
     );
 
     StorageDrive hd(
-        data_address,
+        storage_addr,
         MemOut,
         is_storage && allow_write_on_memory , fast_clock, slow_clock,
         storage_data
@@ -50,7 +50,7 @@ module MemoryUnit
 
     BIOS bios(
         fast_clock,
-        instruction_address[(BIOS_ADDRESS_SIZE):0],
+        original_instruction_address[(BIOS_ADDRESS_WIDTH - 1):0],
         bios_instruction
     );
 

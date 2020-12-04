@@ -1,7 +1,7 @@
 module BIOS
 #(
     parameter DATA_WIDTH=16,
-    parameter ADDR_WIDTH=9
+    parameter ADDR_WIDTH=8
 )(
 	input clk,
 	input [(ADDR_WIDTH-1):0] addr,
