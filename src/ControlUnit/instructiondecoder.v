@@ -325,6 +325,7 @@ module InstructionDecoder #(
 
                         10:begin//Instructions 63 ~ 66
                             RegD[2:0] = Instruction[2:0];
+                            RegA[2:0] = Instruction[2:0];
                             RegB[2:0] = Instruction[5:3];
                             ID = 7'h3f+funct1;
                         end
