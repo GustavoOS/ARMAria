@@ -1,19 +1,16 @@
 module MemoryController
 #(
     parameter INPUT_WIDTH = 32,
-	parameter ADDRESS_WIDTH = 14,
-    parameter MEMORY_END = 2**ADDRESS_WIDTH - 1
+	parameter MEMORY_ADDRESS_WIDTH = 13,
+    parameter STORAGE_ADDRESS_WIDTH = 15,
+    parameter STORAGE_START = 2**MEMORY_ADDRESS_WIDTH,
+    parameter MEMORY_END = STORAGE_START - 1
 )(
-    input [(INPUT_WIDTH -1) : 0] MAH_address, MAH_instruction,
+    input [(INPUT_WIDTH -1) : 0] original_address,
     output is_storage,
-    output [(ADDRESS_WIDTH - 1): 0] data_address,
-                                    instruction_address
+    output [(STORAGE_ADDRESS_WIDTH -1) : 0] storage_address
 );
-    assign is_storage = MAH_address > MEMORY_END;
-
-    assign data_address = MAH_address[(ADDRESS_WIDTH -1) : 0];
-
-    assign instruction_address =
-                    MAH_instruction[(ADDRESS_WIDTH -1) : 0];
+    assign is_storage = original_address > MEMORY_END;
+    assign storage_address = original_address - STORAGE_START;
 
 endmodule

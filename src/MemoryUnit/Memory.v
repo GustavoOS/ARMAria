@@ -1,7 +1,7 @@
 module Memory
 #(
 	parameter DW=32,
-	parameter ADDR_WIDTH=14, 
+	parameter ADDR_WIDTH=13, 
 	parameter INSTRUCTION_SIZE = 16;
 	parameter inputFile = "Program.txt"
 )(

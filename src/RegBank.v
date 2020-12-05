@@ -5,9 +5,9 @@ module RegBank
     parameter PC_REGISTER = 15,
     parameter SP_REGISTER = 14,
     parameter SPECREG_LENGTH = 4,
-    parameter KERNEL_STACK = 6143,
+    parameter KERNEL_STACK = 7167,
     parameter USER_STACK = 8191,
-    parameter OS_START = 2048,
+    parameter OS_START = 3072,
 
     parameter SP_KEEPER_REGISTER = 6,
     parameter SYSTEM_CALL_REGISTER = 7,
