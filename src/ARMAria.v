@@ -24,6 +24,7 @@ module ARMAria
     wire continue_debounced, n_flag, z_flag, should_branch;
     wire c_flag, v_flag, is_os, is_memory_write;
     wire should_fill_b_offset, is_bios, user_request;
+    wire [1 : 0] interruption;
     wire [2 : 0] controlMAH, b_sign_extend;
     wire [2 : 0] load_sign_extend, controlRB;
     wire [3 : 0] RegD, RegA, RegB, controlALU, controlBS;
@@ -53,7 +54,8 @@ module ARMAria
         alu_negative, alu_carry, alu_overflow,
         alu_zero, continue_debounced, bs_negative,
         bs_zero, bs_carry, reset, slow_clock,
-        confirmation, user_request,
+        confirmation,
+        interruption,
         OffImmed,
         RegD, RegA, RegB,
         controlBS, controlALU, 
@@ -138,6 +140,13 @@ module ARMAria
         controlALU,
         c_flag,
         alu_negative, alu_zero, alu_carry, alu_overflow
+    );
+
+    
+    Watchdog pitbull(
+        slow_clock, fast_clock,
+        user_request,
+        interruption
     );
 
 endmodule

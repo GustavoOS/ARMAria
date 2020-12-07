@@ -11,7 +11,8 @@ module Control
     input alu_negative, alu_carry, alu_overflow,
     input alu_zero, continue_button, bs_negative,
     input bs_zero, bs_carry, reset, clock,
-    input confirmation, is_user_request,
+    input confirmation,
+    input [1:0] interruption,
     output [(OFFSET_WIDTH - 1) : 0] OffImmed,
     output [(REGISTER_ID - 1) : 0] RegD, RegA, RegB,
     output [3 : 0] controlBS, controlALU,
@@ -26,7 +27,6 @@ module Control
     wire [(OFFSET_WIDTH - 1) : 0] decoded_offset;
     wire [(CONDITION_WIDTH -1) : 0] condition_code;
     wire [3 : 0] specreg_update_mode;
-    wire interruption;
 
     InstructionDecoder id(
         Instruction,
@@ -63,16 +63,11 @@ module Control
         controlALU, controlBS, specreg_update_mode
     );
 
-    Watchdog pitbull(
-        clock,
-        (is_bios || is_os || is_input || is_output),
-        interruption
-    );
-
     Interruptor proxy(
         decoded_id,
         decoded_offset,
-        is_user_request, interruption,
+        interruption,
+        (is_bios || is_os || is_input || is_output),
         ID,
         OffImmed
     );
