@@ -4,7 +4,7 @@ module Watchdog
 )(
     input clock,
     input reset,
-    output interruption
+    output wire interruption
 );
 
     reg [(COUNTER_SIZE - 1) : 0] counter;
