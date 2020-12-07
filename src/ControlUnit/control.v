@@ -22,17 +22,17 @@ module Control
     output should_branch, is_input, is_output, is_bios
 );
 
-    wire [(ID_WIDTH - 1) : 0] ID;
+    wire [(ID_WIDTH - 1) : 0] ID, decoded_id;
+    wire [(OFFSET_WIDTH - 1) : 0] decoded_offset;
     wire [(CONDITION_WIDTH -1) : 0] condition_code;
     wire [3 : 0] specreg_update_mode;
     wire interruption;
-    
+
     InstructionDecoder id(
         Instruction,
-        (is_user_request && (!is_os)), 1'b0,
-        ID,
+        decoded_id,
         RegD, RegA, RegB,
-        OffImmed,
+        decoded_offset,
         condition_code
     );
 
@@ -62,13 +62,19 @@ module Control
         controlRB, controlMAH,
         controlALU, controlBS, specreg_update_mode
     );
-    
-    // Watchdog pitbull(
-    //     clock,
-    //     (is_bios || is_os),
-    //     (is_input || is_output),
-    //     interruption
-    // );
-    
-    
+
+    Watchdog pitbull(
+        clock,
+        (is_bios || is_os || is_input || is_output),
+        interruption
+    );
+
+    Interruptor proxy(
+        decoded_id,
+        decoded_offset,
+        is_user_request, interruption,
+        ID,
+        OffImmed
+    );
+
 endmodule
